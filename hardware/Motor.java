@@ -24,6 +24,10 @@ public class Motor extends Mechanism{
         motor.setPower(1);
     }
 
+    public void backwards(){
+        motor.setPower(-1);
+    }
+
 
 
 }

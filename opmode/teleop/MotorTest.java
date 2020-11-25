@@ -18,7 +18,13 @@ public class MotorTest extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()){
-            
+
+            if(gamepad1.a){
+                motor.rotate();
+            }
+            else if(gamepad1.b){
+                motor.backwards();
+            }
         }
 
     }
