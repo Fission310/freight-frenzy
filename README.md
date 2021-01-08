@@ -1,5 +1,5 @@
-# FTC Fission 310 2019-2020 SKYSTONE
-Managed Lucas Lee (more to come)
+# FTC Fission 310 2020-2021 ULTIMATE-GOAL
+Managed Lucas Lee
 
 ## Setting up your coding environment
 - Download Java 8 by following these [instructions](https://dojo.stuycs.org/resources/software_installation_and_tips/installation_instructions/programming_languages/installing_jdk.html)
@@ -7,7 +7,7 @@ Managed Lucas Lee (more to come)
 - Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
 - Clone the [ftc_app repository](https://github.com/FIRST-Tech-Challenge/FtcRobotController) by using `git clone` in your terminal or by downloading the .zip  
-- Using your terminal, change directories into the following path `SkyStone\TeamCode\src\main\java\org\firstinspires\ftc`
+- Using your terminal, change directories into the following path `FtcRobotController\TeamCode\src\main\java\org\firstinspires\ftc`
 - Delete the teamcode directory
 - Clone this repository into the above path and rename its directory to teamcode
 - Open Android Studio and click "Open an existing Android Studio project"
