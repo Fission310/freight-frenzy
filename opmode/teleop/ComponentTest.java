@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.Leg;
 
-@TeleOp(name="LegTest", group="Test")
+@TeleOp(name="CompTest", group="Test")
 public class ComponentTest extends LinearOpMode{
 
     private Leg leg = new Leg(this);
@@ -23,11 +23,17 @@ public class ComponentTest extends LinearOpMode{
 
             if(gamepad1.a) {
                 leg.moveB();
-                flywheel.rotate();
+                flywheel.forward();
             }
-            else if(gamepad1.b) leg.moveF();
+            else if(gamepad1.b) {
+                leg.moveF();
+                flywheel.reverse();
+            }
             else if(gamepad1.x) leg.swing();
             else if(gamepad1.y) leg.reset();
+
+            telemetry.addData("LegPos", leg.servo.getPosition());
+            telemetry.update();
 
         }
 

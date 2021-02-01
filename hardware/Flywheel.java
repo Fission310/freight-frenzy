@@ -22,9 +22,10 @@ public class Flywheel extends Mechanism{
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void rotate(){
+    public void forward(){
         motor.setPower(1);
     }
+    public void reverse(){motor.setPower(-1);}
     public void stop(){
         motor.setPower(0);
     }

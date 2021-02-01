@@ -24,7 +24,7 @@ public class Acquirer extends Mechanism {
         intake.setPower(1);
     }
 
-    public void back(){
+    public void reverse(){
         intake.setPower(-1);
     }
 
