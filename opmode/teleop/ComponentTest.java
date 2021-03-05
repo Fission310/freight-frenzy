@@ -40,6 +40,12 @@ public class ComponentTest extends LinearOpMode{
             else if(gamepad1.b){
                 flicker.reset();
             }
+            else if(gamepad1.x){
+                flicker.moveF();
+            }
+            else if(gamepad1.y){
+                flicker.moveB();
+            }
 
             telemetry.addData("servoPos", flicker.servo.getPosition());
             telemetry.update();

@@ -14,7 +14,7 @@ public class Flicker extends Mechanism{
     public void init(HardwareMap hwMap){
 
         servo = hwMap.servo.get("rotator");
-        reset();
+        servo.setPosition(0.5);
     }
 
     public void swing(){
