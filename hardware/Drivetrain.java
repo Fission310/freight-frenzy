@@ -44,11 +44,11 @@ public class Drivetrain extends Mechanism {
     public double varPower = 0;
     public double varCorr = 0;
 
-
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
+    //TODO make private again
+    public DcMotor frontLeft;
+    public DcMotor frontRight;
+    public DcMotor backLeft;
+    public DcMotor backRight;
 
     Map<String, DcMotor> motors = new HashMap<>();
 

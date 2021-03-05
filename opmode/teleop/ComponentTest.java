@@ -3,36 +3,45 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.Flywheel;
-import org.firstinspires.ftc.teamcode.hardware.Leg;
+import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.Flicker;
 
 @TeleOp(name="CompTest", group="Test")
 public class ComponentTest extends LinearOpMode{
 
-    private Leg leg = new Leg(this);
-    private Flywheel flywheel = new Flywheel(this);
+    private Drivetrain drive = new Drivetrain(this);
+    private Flicker flicker = new Flicker(this);
 
     @Override
     public void runOpMode() throws InterruptedException{
 
-        leg.init(hardwareMap);
+        drive.init(hardwareMap);
+        flicker.init(hardwareMap);
 
         waitForStart();
 
         while(opModeIsActive()){
 
-            if(gamepad1.a) {
-                leg.moveB();
-                flywheel.forward();
-            }
-            else if(gamepad1.b) {
-                leg.moveF();
-                flywheel.reverse();
-            }
-            else if(gamepad1.x) leg.swing();
-            else if(gamepad1.y) leg.reset();
+//            if(gamepad1.a)drive.frontLeft.setPower(1);
+//            else drive.frontLeft.setPower(0);
+//
+//            if(gamepad1.b)drive.frontRight.setPower(1);
+//            else drive.frontRight.setPower(0);
+//
+//            if(gamepad1.x)drive.backLeft.setPower(1);
+//            else drive.backLeft.setPower(0);
+//
+//            if(gamepad1.y)drive.backRight.setPower(1);
+//            else drive.backRight.setPower(0);
 
-            telemetry.addData("LegPos", leg.servo.getPosition());
+            if(gamepad1.a){
+                flicker.moveB();
+            }
+            else if(gamepad1.b){
+                flicker.moveF();
+            }
+
+            telemetry.addData("servoPos", flicker.servo.getPosition());
             telemetry.update();
 
         }

@@ -5,14 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Leg extends Mechanism{
+public class Flicker extends Mechanism{
 
     public Servo servo;
 
-    public Leg(LinearOpMode opMode){this.opMode = opMode;}
+    public Flicker(LinearOpMode opMode){this.opMode = opMode;}
 
     public void init(HardwareMap hwMap){
-        servo = hwMap.servo.get("leg");
+
+        servo = hwMap.servo.get("rotator");
+        reset();
     }
 
     public void swing(){

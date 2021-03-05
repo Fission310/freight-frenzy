@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import android.graphics.Paint;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Leg;
+import org.firstinspires.ftc.teamcode.hardware.Flicker;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
-
-import java.util.Objects;
 
 
 @TeleOp(name="PairedMain", group="Main")
@@ -19,7 +15,7 @@ public class PairedMain extends LinearOpMode {
     private double leftInput1, rightInput1, slideInput1, leftInput2, rightInput2, slideInput2;
     private Drivetrain drive = new Drivetrain(this);
     private Acquirer acquirer = new Acquirer(this);
-    private Leg leg = new Leg(this);
+    private Flicker flicker = new Flicker(this);
     private Flywheel flywheel = new Flywheel(this);
 
     @Override
@@ -27,7 +23,7 @@ public class PairedMain extends LinearOpMode {
         //Initializing
         acquirer.init(hardwareMap);
         drive.init(hardwareMap);
-        leg.init(hardwareMap);
+        flicker.init(hardwareMap);
 
         boolean rotate = true;
 
@@ -77,9 +73,9 @@ public class PairedMain extends LinearOpMode {
             }
 
             if(gamepad2.x){
-                leg.swing();
+                flicker.swing();
                 sleep(500);
-                leg.reset();
+                flicker.reset();
             }
 
             if(gamepad2.y){
