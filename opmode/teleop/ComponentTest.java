@@ -4,50 +4,47 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Flicker;
+import org.firstinspires.ftc.teamcode.hardware.Rotator;
+import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 
 @TeleOp(name="CompTest", group="Test")
 public class ComponentTest extends LinearOpMode{
 
     private Drivetrain drive = new Drivetrain(this);
-    private Flicker flicker = new Flicker(this);
+    private Rotator rotator = new Rotator(this);
+    private Acquirer acquirer = new Acquirer(this);
 
     @Override
     public void runOpMode() throws InterruptedException{
 
         drive.init(hardwareMap);
-        flicker.init(hardwareMap);
+        rotator.init(hardwareMap);
+        acquirer.init(hardwareMap);
+
 
         waitForStart();
 
         while(opModeIsActive()){
 
-//            if(gamepad1.a)drive.frontLeft.setPower(1);
-//            else drive.frontLeft.setPower(0);
-//
-//            if(gamepad1.b)drive.frontRight.setPower(1);
-//            else drive.frontRight.setPower(0);
-//
-//            if(gamepad1.x)drive.backLeft.setPower(1);
-//            else drive.backLeft.setPower(0);
-//
-//            if(gamepad1.y)drive.backRight.setPower(1);
-//            else drive.backRight.setPower(0);
-
             if(gamepad1.a){
-                flicker.swing();
+                rotator.swing();
             }
             else if(gamepad1.b){
-                flicker.reset();
-            }
-            else if(gamepad1.x){
-                flicker.moveF();
-            }
-            else if(gamepad1.y){
-                flicker.moveB();
+                rotator.reset();
             }
 
-            telemetry.addData("servoPos", flicker.servo.getPosition());
+            if(gamepad1.x){
+                acquirer.forward();
+            }
+            else if(gamepad1.y){
+                acquirer.reverse();
+            }
+            else{
+                acquirer.stop();
+            }
+
+
+            telemetry.addData("servoPos", rotator.servo.getPosition());
             telemetry.update();
 
         }

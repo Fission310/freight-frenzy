@@ -5,35 +5,22 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Flicker extends Mechanism{
+public class Rotator extends Mechanism{
 
     public Servo servo;
 
-    public Flicker(LinearOpMode opMode){this.opMode = opMode;}
+    public Rotator(LinearOpMode opMode){this.opMode = opMode;}
 
     public void init(HardwareMap hwMap){
-
         servo = hwMap.servo.get("rotator");
-        servo.setPosition(0.5);
+        reset();
     }
 
     public void swing(){
-        servo.setPosition(0.5);
+        servo.setPosition(0.73);
     }
 
     public void reset(){
-        servo.setPosition(0.0);
+        servo.setPosition(0.10);
     }
-
-    //For Testing
-
-    public void moveF(){
-        servo.setPosition(servo.getPosition() + 0.001);
-    }
-
-    public void moveB(){
-        servo.setPosition(servo.getPosition() - 0.001);
-    }
-
-
 }
