@@ -35,10 +35,10 @@ public class ComponentTest extends LinearOpMode{
 //            else drive.backRight.setPower(0);
 
             if(gamepad1.a){
-                flicker.moveB();
+                flicker.swing();
             }
             else if(gamepad1.b){
-                flicker.moveF();
+                flicker.reset();
             }
 
             telemetry.addData("servoPos", flicker.servo.getPosition());

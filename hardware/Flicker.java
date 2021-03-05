@@ -18,7 +18,7 @@ public class Flicker extends Mechanism{
     }
 
     public void swing(){
-        servo.setPosition(1);
+        servo.setPosition(0.5);
     }
 
     public void reset(){
