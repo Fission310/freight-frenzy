@@ -3,21 +3,17 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 
 public class Acquirer extends Mechanism {
 
-    private DcMotor intake;
+    private CRServo intake;
 
     public Acquirer(LinearOpMode opMode){this.opMode = opMode;}
 
     public void init(HardwareMap hwMap){
-        intake = hwMap.dcMotor.get("intake");
-        intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);;
+        intake = hwMap.crservo.get("intake");
     }
 
     public void forward(){
