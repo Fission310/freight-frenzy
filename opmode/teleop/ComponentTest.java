@@ -24,6 +24,7 @@ public class ComponentTest extends LinearOpMode{
         drive.init(hardwareMap);
         acquirer.init(hardwareMap);
         flywheel.init(hardwareMap);
+        flicker.init(hardwareMap);
 
         waitForStart();
 
