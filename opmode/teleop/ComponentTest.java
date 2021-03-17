@@ -105,7 +105,7 @@ public class ComponentTest extends LinearOpMode{
             }
 
 
-            telemetry.addData("servoPos", flicker.leg.getPosition());
+            telemetry.addData("servoPos", flicker.adjustor.getPosition());
             telemetry.update();
 
         }
