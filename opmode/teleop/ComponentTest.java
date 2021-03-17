@@ -64,12 +64,12 @@ public class ComponentTest extends LinearOpMode{
                 drive.teleDrive(r, robotAngle, rightX1);
             }
 
-            if(gamepad1.a){
-                acquirer.swing();
-            }
-            else if(gamepad1.b){
-                acquirer.reset();
-            }
+//            if(gamepad1.a){
+//                acquirer.swing();
+//            }
+//            else if(gamepad1.b){
+//                acquirer.reset();
+//            }
 
             if(gamepad1.x) {
                 flywheel.forward();
