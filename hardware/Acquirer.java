@@ -22,7 +22,7 @@ public class Acquirer extends Mechanism {
         servo = hwMap.servo.get("rotator");
         ramp = hwMap.dcMotor.get("ramp");
 
-        reset();
+        swing();
         stop();
     }
 
