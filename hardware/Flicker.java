@@ -18,30 +18,30 @@ public class Flicker extends Mechanism{
         leg = hwMap.servo.get("leg");
         adjustor = hwMap.servo.get("adjustor");
 
-        leg.setPosition(0.5);
+        swing();
         adjustor.setPosition(0.5);
     }
 
     public void swing(){
 
-        leg.setPosition(1.0);
+        leg.setPosition(0.4);
     }
 
     public void reset(){
 
-        leg.setPosition(0.0);
+        leg.setPosition(0.6);
     }
 
     //For Testing
 
     public void moveF(){
 
-        leg.setPosition(leg.getPosition() + 0.001);
+        adjustor.setPosition(adjustor.getPosition() + 0.01);
     }
 
     public void moveB(){
 
-        leg.setPosition(leg.getPosition() - 0.001);
+        adjustor.setPosition(adjustor.getPosition() - 0.01);
     }
 
 
