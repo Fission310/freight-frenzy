@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Rotator;
+import org.firstinspires.ftc.teamcode.hardware.Flicker;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 
@@ -16,6 +16,7 @@ public class ComponentTest extends LinearOpMode{
     private Drivetrain drive = new Drivetrain(this);
     private Acquirer acquirer = new Acquirer(this);
     private Flywheel flywheel = new Flywheel(this);
+    private Flicker flicker = new Flicker(this);
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -91,8 +92,21 @@ public class ComponentTest extends LinearOpMode{
                 acquirer.stop();
             }
 
+            if(gamepad1.dpad_left){
+                flicker.moveB();
+            }
+            else if(gamepad1.dpad_right){
+                flicker.moveF();
+            }
+            else if(gamepad1.dpad_up){
+                flicker.swing();
+            }
+            else if(gamepad1.dpad_down){
+                flicker.reset();
+            }
 
-            telemetry.addData("servoPos", acquirer.servo.getPosition());
+
+            telemetry.addData("servoPos", flicker.leg.getPosition());
             telemetry.update();
 
         }

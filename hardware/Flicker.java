@@ -23,7 +23,8 @@ public class Flicker extends Mechanism{
     }
 
     public void swing(){
-        leg.setPosition(0.5);
+
+        leg.setPosition(1.0);
     }
 
     public void reset(){
@@ -39,6 +40,7 @@ public class Flicker extends Mechanism{
     }
 
     public void moveB(){
+
         leg.setPosition(leg.getPosition() - 0.001);
     }
 
