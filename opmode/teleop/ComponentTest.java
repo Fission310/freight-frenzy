@@ -71,11 +71,8 @@ public class ComponentTest extends LinearOpMode{
                 acquirer.reset();
             }
 
-            if(gamepad1.x){
+            if(gamepad1.x) {
                 flywheel.forward();
-            }
-            else if(gamepad1.y){
-                flywheel.reverse();
             }
             else{
                 flywheel.stop();
@@ -92,17 +89,11 @@ public class ComponentTest extends LinearOpMode{
                 acquirer.stop();
             }
 
-            if(gamepad1.dpad_left){
+            if(gamepad1.a){
                 flicker.moveB();
             }
-            else if(gamepad1.dpad_right){
+            else if(gamepad1.b) {
                 flicker.moveF();
-            }
-            else if(gamepad1.dpad_up){
-                flicker.swing();
-            }
-            else if(gamepad1.dpad_down){
-                flicker.reset();
             }
 
 
