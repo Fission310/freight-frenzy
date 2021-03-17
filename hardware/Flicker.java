@@ -7,32 +7,39 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Flicker extends Mechanism{
 
-    public Servo servo;
+    public Servo leg;
+    public Servo adjustor;
+
 
     public Flicker(LinearOpMode opMode){this.opMode = opMode;}
 
     public void init(HardwareMap hwMap){
 
-        servo = hwMap.servo.get("rotator");
-        servo.setPosition(0.5);
+        leg = hwMap.servo.get("leg");
+        adjustor = hwMap.servo.get("adjustor");
+
+        leg.setPosition(0.5);
+        adjustor.setPosition(0.5);
     }
 
     public void swing(){
-        servo.setPosition(0.5);
+        leg.setPosition(0.5);
     }
 
     public void reset(){
-        servo.setPosition(0.0);
+
+        leg.setPosition(0.0);
     }
 
     //For Testing
 
     public void moveF(){
-        servo.setPosition(servo.getPosition() + 0.001);
+
+        leg.setPosition(leg.getPosition() + 0.001);
     }
 
     public void moveB(){
-        servo.setPosition(servo.getPosition() - 0.001);
+        leg.setPosition(leg.getPosition() - 0.001);
     }
 
 

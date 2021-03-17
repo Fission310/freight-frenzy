@@ -16,7 +16,7 @@ public class Flywheel extends Mechanism{
     }
 
     public void init(HardwareMap hwMap){
-        motor = hwMap.dcMotor.get("flywheel");
+        motor = hwMap.dcMotor.get("shooter");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
