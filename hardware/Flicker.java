@@ -32,6 +32,14 @@ public class Flicker extends Mechanism{
         leg.setPosition(0.6);
     }
 
+    public void up(){
+        adjustor.setPosition(0.52);
+    }
+
+    public void down(){
+        adjustor.setPosition(1.0);
+    }
+
     //For Testing
 
     public void moveF(){
