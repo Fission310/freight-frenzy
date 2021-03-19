@@ -99,7 +99,7 @@ public class ComponentTest extends LinearOpMode{
                 acquirer.stop();
             }
 
-            if(gamepad1.a){
+            if(gamepad1.y){
                 legSwing = !legSwing;
 
                 if(legSwing){
@@ -112,7 +112,7 @@ public class ComponentTest extends LinearOpMode{
 
             else if(gamepad1.b) {
                 adjustorDown = !adjustorDown;
-                
+
                 if(adjustorDown){
                     flicker.up();
                 }
