@@ -20,11 +20,11 @@ public class Wobble extends Mechanism{
     }
 
     public void moveF(){
-        rotator.setPosition(rotator.getPortNumber() + 0.001);
+        rotator.setPosition(rotator.getPosition() + 0.001);
     }
 
     public void moveB(){
-        rotator.setPosition(rotator.getPortNumber() - 0.001);
+        rotator.setPosition(rotator.getPosition() - 0.001);
     }
 
 

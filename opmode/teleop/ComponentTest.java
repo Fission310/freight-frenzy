@@ -84,14 +84,14 @@ public class ComponentTest extends LinearOpMode{
             }
 
             if(gamepad1.y){
-                legSwing = !legSwing;
+                flicker.swing();
+                sleep(100);
+                flicker.reset();
             }
-
             if(gamepad1.b) {
-                adjustorDown = !adjustorDown;
-            }
-            if(gamepad1.a){
-                acquirerDown = !acquirerDown;
+                flicker.down();
+                sleep(100);
+                flicker.up();
             }
 
 
@@ -102,6 +102,9 @@ public class ComponentTest extends LinearOpMode{
                 flywheel.stop();
             }
 
+            if(gamepad1.a){
+                acquirerDown = !acquirerDown;
+            }
             if(acquirerDown){
                 acquirer.swing();
             }
@@ -109,19 +112,6 @@ public class ComponentTest extends LinearOpMode{
                 acquirer.reset();
             }
 
-            if(legSwing){
-                flicker.swing();
-            }
-            else{
-                flicker.reset();
-            }
-
-            if(adjustorDown){
-                flicker.up();
-            }
-            else{
-                flicker.down();
-            }
 
             if(gamepad1.dpad_up){
                 wobble.moveF();
