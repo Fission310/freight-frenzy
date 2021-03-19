@@ -18,6 +18,10 @@ public class ComponentTest extends LinearOpMode{
     private Flywheel flywheel = new Flywheel(this);
     private Flicker flicker = new Flicker(this);
 
+    private boolean acquirerDown = false;
+    private boolean legSwing = false;
+    private boolean adjustorDown = false;
+
     @Override
     public void runOpMode() throws InterruptedException{
 
@@ -65,12 +69,17 @@ public class ComponentTest extends LinearOpMode{
                 drive.teleDrive(r, robotAngle, rightX1);
             }
 
-//            if(gamepad1.a){
-//                acquirer.swing();
-//            }
-//            else if(gamepad1.b){
-//                acquirer.reset();
-//            }
+            if(gamepad1.a){
+               acquirerDown = !acquirerDown;
+
+                if(acquirerDown){
+                    acquirer.swing();
+                }
+                else{
+                    acquirer.reset();
+                }
+            }
+
 
             if(gamepad1.x) {
                 flywheel.forward();
@@ -91,18 +100,28 @@ public class ComponentTest extends LinearOpMode{
             }
 
             if(gamepad1.a){
-                flicker.swing();
-            }
-            else if(gamepad1.b) {
-                flicker.reset();
+                legSwing = !legSwing;
+
+                if(legSwing){
+                    flicker.swing();
+                }
+                else{
+                    flicker.reset();
+                }
             }
 
-            if(gamepad1.dpad_up){
-                flicker.up();
+            else if(gamepad1.b) {
+                adjustorDown = !adjustorDown;
+                
+                if(adjustorDown){
+                    flicker.up();
+                }
+                else{
+                    flicker.down();
+                }
             }
-            else if(gamepad1.dpad_down){
-                flicker.down();
-            }
+
+
 
 
             telemetry.addData("servoPos", flicker.adjustor.getPosition());
