@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Flicker;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
+import org.firstinspires.ftc.teamcode.hardware.Wobble;
 
 @TeleOp(name="CompTest", group="Test")
 public class ComponentTest extends LinearOpMode{
@@ -17,6 +18,7 @@ public class ComponentTest extends LinearOpMode{
     private Acquirer acquirer = new Acquirer(this);
     private Flywheel flywheel = new Flywheel(this);
     private Flicker flicker = new Flicker(this);
+    private Wobble wobble = new Wobble(this);
 
     private boolean acquirerDown = false;
     private boolean legSwing = false;
@@ -29,6 +31,7 @@ public class ComponentTest extends LinearOpMode{
         acquirer.init(hardwareMap);
         flywheel.init(hardwareMap);
         flicker.init(hardwareMap);
+        wobble.init(hardwareMap);
 
         waitForStart();
 
@@ -69,25 +72,6 @@ public class ComponentTest extends LinearOpMode{
                 drive.teleDrive(r, robotAngle, rightX1);
             }
 
-            if(gamepad1.a){
-               acquirerDown = !acquirerDown;
-
-                if(acquirerDown){
-                    acquirer.swing();
-                }
-                else{
-                    acquirer.reset();
-                }
-            }
-
-
-            if(gamepad1.x) {
-                flywheel.forward();
-            }
-            else{
-                flywheel.stop();
-            }
-
 
             if(gamepad1.left_bumper){
                 acquirer.forward();
@@ -101,30 +85,54 @@ public class ComponentTest extends LinearOpMode{
 
             if(gamepad1.y){
                 legSwing = !legSwing;
-
-                if(legSwing){
-                    flicker.swing();
-                }
-                else{
-                    flicker.reset();
-                }
             }
 
-            else if(gamepad1.b) {
+            if(gamepad1.b) {
                 adjustorDown = !adjustorDown;
+            }
+            if(gamepad1.a){
+                acquirerDown = !acquirerDown;
+            }
 
-                if(adjustorDown){
-                    flicker.up();
-                }
-                else{
-                    flicker.down();
-                }
+
+            if(gamepad1.x) {
+                flywheel.forward();
+            }
+            else{
+                flywheel.stop();
+            }
+
+            if(acquirerDown){
+                acquirer.swing();
+            }
+            else{
+                acquirer.reset();
+            }
+
+            if(legSwing){
+                flicker.swing();
+            }
+            else{
+                flicker.reset();
+            }
+
+            if(adjustorDown){
+                flicker.up();
+            }
+            else{
+                flicker.down();
+            }
+
+            if(gamepad1.dpad_up){
+                wobble.moveF();
+            }
+            else if(gamepad1.dpad_down){
+                wobble.moveB();
             }
 
 
 
-
-            telemetry.addData("servoPos", flicker.adjustor.getPosition());
+            telemetry.addData("servoPos", wobble.rotator.getPosition());
             telemetry.update();
 
         }

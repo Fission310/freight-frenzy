@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Wobble extends Mechanism{
 
     private Servo clamp;
-    private Servo rotator;
+    public Servo rotator;
 
     public Wobble(LinearOpMode opMode){this.opMode = opMode;}
 
@@ -15,6 +15,16 @@ public class Wobble extends Mechanism{
 
         rotator = hwMap.servo.get("wobbleRotator");
         clamp = hwMap.servo.get("wobbleClamp");
+
+        rotator.setPosition(0.5);
+    }
+
+    public void moveF(){
+        rotator.setPosition(rotator.getPortNumber() + 0.001);
+    }
+
+    public void moveB(){
+        rotator.setPosition(rotator.getPortNumber() - 0.001);
     }
 
 
