@@ -85,12 +85,12 @@ public class ComponentTest extends LinearOpMode{
 
             if(gamepad1.y){
                 flicker.swing();
-                sleep(100);
+                sleep(500);
                 flicker.reset();
             }
             if(gamepad1.b) {
                 flicker.down();
-                sleep(100);
+                sleep(500);
                 flicker.up();
             }
 
