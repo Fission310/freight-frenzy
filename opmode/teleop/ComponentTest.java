@@ -20,9 +20,8 @@ public class ComponentTest extends LinearOpMode{
     private Flicker flicker = new Flicker(this);
     private Wobble wobble = new Wobble(this);
 
-    private boolean acquirerDown = false;
-    private boolean legSwing = false;
-    private boolean adjustorDown = false;
+    private boolean acquirerDown = true;
+    private boolean clampClosed = true;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -95,7 +94,7 @@ public class ComponentTest extends LinearOpMode{
             }
 
 
-            if(gamepad1.x) {
+            if(gamepad1.left_trigger > 0) {
                 flywheel.forward();
             }
             else{
@@ -104,25 +103,45 @@ public class ComponentTest extends LinearOpMode{
 
             if(gamepad1.a){
                 acquirerDown = !acquirerDown;
+
+                if(acquirerDown){
+                    acquirer.swing();
+                }
+                else{
+                    acquirer.reset();
+                }
+                sleep(500);
             }
-            if(acquirerDown){
-                acquirer.swing();
-            }
-            else{
-                acquirer.reset();
-            }
+
 
 
             if(gamepad1.dpad_up){
-                wobble.moveF();
+                wobble.rotateUp();
+                sleep(200);
             }
             else if(gamepad1.dpad_down){
-                wobble.moveB();
+                wobble.rotateDown();
+                sleep(200);
+            }
+
+            if(gamepad1.x){
+                clampClosed = !clampClosed;
+
+                if(clampClosed){
+                    wobble.close();
+                }
+                else{
+                    wobble.open();
+                }
+                sleep(200);
             }
 
 
 
-            telemetry.addData("servoPos", wobble.rotator.getPosition());
+
+
+
+            telemetry.addData("servoPos", wobble.clamp.getPosition());
             telemetry.update();
 
         }

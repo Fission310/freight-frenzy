@@ -6,8 +6,28 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Wobble extends Mechanism{
 
-    private Servo clamp;
+    public Servo clamp;
     public Servo rotator;
+    private State state;
+
+    public enum State{
+        REST,
+        UP,
+        DOWN;
+
+        private State up, down;
+
+        static{
+            REST.up = REST;
+            REST.down = UP;
+
+            UP.up = REST;
+            UP.down = DOWN;
+
+            DOWN.up = UP;
+            DOWN.down = DOWN;
+        }
+    }
 
     public Wobble(LinearOpMode opMode){this.opMode = opMode;}
 
@@ -16,15 +36,48 @@ public class Wobble extends Mechanism{
         rotator = hwMap.servo.get("wobbleRotator");
         clamp = hwMap.servo.get("wobbleClamp");
 
-        rotator.setPosition(0.5);
+        updateRotator(State.REST);
+        open();
     }
 
+
+    private void updateRotator(State nextState){
+        this.state = nextState;
+        if(state == State.DOWN){
+            rotator.setPosition(0.85);
+        }
+        else if(state == State.UP){
+            rotator.setPosition(0.51);
+        }
+        else if(state == State.REST){
+            rotator.setPosition(0.31);
+        }
+    }
+
+    public void rotateUp(){
+        updateRotator(state.up);
+    }
+
+    public void rotateDown(){
+        updateRotator(state.down);
+    }
+
+    public void close(){
+        clamp.setPosition(0.0);
+    }
+
+    public void open(){
+        clamp.setPosition(0.46);
+    }
+
+
+
     public void moveF(){
-        rotator.setPosition(rotator.getPosition() + 0.001);
+        clamp.setPosition(clamp.getPosition() + 0.001);
     }
 
     public void moveB(){
-        rotator.setPosition(rotator.getPosition() - 0.001);
+        clamp.setPosition(clamp.getPosition() - 0.001);
     }
 
 
