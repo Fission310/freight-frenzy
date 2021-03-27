@@ -50,8 +50,6 @@ public class Drivetrain extends Mechanism {
     public DcMotor backLeft;
     public DcMotor backRight;
 
-    Map<String, DcMotor> motors = new HashMap<>();
-
     public BNO055IMU imu;
     public PIDController pidDrive;
     public PIDController pidRotate;

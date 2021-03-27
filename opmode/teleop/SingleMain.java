@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 import org.firstinspires.ftc.teamcode.hardware.Wobble;
 
-@TeleOp(name="CompTest", group="Test")
-public class ComponentTest extends LinearOpMode{
+@TeleOp(name="SingleMain", group="Test")
+public class SingleMain extends LinearOpMode{
 
     private double leftInput1, rightInput1, slideInput1, leftInput2, rightInput2, slideInput2;
 

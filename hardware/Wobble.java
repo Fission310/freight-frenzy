@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import static android.os.SystemClock.sleep;
+
 public class Wobble extends Mechanism{
 
     public Servo clamp;
@@ -36,8 +38,10 @@ public class Wobble extends Mechanism{
         rotator = hwMap.servo.get("wobbleRotator");
         clamp = hwMap.servo.get("wobbleClamp");
 
-        updateRotator(State.REST);
-        open();
+        close();
+        sleep(1000);
+        updateRotator(State.UP);
+
     }
 
 
