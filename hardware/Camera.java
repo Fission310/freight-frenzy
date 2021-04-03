@@ -110,22 +110,34 @@ public class Camera extends Mechanism{
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
                 for (Recognition recognition : updatedRecognitions) {
-                    opMode.telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                    opMode.telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                            recognition.getLeft(), recognition.getTop());
-                    opMode.telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                            recognition.getRight(), recognition.getBottom());
-                    opMode.telemetry.update();
+
+//                    opMode.telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+//                    opMode.telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+//                            recognition.getLeft(), recognition.getTop());
+//                    opMode.telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+//                            recognition.getRight(), recognition.getBottom());
+
 
                     String label = recognition.getLabel();
-                    if(label.equals("Single")) return Ring.ONE;
-                    else if(label.equals("Quad")) return Ring.FOUR;
+                    opMode.telemetry.addData("Label", label);
+                    if("Single".equals(label)) {
+                        opMode.telemetry.addData("Config", "Single");
+                        opMode.telemetry.update();
+                        return Ring.ONE;
+                    }
+                    else if("Quad".equals(label)) {
+                        opMode.telemetry.addData("Config", "Quad");
+                        opMode.telemetry.update();
+                        return Ring.FOUR;
+                    }
                 }
 
             }
 
         }
 
+        opMode.telemetry.addData("Config", "None");
+        opMode.telemetry.update();
         return Ring.NONE;
     }
 
