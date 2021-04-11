@@ -38,5 +38,7 @@ public class RingShoot extends LinearOpMode {
             sleep(500);
         }
 
+        drive.driveToPos(-5, 0.8);
+
     }
 }

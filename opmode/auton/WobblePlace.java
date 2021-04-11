@@ -62,6 +62,8 @@ public class WobblePlace extends LinearOpMode{
             wobble.rotateDown();
             sleep(500);
             wobble.open();
+
+            drive.driveToPos(-5, 0.8);
         }
         else if(rings == Camera.Ring.ONE){
             drive.driveToPos(-8, 0.8);
