@@ -101,6 +101,13 @@ public class SingleMain extends LinearOpMode{
                 flywheel.stop();
             }
 
+            if(gamepad1.right_trigger > 0) {
+                acquirer.forward2();
+            }
+            else{
+                acquirer.stop();
+            }
+
             if(gamepad1.a){
                 acquirerDown = !acquirerDown;
 

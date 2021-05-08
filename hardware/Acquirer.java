@@ -36,13 +36,17 @@ public class Acquirer extends Mechanism {
         intake.setPower(-1);
     }
 
+    public void forward2() {
+        ramp.setPower(-1);
+    }
+
     public void stop(){
         intake.setPower(0);
         ramp.setPower(0);
     }
 
     public void swing(){
-        servo.setPosition(0.75);
+        servo.setPosition(0.73);
     }
 
     public void reset(){
