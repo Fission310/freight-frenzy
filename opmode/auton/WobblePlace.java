@@ -32,6 +32,7 @@ public class WobblePlace extends LinearOpMode{
 
         waitForStart();
 
+        drive.driveToPos(-10, 0.8);
 
         ElapsedTime time = new ElapsedTime();
         time.reset();
@@ -44,7 +45,7 @@ public class WobblePlace extends LinearOpMode{
         telemetry.update();
 
         drive.strafePID(-0.8, 0.72);
-        drive.driveToPos(-32, 0.8);
+        drive.driveToPos(-22, 0.8);
         drive.turn(10,0.8);
 
         flywheel.forward();
