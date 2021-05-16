@@ -46,7 +46,7 @@ public class Acquirer extends Mechanism {
     }
 
     public void swing(){
-        servo.setPosition(0.73);
+        servo.setPosition(0.69);
     }
 
     public void reset(){
