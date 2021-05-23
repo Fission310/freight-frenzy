@@ -47,52 +47,62 @@ public class WobblePlace extends LinearOpMode{
         telemetry.addData("rings", rings);
         telemetry.update();
 
-        drive.strafePID(-0.8, 0.72);
+        drive.strafePID(-0.8, 0.73);
         drive.driveToPos(-20, 0.65);
         drive.turn(15,0.8);
 
         flywheel.forward();
         sleep(1000);
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 2 && opModeIsActive(); i++){
             flicker.swing();
-            sleep(700);
+            sleep(800);
             flicker.reset();
-            sleep(700);
+            sleep(800);
         }
+
+        flicker.down();
+        sleep(700);
+        flicker.up();
+        sleep(1000);
+
+        flicker.swing();
+        sleep(700);
+        flicker.reset();
+        sleep(700);
+
         flywheel.stop();
         drive.turn(-15, 0.8);
 
         if(rings == Camera.Ring.NONE){
 
-            drive.driveToPos(-5, 0.8);
-
             wobble.rotateDown();
             sleep(500);
             wobble.open();
+            sleep(500);
 
-            drive.strafePID(0.8, 0.3);
+            drive.strafePID(0.8, 1.2);
 
-            drive.driveToPos(-2, 0.65);
+            drive.driveToPos(-5.25, 0.65);
         }
         else if(rings == Camera.Ring.ONE){
             drive.driveToPos(-14, 0.8);
 
-            drive.strafePID(0.8, 0.7);
+            drive.strafePID(0.8, 0.75);
 
             wobble.rotateDown();
             sleep(500);
             wobble.open();
 
-            drive.driveToPos(10, 0.8);
+            drive.driveToPos(3, 0.8);
         }
         else if(rings == Camera.Ring.FOUR){
-            drive.driveToPos(-25, 0.8);
+            drive.driveToPos(-23, 0.8);
 
             wobble.rotateDown();
             sleep(500);
             wobble.open();
 
-            drive.driveToPos(12, 0.8);
+            drive.driveToPos(15, 0.8);
 //            acquirer.swing();
 //            acquirer.forward();
 //            drive.driveToPos(24, 0.8);
