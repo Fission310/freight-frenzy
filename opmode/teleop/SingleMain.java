@@ -34,7 +34,7 @@ public class SingleMain extends LinearOpMode{
 
         waitForStart();
 
-        while(opModeIsActive()){
+        while(opModeIsActive() && !isStopRequested()){
 
             //Inputs for the stick and triggers
             // Sticks are [0,1], triggers are [-1,1] as a sum

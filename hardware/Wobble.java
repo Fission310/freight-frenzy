@@ -45,13 +45,13 @@ public class Wobble extends Mechanism{
     }
 
 
-    private void updateRotator(State nextState){
+    public void updateRotator(State nextState){
         this.state = nextState;
         if(state == State.DOWN){
             rotator.setPosition(0.85);
         }
         else if(state == State.UP){
-            rotator.setPosition(0.51);
+            rotator.setPosition(0.45);
         }
         else if(state == State.REST){
             rotator.setPosition(0.31);
