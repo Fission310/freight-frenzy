@@ -7,7 +7,7 @@ Managed by Lucas Lee
 - Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
 - Clone the [roadrunner quickstart repository](https://github.com/acmerobotics/road-runner-quickstart) by using `git clone` in your terminal or by downloading the .zip  
-- Using your terminal, change directories into the following path `road-runner-quickstart)TeamCode\src\main\java\org\firstinspires\ftc`
+- Using your terminal, change directories into the following path `road-runner-quickstart\TeamCode\src\main\java\org\firstinspires\ftc`
 - Delete the teamcode directory
 - Clone this repository into the above path and rename its directory to teamcode
 - Open Android Studio and click "Open an existing Android Studio project"
