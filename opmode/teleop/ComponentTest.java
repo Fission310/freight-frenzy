@@ -4,30 +4,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Flicker;
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.Flywheel;
-import org.firstinspires.ftc.teamcode.hardware.Wobble;
 
 @TeleOp(name="CompTest", group="Test")
 public class ComponentTest extends LinearOpMode {
     private double leftInput1, rightInput1, slideInput1, leftInput2, rightInput2, slideInput2;
 
     private Drivetrain drive = new Drivetrain(this);
-    private Acquirer acquirer = new Acquirer(this);
-    private Flywheel flywheel = new Flywheel(this);
-    private Flicker flicker = new Flicker(this);
-    private Wobble wobble = new Wobble(this);
 
     @Override
     public void runOpMode() throws InterruptedException{
 
         drive.init(hardwareMap);
-        acquirer.init(hardwareMap);
-        flywheel.init(hardwareMap);
-        flicker.init(hardwareMap);
-        wobble.init(hardwareMap);
-
         waitForStart();
 
         while(opModeIsActive()){
@@ -67,31 +54,6 @@ public class ComponentTest extends LinearOpMode {
                 drive.teleDrive(r, robotAngle, rightX1);
             }
 
-//            if(gamepad1.a){
-//                acquirer.swing();
-//            }
-//            else if(gamepad1.b){
-//                acquirer.reset();
-//            }
-
-            if(gamepad1.x){
-                flicker.moveB();
-            }
-            else if(gamepad1.y){
-                flicker.moveF();
-            }
-
-            if(gamepad1.a){
-                wobble.moveF();
-            }
-            else if(gamepad1.b){
-                wobble.moveB();
-            }
-
-
-            telemetry.addData("adjustorPos", flicker.adjustor.getPosition());
-            telemetry.addData("rotatorPos", wobble.rotator.getPosition());
-            telemetry.update();
 
         }
 

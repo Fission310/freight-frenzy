@@ -1,5 +1,5 @@
 # FTC Fission 310 2021-2022 Freight Frenzy
-Managed Lucas Lee
+Managed by Lucas Lee
 
 ## Setting up your coding environment
 - Download Java 8 by following these [instructions](https://dojo.stuycs.org/resources/software_installation_and_tips/installation_instructions/programming_languages/installing_jdk.html)

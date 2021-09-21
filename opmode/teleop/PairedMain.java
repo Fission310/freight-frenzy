@@ -3,10 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
-import org.firstinspires.ftc.teamcode.hardware.Flicker;
-import org.firstinspires.ftc.teamcode.hardware.Flywheel;
 
 
 @TeleOp(name="PairedMain", group="Main")
@@ -14,18 +11,12 @@ public class PairedMain extends LinearOpMode {
 
     private double leftInput1, rightInput1, slideInput1, leftInput2, rightInput2, slideInput2;
     private Drivetrain drive = new Drivetrain(this);
-    private Acquirer acquirer = new Acquirer(this);
-    private Flicker flicker = new Flicker(this);
-    private Flywheel flywheel = new Flywheel(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
         //Initializing
-        acquirer.init(hardwareMap);
         drive.init(hardwareMap);
-        flicker.init(hardwareMap);
 
-        boolean rotate = true;
 
         while(!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status", "Waiting in Init");
@@ -71,36 +62,6 @@ public class PairedMain extends LinearOpMode {
             else {
                 drive.teleDrive(r, robotAngle, rightX1);
             }
-
-            if(gamepad2.x){
-                flicker.swing();
-                sleep(500);
-                flicker.reset();
-            }
-
-            if(gamepad2.y){
-                rotate = !rotate;
-            }
-            if(rotate){
-                flywheel.forward();
-
-            }
-            else{
-                flywheel.reverse();
-            }
-
-            if(gamepad2.right_bumper){
-                acquirer.forward();
-            }
-            else if(gamepad2.left_bumper){
-                acquirer.reverse();
-            }
-            else{
-                acquirer.stop();
-            }
-
-
-
 
 
             telemetry.addData("angle", drive.getAngle());
