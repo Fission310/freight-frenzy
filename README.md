@@ -1,4 +1,4 @@
-# FTC Fission 310 2020-2021 ULTIMATE-GOAL
+# FTC Fission 310 2021-2022 Freight Frenzy
 Managed Lucas Lee
 
 ## Setting up your coding environment
@@ -6,8 +6,8 @@ Managed Lucas Lee
 - Create a GitHub account
 - Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
-- Clone the [ftc_app repository](https://github.com/FIRST-Tech-Challenge/FtcRobotController) by using `git clone` in your terminal or by downloading the .zip  
-- Using your terminal, change directories into the following path `FtcRobotController\TeamCode\src\main\java\org\firstinspires\ftc`
+- Clone the [roadrunner quickstart repository](https://github.com/acmerobotics/road-runner-quickstart) by using `git clone` in your terminal or by downloading the .zip  
+- Using your terminal, change directories into the following path `road-runner-quickstart)TeamCode\src\main\java\org\firstinspires\ftc`
 - Delete the teamcode directory
 - Clone this repository into the above path and rename its directory to teamcode
 - Open Android Studio and click "Open an existing Android Studio project"
