@@ -58,8 +58,6 @@ public class Drivetrain extends Mechanism {
     double  globalAngle, power = .30, correction;
     Orientation lastAngles = new Orientation();
 
-//    private double flPower = 0.0, frPower = 0.0, blPower = 0.0, brPower = 0.0;
-
     public Drivetrain(LinearOpMode opMode) {
         this.opMode = opMode;
     }
@@ -82,13 +80,8 @@ public class Drivetrain extends Mechanism {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        ((DcMotorEx)frontLeft).setTargetPositionTolerance(10);
-        ((DcMotorEx)backLeft).setTargetPositionTolerance(10);
-        ((DcMotorEx)backRight).setTargetPositionTolerance(10);
-        ((DcMotorEx)frontRight).setTargetPositionTolerance(10);
-        pidRotate = new PIDController(0.01, 0.0001, 0);
-        pidDrive = new PIDController(0.015,0.0015,0);
-        pidStrafe = new PIDController(0.1  ,0,0);
+        pidRotate = new PIDController(0.005, 0.1, 0);
+        pidDrive = new PIDController(0.05,0,0);
 
         // Set all motors to zero power
         setPower(0.0);
@@ -106,10 +99,7 @@ public class Drivetrain extends Mechanism {
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
     }
-    //    public void setDash(FtcDashboard givenDash, TelemetryPacket givenPacket) {
-//        dash = givenDash;
-//        packet = givenPacket;
-//    }
+
     private void setPower(double power) {
         setPower(power, power, power, power);
     }
@@ -123,9 +113,9 @@ public class Drivetrain extends Mechanism {
 
     public void setMode(DcMotor.RunMode mode) {
         frontLeft.setMode(mode);
+        backRight.setMode(mode);
         frontRight.setMode(mode);
         backLeft.setMode(mode);
-        backRight.setMode(mode);
     }
 
 
@@ -140,220 +130,66 @@ public class Drivetrain extends Mechanism {
     public void strafeLeft() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        teleDrive(power,  3 * Math.PI / 4,0);
-        setPower(-1, 1, 1, -1);
+        setPower(-0.5, 0.45, 0.55, -0.5);
     }
 
     public void strafeRight() {
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        teleDrive(power, 2.5,0);
-        setPower(1, -1, -1, 1);
+        setPower(0.52, -0.45, -0.5, 0.5);
     }
-
-
-//    public void driveToPos(double inches, double power) {
-//        ElapsedTime time = new ElapsedTime();
-//        time.reset();
-//        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        int tickCount = (int) (inches * COUNTS_PER_INCH);
-//        double targetPower;
-//        frontLeft.setTargetPosition(tickCount);
-//        frontRight.setTargetPosition(tickCount);
-//        backLeft.setTargetPosition(tickCount);
-//        backRight.setTargetPosition(tickCount);
-//        setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        pidDrive.reset();
-//        pidDrive.setSetpoint(0);
-//        pidDrive.setOutputRange(0, power);
-//        pidDrive.setInputRange(-90, 90);
-//        pidDrive.enable();
-//        double corrections;
-//        int avgPos = (Math.abs(frontLeft.getCurrentPosition()) + Math.abs(frontRight.getCurrentPosition())
-//                + Math.abs(backLeft.getCurrentPosition()) + Math.abs(backRight.getCurrentPosition() ))/4;
-//        int avgTick = (Math.abs(frontLeft.getTargetPosition()) + Math.abs(frontRight.getTargetPosition())
-//                + Math.abs(backLeft.getTargetPosition()) + Math.abs(backRight.getTargetPosition() ))/4;
-//        while(frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()){
-//            corrections = pidDrive.performPID(getAngle());
-//            if (Math.abs(avgPos) < 200)
-//                targetPower = Range.clip((float)avgPos/200.0 * power,0.1,1);
-//            else if (Math.abs(avgPos - avgTick) < 200)
-//                targetPower = Range.clip(((float)Math.abs(avgPos - avgTick))/200.0 * power,0.1,1) ;
-//            else
-//                targetPower = power;
-//            setPower(targetPower - corrections,  targetPower + corrections, targetPower - corrections, targetPower + corrections);
-//
-//            varPower = targetPower;
-//            varCorr = corrections;
-////            packet.put("Correction", varCorr);
-////            packet.put("getAngle", getAngle());
-////            dash.sendTelemetryPacket(packet);
-//            opMode.telemetry.addData("Power: ", targetPower);
-//            opMode.telemetry.addData("Angle: ", getAngle());
-//            opMode.telemetry.addData("Correction:", corrections);
-//            opMode.telemetry.update();
-//        }
-//        setPower(0.0);
-//        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//    }
 
     public void driveToPos(double inches, double power) {
         ElapsedTime time = new ElapsedTime();
         time.reset();
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         int tickCount = (int) (inches * COUNTS_PER_INCH);
-        double targetPower = 0;
-//        frontLeft.setTargetPosition(tickCount);
-//        frontRight.setTargetPosition(tickCount);
-//        backLeft.setTargetPosition(tickCount);
-//        backRight.setTargetPosition(tickCount);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double set_power = power * inches/Math.abs(inches);
 
-        pidDrive.reset();
-        pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, power);
-        pidDrive.setInputRange(-90, 90);
-        pidDrive.enable();
-        double corrections;
-        int i = 0;
-        int j = 5;
-        boolean fl = true;
-        boolean fr = true;
-        boolean bl = true;
-        boolean br = true;
-        while(fl && fr && bl && br){
-            fl = Math.signum(inches) * (tickCount- frontLeft.getCurrentPosition() ) > 15;
-            fr = Math.signum(inches) * (tickCount - frontRight.getCurrentPosition())> 15;
-            bl = Math.signum(inches) * (tickCount- backLeft.getCurrentPosition() )> 15;
-            br = Math.signum(inches) * (tickCount- backRight.getCurrentPosition())  > 15;
-            corrections = pidDrive.performPID(getAngle());
-            if (i < 5) {
-                i++;
-                targetPower = power * Math.signum(inches) /5.0 * i;
-            }
-            if (Math.abs(frontLeft.getTargetPosition()-frontLeft.getCurrentPosition() )< 200){
-                targetPower = power * Math.signum(inches) /5.0 * j;
-                j--;
-                if ( j < 1) {
-                    j = 1;
-                }
-            }
-            setPower(targetPower - corrections,  targetPower + corrections, targetPower - corrections, targetPower + corrections);
-            varPower = targetPower;
-            varCorr = corrections;
-//            packet.put("Correction", varCorr);
-//            packet.put("getAngle", getAngle());
-//            dash.sendTelemetryPacket(packet);
-            opMode.telemetry.addData("Power: ", targetPower);
-            opMode.telemetry.addData("Angle: ", getAngle());
-            opMode.telemetry.addData("Correction:", corrections);
-            opMode.telemetry.addData("frontLeft:", frontLeft.getCurrentPosition());
-            opMode.telemetry.addData("backLeft:", backLeft.getCurrentPosition());
-            opMode.telemetry.addData("backRight:", backRight.getCurrentPosition());
-            opMode.telemetry.addData("frontRight:", frontRight.getCurrentPosition());
-            opMode.telemetry.addData("fr", tickCount- frontLeft.getCurrentPosition()  );
-            opMode.telemetry.addData("fl", tickCount - frontRight.getCurrentPosition()> 15);
-            opMode.telemetry.addData("bl", tickCount - backLeft.getCurrentPosition() > 15);
-            opMode.telemetry.addData("br", tickCount- backRight.getCurrentPosition()  > 15);
-            opMode.telemetry.update();
-        }
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setPower(0.0);
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+        frontLeft.setTargetPosition(tickCount);
+        frontRight.setTargetPosition(tickCount);
+        backLeft.setTargetPosition(tickCount);
+        backRight.setTargetPosition(tickCount);
 
-    public void strafePID(double power, double duration) {
-        ElapsedTime time = new ElapsedTime();
-        time.reset();
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        pidStrafe.reset();
-        pidStrafe.setSetpoint(0);
-        pidStrafe.setOutputRange(0, power);
-        pidStrafe.setInputRange(-90, 90);
-        pidStrafe.enable();
-
-        double targetPower = 0.0;
-        int i = 0;
-        while(opMode.opModeIsActive() && (time.seconds() <= duration)) {
-            double corrections = pidStrafe.performPID(getAngle());
-            opMode.telemetry.addData("corrections",varCorr);
-            opMode.telemetry.addData("getAngle", getAngle());
-            targetPower = power;
-            frontLeft.setPower(targetPower - corrections);
-            backLeft.setPower(-targetPower - corrections);
-            backRight.setPower(targetPower + corrections);
-            frontRight.setPower(-targetPower + corrections);
-            opMode.telemetry.addData("Power: ", targetPower);
-            opMode.telemetry.addData("Angle: ", getAngle());
-            opMode.telemetry.addData("Correction:", corrections);
-//            packet.put("Correction", varCorr);
-//            packet.put("getAngle", getAngle());
-//            dash.sendTelemetryPacket(packet);
-            opMode.telemetry.update();
-        }
-
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        frontRight.setPower(0);
-//        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-    public void strafeEncoder(int inches, double power) {
-//        power = power * Math.signum(inches);
-        ElapsedTime time = new ElapsedTime();
-        time.reset();
-        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        int tickCount = (int) (inches * COUNTS_PER_INCH);
-        double targetPower = 0;
-        frontLeft.setTargetPosition(frontLeft.getCurrentPosition()+tickCount);
-        frontRight.setTargetPosition(frontRight.getCurrentPosition()+tickCount);
-        backLeft.setTargetPosition(backLeft.getCurrentPosition()+tickCount);
-        backRight.setTargetPosition(backRight.getCurrentPosition()+tickCount);
         setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        pidDrive.reset();
-        pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, power);
-        pidDrive.setInputRange(-90, 90);
-        pidDrive.enable();
-        double corrections;
-        int i = 0;
-        int avgPos = (Math.abs(frontLeft.getCurrentPosition()) + Math.abs(frontRight.getCurrentPosition())
-                + Math.abs(backLeft.getCurrentPosition()) + Math.abs(backRight.getCurrentPosition() ))/4;
-        int avgTick = (Math.abs(frontLeft.getTargetPosition()) + Math.abs(frontRight.getTargetPosition())
-                + Math.abs(backLeft.getTargetPosition()) + Math.abs(backRight.getTargetPosition() ))/4;
-        while(frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()){
-            corrections = pidDrive.performPID(getAngle());
-            if (Math.abs(avgPos) < 200)
-                targetPower = Range.clip((float)avgPos/200.0 * power, 0.2, 1);
-            else if (Math.abs(avgPos - avgTick) < 200)
-                targetPower = Range.clip((float)(Math.abs(avgPos - avgTick))/200.0 * power,0.2,1) ;
-            else
-                targetPower = power;
-            frontLeft.setPower(targetPower - corrections);
-            backRight.setPower(targetPower + corrections);
-            backLeft.setPower(-targetPower - corrections);
-            frontRight.setPower(-targetPower + corrections);
-
-            varPower = targetPower;
-            varCorr = corrections;
-//            packet.put("Correction", varCorr);
-//            packet.put("getAngle", getAngle());
-//            dash.sendTelemetryPacket(packet);
-            opMode.telemetry.addData("Power: ", targetPower);
-            opMode.telemetry.addData("Angle: ", getAngle());
-            opMode.telemetry.addData("Correction:", corrections);
-            opMode.telemetry.update();
+        while(opMode.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
+            driveStraightPID(inches, set_power);
+            varPower = set_power;
+            if (time.seconds() > 3) {
+                setPower(0.0);
+                return;
+            }
         }
 
-        frontLeft.setPower(0);
-        backRight.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
+        setPower(0.0);
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+    public void driveStraightPID(double power, double inches) {
+        double leftSpeed = -power, rightSpeed = -power;
+        pidDrive.setPID(.07, 0, 0);
+        // Set up parameters for driving in a straight line.
+        pidDrive.setSetpoint(0);
+        pidDrive.setOutputRange(0, power);
+        pidDrive.setInputRange(-90, 90);
+        pidRotate.enable();
+        double corrections = pidDrive.performPID(getAngle());
+        varCorr = corrections;
+
+
+        if (Math.signum(inches) >= 0) {
+            setPower(leftSpeed + corrections,  rightSpeed - corrections, leftSpeed + corrections, rightSpeed - corrections);
+        } else if (Math.signum(inches) < 0){
+            setPower(leftSpeed - corrections,  rightSpeed + corrections, leftSpeed - corrections, rightSpeed + corrections);
+        }
+    }
+
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
     public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
@@ -394,9 +230,14 @@ public class Drivetrain extends Mechanism {
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
      * @param degrees Degrees to turn, + is left - is right
      */
-    public void turn(double degrees, double power) {
+    public void turn(int degrees, double power) {
+       turn (degrees,power, 0.02, 0.001, 0);
+    }
+
+    public void turn(int degrees, double power, double p, double i, double d) {
         // restart imu angle tracking.
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        resetAngle();
+        pidRotate.setPID(p, i, d);
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(0, degrees);
@@ -405,35 +246,27 @@ public class Drivetrain extends Mechanism {
         pidRotate.enable();
         if (degrees < 0) {
 //             Get it stuck off 0 degrees
-            while (opMode.opModeIsActive() && getAngle() == 0) {
-                setPower(-power, power, -power, power);
+            while (getAngle() == 0) {
+                setPower(power, -power, power, -power);
 //                 Make sure it moves a little bit
                 opMode.sleep(100);
             }
-            do
-            {
-                power = pidRotate.performPID(getAngle()); // power will be negative on right turn.
-                setPower(-power, power, -power, power);
-                opMode.telemetry.addData("angle", getAngle());
-                opMode.telemetry.addData("power", power);
-                opMode.telemetry.update();
-            }
-            while (opMode.opModeIsActive() &&!pidRotate.onTarget());
-        }
-        else {
             do {
                 power = pidRotate.performPID(getAngle()); // power will be negative on right turn.
                 setPower(-power, power, -power, power);
-                opMode.telemetry.addData("angle", getAngle());
-                opMode.telemetry.addData("power", power);
-                opMode.telemetry.update();
             }
-            while (opMode.opModeIsActive() && !pidRotate.onTarget());
-
+            while (!pidRotate.onTarget());
         }
+        else    // left turn.
+            do {
+                power = pidRotate.performPID(getAngle()); // power will be positive on left turn.
+                setPower(-power, power, -power, power);
+            }
+            while (!pidRotate.onTarget());
 
         setPower(0);
+        opMode.sleep(200);
 //        ready for the next turn
-        globalAngle -= degrees;
+        resetAngle();
     }
 }
