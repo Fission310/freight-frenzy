@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,6 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Carousel extends Mechanism {
 
     private DcMotor duckDisk;
+
+    public Carousel(LinearOpMode opMode){
+        this.opMode = opMode;
+    }
 
     @Override
     public void init(HardwareMap hwMap) {
