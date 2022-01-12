@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 
+@Config
 @TeleOp(name="ControllerTest", group="Test")
 public class ControllerTest extends LinearOpMode{
 
