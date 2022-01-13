@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Carousel;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
+@Config
 @TeleOp(name="SingleMain", group="Test")
 public class SingleMain extends LinearOpMode{
 
@@ -65,13 +67,12 @@ public class SingleMain extends LinearOpMode{
 
             //Lift
             if(gamepad1.a) lift.reset();
-            else if(gamepad1.x) lift.low();
-            else if(gamepad1.y) lift.mid();
-            else if(gamepad1.b) lift.high();
+//            else if(gamepad1.x) lift.low();
+//            else if(gamepad1.y) lift.mid();
+            else if(gamepad1.y) lift.high();
 
             if(gamepad1.right_bumper) lift.tip();
-            else lift.down();
-
+            else if(gamepad1.left_bumper)lift.down();
 
 
 

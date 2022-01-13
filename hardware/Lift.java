@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @Config
 public class Lift extends Mechanism{
 
-    static double SLIDE_RESET =  0;
-    static double SLIDE_LOW = .25;
-    static double SLIDE_MID = .75;
-    static double SLIDE_HIGH = 1;
+    public static double SLIDE_RESET =  1;
+//    public static double SLIDE_LOW = 0.;
+//    public static double SLIDE_MID = .75;
+    public static double SLIDE_HIGH = 0.65;
 
-    static double CUP_RESET = 0;
-    static double CUP_TIP = 1;
+    public static double CUP_RESET = 0;
+    public static double CUP_TIP = 1;
 
     private Servo slide;
     private Servo cup;
@@ -34,13 +34,13 @@ public class Lift extends Mechanism{
         slide.setPosition(SLIDE_RESET);
     }
 
-    public void low(){
-        slide.setPosition(SLIDE_LOW);
-    }
-
-    public void mid(){
-        slide.setPosition(SLIDE_MID);
-    }
+//    public void low(){
+//        slide.setPosition(SLIDE_LOW);
+//    }
+//
+//    public void mid(){
+//        slide.setPosition(SLIDE_MID);
+//    }
 
     public void high(){
         slide.setPosition(SLIDE_HIGH);
