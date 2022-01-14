@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
@@ -26,7 +27,14 @@ public class SingleMain extends LinearOpMode{
         carousel.init(hardwareMap);
         lift.init(hardwareMap);
 
+        ElapsedTime slideWait = new ElapsedTime();
+        ElapsedTime cupWait = new ElapsedTime();
+
         waitForStart();
+
+        slideWait.reset();
+        cupWait.reset();
+
 
         while(opModeIsActive() && !isStopRequested()){
 
@@ -54,7 +62,6 @@ public class SingleMain extends LinearOpMode{
             else if (gamepad1.right_trigger > 0.3) drive.teleDrive(r / 3, robotAngle, rightX / 3);
             else drive.teleDrive(r, robotAngle, rightX);
 
-
             //Carousel
             if(gamepad1.dpad_up) carousel.spin();
             else if(gamepad1.dpad_down) carousel.reverse();
@@ -66,13 +73,17 @@ public class SingleMain extends LinearOpMode{
             else acquirer.stop();
 
             //Lift
-            if(gamepad1.a) lift.reset();
-//            else if(gamepad1.x) lift.low();
-//            else if(gamepad1.y) lift.mid();
-            else if(gamepad1.y) lift.high();
+            if(gamepad1.y && slideWait.seconds() > 0.5) {
+                lift.toggleSlide();
+                slideWait.reset();
+            }
+            if(gamepad1.x && cupWait.seconds() > 0.5) {
+                lift.toggleCup();
+                cupWait.reset();
+            }
 
-            if(gamepad1.right_bumper) lift.tip();
-            else if(gamepad1.left_bumper)lift.down();
+
+
 
 
 
