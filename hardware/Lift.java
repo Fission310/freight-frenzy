@@ -30,14 +30,14 @@ public class Lift extends Mechanism{
         slide = hwMap.servo.get("slide");
         cup = hwMap.servo.get("cup");
 
-        reset();
         down();
+        reset();
 
         tipped = false;
         raised = false;
     }
 
-    public void reset(){
+    private void reset(){
 
         slide.setPosition(SLIDE_RESET);
 
@@ -47,11 +47,11 @@ public class Lift extends Mechanism{
     }
 
 
-    public void high(){
+    private void high(){
         ElapsedTime t = new ElapsedTime();
         t.reset();
 
-        while(t.seconds() < 0.25) cup.setPosition(CUP_TEMP);
+        while(t.seconds() < 0.25 && cup.getPosition() != CUP_TIP) cup.setPosition(CUP_TEMP);
 
         slide.setPosition(SLIDE_HIGH);
 
@@ -68,14 +68,15 @@ public class Lift extends Mechanism{
         raised = !raised;
     }
 
+    public void temp(){
+        cup.setPosition(CUP_TEMP);
+    }
 
-
-
-    public void down(){
+    private void down(){
         cup.setPosition(CUP_RESET);
     }
 
-    public void tip(){
+    private void tip(){
         cup.setPosition(CUP_TIP);
     }
 
