@@ -26,8 +26,16 @@ public class Acquirer extends Mechanism{
         pasta.setPower(1);
     }
 
+    public void acquireSlow(){
+        pasta.setPower(0.6);
+    }
+
     public void reverse(){
         pasta.setPower(-1);
+    }
+
+    public void reverseSlow(){
+        pasta.setPower(-0.6);
     }
 
     public void stop() {pasta.setPower(0);}

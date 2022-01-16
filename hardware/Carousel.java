@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 @Config
 public class Carousel extends Mechanism {
 
-    public static double DISK_POWER = 0.4;
+    public static double DISK_POWER = 0.55;
     private DcMotor duckDisk;
 
     public Carousel(LinearOpMode opMode){

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Lift extends Mechanism{
 
     public static double SLIDE_RESET =  1;
-    public static double SLIDE_HIGH = 0.6;
+    public static double SLIDE_HIGH = 0.63;
 
     public static double CUP_RESET = 0.15;
     public static double CUP_TEMP = 0.2;
@@ -58,10 +58,15 @@ public class Lift extends Mechanism{
     }
 
     public void toggleSlide(){
+
         if(raised){
+            if(cup.getPosition() == CUP_TIP) return;
+
             reset();
         }
         else{
+
+
             high();
         }
 
@@ -85,6 +90,8 @@ public class Lift extends Mechanism{
             down();
         }
         else{
+            if(slide.getPosition() == SLIDE_RESET) return;
+
             tip();
         }
 

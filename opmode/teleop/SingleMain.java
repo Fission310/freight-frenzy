@@ -59,12 +59,14 @@ public class SingleMain extends LinearOpMode{
             else if (gamepad1.dpad_right)  drive.strafeRight();
 
             // Slow and regular driving
-            else if (gamepad1.right_trigger > 0.3) drive.teleDrive(r / 3, robotAngle, rightX / 3);
-            else drive.teleDrive(r, robotAngle, rightX);
+            else if (gamepad1.right_trigger > 0.3 || gamepad1.right_bumper) drive.teleDrive(r / 3, robotAngle, rightX / 3);
+            else drive.teleDrive(r * 0.75, robotAngle, rightX * 0.75);
 
             //Acquirer
             if(gamepad1.right_trigger > 0) acquirer.acquire();
             else if(gamepad1.left_trigger > 0) acquirer.reverse();
+            else if(gamepad1.right_bumper) acquirer.acquireSlow();
+            else if(gamepad1.left_bumper) acquirer.reverseSlow();
             else acquirer.stop();
 
             //Carousel
