@@ -58,5 +58,7 @@ public class Webcam extends Mechanism{
         return detector.getLocation();
     }
 
+    public void stopStreaming() { camera.stopStreaming(); }
+
 
 }
