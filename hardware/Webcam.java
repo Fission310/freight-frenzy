@@ -13,8 +13,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class Webcam extends Mechanism{
     private WebcamName webcamName;
     private OpenCvCamera camera;
-
-    private BarcodeDetector detector = new BarcodeDetector(opMode.telemetry);
+    private BarcodeDetector detector;
 
     public Webcam(LinearOpMode opMode){
         this.opMode = opMode;
@@ -45,6 +44,8 @@ public class Webcam extends Mechanism{
 
             }
         });
+
+        detector = new BarcodeDetector(opMode.telemetry);
 
 
 
