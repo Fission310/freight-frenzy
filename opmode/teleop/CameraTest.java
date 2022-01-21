@@ -16,11 +16,15 @@ public class CameraTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         camera.init(hardwareMap);
 
+        telemetry.addData("test", "test");
+        telemetry.update();
+
+
         waitForStart();
 
         while(opModeIsActive()){
-            telemetry.addData("test", "test");
-            telemetry.update();
+
+
             camera.listDetections();
         }
     }

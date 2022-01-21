@@ -93,11 +93,17 @@ public class Camera extends Mechanism{
     }
 
     public void listDetections(){
+        opMode.telemetry.addData("working", "listing detections...");
+        opMode.telemetry.update();
+
+
         if (tfod != null) {
-            opMode.telemetry.addData("working", "listing detections...");
+
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            opMode.telemetry.addData("Recognitions", updatedRecognitions);
+
             if (updatedRecognitions != null) {
                 opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());
                 // step through the list of recognitions and display boundary info.
@@ -110,14 +116,10 @@ public class Camera extends Mechanism{
                             recognition.getRight(), recognition.getBottom());
                     i++;
                 }
-                opMode.telemetry.update();
             }
             opMode.telemetry.update();
 
         }
-
-        opMode.telemetry.addData("Config", "None");
-        opMode.telemetry.update();
     }
 
     public void shutdown(){
