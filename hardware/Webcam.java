@@ -36,7 +36,7 @@ public class Webcam extends Mechanism{
             @Override
             public void onOpened()
             {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1280, 720);
                 // Usually this is where you'll want to start streaming from the camera (see section 4)
             }
 
