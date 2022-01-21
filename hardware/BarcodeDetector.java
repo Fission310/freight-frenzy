@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmode.auton;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -12,6 +12,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class BarcodeDetector extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
+
     public enum Location {
         LEFT,
         RIGHT,
