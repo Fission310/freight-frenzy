@@ -29,7 +29,7 @@ public class Webcam extends Mechanism{
         webcamName = hwMap.get(WebcamName.class, "Webcam");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
 
-        FtcDashboard.getInstance().startCameraStream(camera, cameraMonitorViewId);
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
