@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.BarcodeDetector;
+import org.firstinspires.ftc.teamcode.hardware.Webcam;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
@@ -11,38 +12,19 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 @Autonomous
 public class CameraAuto extends LinearOpMode {
-    OpenCvCamera camera;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        int cameraMonitorViewId = hardwareMap.appContext
-                .getResources().getIdentifier("cameraMonitorViewId",
-                        "id", hardwareMap.appContext.getPackageName());
+        Webcam webcam = new Webcam(this);
+        webcam.init(hardwareMap);
 
-        // TODO: test if works
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam");
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-
-        // Below works with phone cam:
-//        phoneCam = OpenCvCameraFactory.getInstance()
-//                .createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        BarcodeDetector detector = new BarcodeDetector(telemetry);
-        camera.setPipeline(detector);
-
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                camera.startStreaming(320, 240);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
 
         waitForStart();
-        switch (detector.getLocation()) {
+        switch (webcam.location()) {
             case LEFT:
+                // ...
+                break;
+            case MIDDLE:
                 // ...
                 break;
             case RIGHT:
@@ -51,6 +33,6 @@ public class CameraAuto extends LinearOpMode {
             case NOT_FOUND:
                 // ...
         }
-        camera.stopStreaming();
+        webcam.stopStreaming();
     }
 }
