@@ -13,8 +13,6 @@ public class CameraAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Webcam webcam = new Webcam(this);
         webcam.init(hardwareMap);
-        webcam.setPipeline();
-
 
         waitForStart();
         switch (webcam.location()) {
@@ -29,6 +27,7 @@ public class CameraAuto extends LinearOpMode {
                 break;
             case NOT_FOUND:
                 // ...
+                break;
         }
         webcam.stopStreaming();
     }
