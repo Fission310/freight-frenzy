@@ -99,16 +99,6 @@ public class Webcam extends Mechanism{
                 new Point((GAP * 3) + (SIDE_LEN * 2), CENTER_POS),
                 new Point((GAP * 3) + (SIDE_LEN * 3), CENTER_POS + SIDE_LEN));
 
-//    static final Rect LEFT_ROI = new Rect(
-//            new Point(40, 40),
-//            new Point(60, 60));
-//    static final Rect MIDDLE_ROI = new Rect(
-//            new Point(80, 40),
-//            new Point(100, 60));
-//    static final Rect RIGHT_ROI = new Rect(
-//            new Point(140, 40),
-//            new Point(160, 60));
-
         static double PERCENT_COLOR_THRESHOLD = 0.4;
 
         public BarcodeDetector(Telemetry t) {
