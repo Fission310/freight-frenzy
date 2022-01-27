@@ -123,10 +123,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -257,9 +258,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
         for (DcMotorEx motor : motors) {
-            if(motor.equals(rightFront))wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()));
+//            if(motor.equals(leftRear) || motor.equals(rightRear)) wheelPositions.add(encoderTicksToInches(-motor.getCurrentPosition()));
 
-            else wheelPositions.add(encoderTicksToInches(-motor.getCurrentPosition()));
+            wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()));
+
         }
         return wheelPositions;
     }
@@ -269,9 +271,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         List<Double> wheelVelocities = new ArrayList<>();
         for (DcMotorEx motor : motors) {
 
-            if(motor.equals(rightFront))wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
+//            if(motor.equals(leftRear) || motor.equals(rightRear)) wheelVelocities.add(encoderTicksToInches(-motor.getVelocity()));
 
-            else wheelVelocities.add(encoderTicksToInches(-motor.getVelocity()));
+            wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
+
         }
         return wheelVelocities;
     }

@@ -70,7 +70,7 @@ public class Drivetrain extends Mechanism {
         backRight = hwMap.dcMotor.get("backRight");
 
         //Set motor direction (AndyMark configuration)
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
