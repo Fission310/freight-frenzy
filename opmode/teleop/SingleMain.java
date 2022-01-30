@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Carousel;
+import org.firstinspires.ftc.teamcode.hardware.FreightSensor;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
 @Config
@@ -18,14 +21,19 @@ public class SingleMain extends LinearOpMode{
     private Acquirer acquirer = new Acquirer(this);
     private Carousel carousel = new Carousel(this);
     private Lift lift = new Lift(this);
+    private FreightSensor sensor = new FreightSensor();
+
+    private String telemData;
 
     @Override
     public void runOpMode() throws InterruptedException{
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.init(hardwareMap);
         acquirer.init(hardwareMap);
         carousel.init(hardwareMap);
         lift.init(hardwareMap);
+        sensor.init(hardwareMap);
 
         ElapsedTime slideWait = new ElapsedTime();
         ElapsedTime cupWait = new ElapsedTime();
@@ -85,6 +93,14 @@ public class SingleMain extends LinearOpMode{
             }
 
 
+            if (sensor.hasFreight()) {
+                telemData = "True";
+            } else {
+                telemData = "False";
+            }
+
+            telemetry.addData("Detect Freight", telemData);
+            telemetry.update();
 
 
 
