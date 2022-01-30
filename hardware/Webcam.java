@@ -83,7 +83,7 @@ public class Webcam extends Mechanism{
         // view is 1280 x 720
         static final int SCREEN_WIDTH = 1280;
         static final int SCREEN_HEIGHT = 720;
-        public static int SIDE_LEN = 250;
+        public static int SIDE_LEN = 400;
 
         static final int CENTER_POS = (SCREEN_HEIGHT / 2) - (SIDE_LEN / 2);
         static final int NUM_ROI = 3;
@@ -134,9 +134,15 @@ public class Webcam extends Mechanism{
             telemetry.addData("Middle percentage", Math.round(middleValue * 100) + "%");
             telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
 
-            boolean duckLeft = leftValue > PERCENT_COLOR_THRESHOLD;
-            boolean duckMiddle = middleValue > PERCENT_COLOR_THRESHOLD;
-            boolean duckRight = rightValue > PERCENT_COLOR_THRESHOLD;
+            double maxVal = Math.max(Math.max(leftValue, middleValue), rightValue);
+
+            boolean duckLeft = maxVal == leftValue;
+            boolean duckMiddle = maxVal == middleValue;
+            boolean duckRight = maxVal == rightValue;
+
+//            boolean duckLeft = leftValue > PERCENT_COLOR_THRESHOLD;
+//            boolean duckMiddle = middleValue > PERCENT_COLOR_THRESHOLD;
+//            boolean duckRight = rightValue > PERCENT_COLOR_THRESHOLD;
 
             if (duckLeft) {
                 location = Location.LEFT;
