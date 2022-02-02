@@ -15,7 +15,7 @@ public class ColorTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        FreightSensor sensor = new FreightSensor();
+        FreightSensor sensor = new FreightSensor(this);
         sensor.init(hardwareMap);
 
         waitForStart();

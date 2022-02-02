@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.Carousel;
@@ -21,9 +23,11 @@ public class SingleMain extends LinearOpMode{
     private Acquirer acquirer = new Acquirer(this);
     private Carousel carousel = new Carousel(this);
     private Lift lift = new Lift(this);
-    private FreightSensor sensor = new FreightSensor();
+    private FreightSensor sensor = new FreightSensor(this);
 
-    private String telemData;
+    private SampleMecanumDrive rrDrive;
+
+    private boolean loaded = false;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -35,13 +39,17 @@ public class SingleMain extends LinearOpMode{
         lift.init(hardwareMap);
         sensor.init(hardwareMap);
 
+        rrDrive = new SampleMecanumDrive(hardwareMap);
+
         ElapsedTime slideWait = new ElapsedTime();
         ElapsedTime cupWait = new ElapsedTime();
+        ElapsedTime freightWait = new ElapsedTime();
 
         waitForStart();
 
         slideWait.reset();
         cupWait.reset();
+        freightWait.reset();
 
 
         while(opModeIsActive() && !isStopRequested()){
@@ -70,6 +78,15 @@ public class SingleMain extends LinearOpMode{
             else if (gamepad1.right_trigger > 0.3 || gamepad1.right_bumper) drive.teleDrive(r / 3, robotAngle, rightX / 3);
             else drive.teleDrive(r * 0.75, robotAngle, rightX * 0.75);
 
+
+//            rrDrive.setWeightedDrivePower(
+//                    new Pose2d(
+//                            -gamepad1.left_stick_y,
+//                            -gamepad1.left_stick_x,
+//                            -gamepad1.right_stick_x
+//                    )
+//            );
+
             //Acquirer
             if(gamepad1.right_trigger > 0) acquirer.acquire();
             else if(gamepad1.left_trigger > 0) acquirer.reverse();
@@ -93,13 +110,20 @@ public class SingleMain extends LinearOpMode{
             }
 
 
+
+
             if (sensor.hasFreight()) {
-                telemData = "True";
+                loaded = true;
             } else {
-                telemData = "False";
+                loaded = false;
             }
 
-            telemetry.addData("Detect Freight", telemData);
+            if(loaded){
+                lift.toggleSlide();
+                slideWait.reset();
+            }
+
+            telemetry.addData("Detect Freight", loaded);
             telemetry.update();
 
 

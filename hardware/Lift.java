@@ -9,15 +9,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 public class Lift extends Mechanism{
 
-    public static double SLIDE_RESET =  1;
+    public static double SLIDE_RESET =  1.0;
     public static double SLIDE_HIGH = 0.63;
 
     public static double CUP_RESET = 0.15;
     public static double CUP_TEMP = 0.2;
     public static double CUP_TIP = 0.8;
 
+    public static double ROOF_OPEN = 1.0;
+    public static double ROOF_CLOSE = 0.0;
+
     private Servo slide;
     private Servo cup;
+    private Servo roof;
+
+
     private boolean tipped;
     private boolean raised;
 
@@ -29,6 +35,7 @@ public class Lift extends Mechanism{
     public void init(HardwareMap hwMap) {
         slide = hwMap.servo.get("slide");
         cup = hwMap.servo.get("cup");
+        roof = hwMap.servo.get("roof");
 
         down();
         reset();
@@ -96,6 +103,14 @@ public class Lift extends Mechanism{
         }
 
         tipped = !tipped;
+    }
+
+    public void open(){
+        roof.setPosition(ROOF_OPEN);
+    }
+
+    public void close(){
+        roof.setPosition(ROOF_CLOSE);
     }
 
 

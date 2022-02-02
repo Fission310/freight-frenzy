@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class FreightSensor extends Mechanism {
     ColorSensor sensor;
+
+    public FreightSensor(LinearOpMode opMode){
+        this.opMode = opMode;
+    }
+
     @Override
     public void init(HardwareMap hwMap) {
         sensor = hwMap.get(ColorSensor.class, "colorSensor");
