@@ -109,6 +109,10 @@ public class SingleMain extends LinearOpMode{
                 cupWait.reset();
             }
 
+            //Roof
+            if(gamepad1.dpad_up) lift.open();
+            else if(gamepad1.dpad_down) lift.close();
+
 
 
 
