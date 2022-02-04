@@ -47,7 +47,7 @@ public class CameraAuto extends LinearOpMode {
 
 
         drive.followTrajectorySequence(strafe);
-        
+
 
 
         webcam.stopStreaming();
