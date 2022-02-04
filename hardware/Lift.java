@@ -10,11 +10,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Lift extends Mechanism{
 
     public static double SLIDE_RESET =  1.0;
-    public static double SLIDE_HIGH = 0.63;
+    public static double SLIDE_HIGH = 0.58;
 
-    public static double CUP_RESET = 0.15;
-    public static double CUP_TEMP = 0.2;
+    public static double CUP_RESET = 0;
+    public static double CUP_TEMP = 0.05;
     public static double CUP_TIP = 0.8;
+
+    public static double CUP_LOW = 0.95;
+    public static double CUP_MID = 0.8;
+    public static double CUP_HIGH = 0.67;
 
     public static double ROOF_OPEN = 1.0;
     public static double ROOF_CLOSE = 0.0;
@@ -45,12 +49,12 @@ public class Lift extends Mechanism{
     }
 
     private void reset(){
+        ElapsedTime t = new ElapsedTime();
+        t.reset();
 
-        slide.setPosition(SLIDE_RESET);
+        while(t.seconds() < 0.25) slide.setPosition(SLIDE_RESET);
 
-        if(cup.getPosition() == CUP_TEMP){
-            cup.setPosition(CUP_RESET);
-        }
+        cup.setPosition(CUP_RESET);
     }
 
 
@@ -58,7 +62,7 @@ public class Lift extends Mechanism{
         ElapsedTime t = new ElapsedTime();
         t.reset();
 
-        while(t.seconds() < 0.25 && cup.getPosition() != CUP_TIP) cup.setPosition(CUP_TEMP);
+        while(t.seconds() < 0.5) cup.setPosition(CUP_TEMP);
 
         slide.setPosition(SLIDE_HIGH);
 
@@ -66,13 +70,13 @@ public class Lift extends Mechanism{
 
     public void toggleSlide(){
 
+        if(tipped) return;
+
         if(raised){
-            if(cup.getPosition() == CUP_TIP) return;
 
             reset();
         }
         else{
-
 
             high();
         }
@@ -93,11 +97,13 @@ public class Lift extends Mechanism{
     }
 
     public void toggleCup(){
+
+        if(!raised) return;
+
         if(tipped){
-            down();
+            temp();
         }
         else{
-            if(slide.getPosition() == SLIDE_RESET) return;
 
             tip();
         }

@@ -17,8 +17,6 @@ public class Acquirer extends Mechanism{
     public void init(HardwareMap hwMap) {
         pasta = hwMap.dcMotor.get("pasta");
 
-        //TODO reverse if necessary
-        pasta.setDirection(DcMotorSimple.Direction.REVERSE);
         pasta.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 

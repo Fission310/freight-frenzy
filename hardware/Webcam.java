@@ -90,14 +90,20 @@ public class Webcam extends Mechanism{
         static final int GAP = (SCREEN_WIDTH - (SIDE_LEN * NUM_ROI)) / (NUM_ROI + 1);
 
         static final Rect LEFT_ROI = new Rect(
-                new Point(GAP, CENTER_POS),
-                new Point(GAP + SIDE_LEN, CENTER_POS + SIDE_LEN));
+                new Point(0,0),
+                new Point((SCREEN_WIDTH/3.0), SCREEN_HEIGHT));
+//                new Point(GAP, CENTER_POS),
+//                new Point(GAP + SIDE_LEN, CENTER_POS + SIDE_LEN));
         static final Rect MIDDLE_ROI = new Rect(
-                new Point((GAP * 2) + SIDE_LEN, CENTER_POS),
-                new Point((GAP * 2) + (SIDE_LEN * 2), CENTER_POS + SIDE_LEN));
+                new Point((SCREEN_WIDTH/3.0), 0),
+                new Point((SCREEN_WIDTH/3.0)*2, SCREEN_HEIGHT));
+//                new Point((GAP * 2) + SIDE_LEN, CENTER_POS),
+//                new Point((GAP * 2) + (SIDE_LEN * 2), CENTER_POS + SIDE_LEN));
         static final Rect RIGHT_ROI = new Rect(
-                new Point((GAP * 3) + (SIDE_LEN * 2), CENTER_POS),
-                new Point((GAP * 3) + (SIDE_LEN * 3), CENTER_POS + SIDE_LEN));
+                new Point((SCREEN_WIDTH/3.0)*2, 0),
+                new Point(SCREEN_WIDTH, SCREEN_HEIGHT));
+//                new Point((GAP * 3) + (SIDE_LEN * 2), CENTER_POS),
+//                new Point((GAP * 3) + (SIDE_LEN * 3), CENTER_POS + SIDE_LEN));
 
         static double PERCENT_COLOR_THRESHOLD = 0.4;
 

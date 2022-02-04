@@ -122,10 +122,10 @@ public class SingleMain extends LinearOpMode{
                 loaded = false;
             }
 
-            if(loaded){
-                lift.toggleSlide();
-                slideWait.reset();
-            }
+//            if(loaded){
+//                lift.toggleSlide();
+//                slideWait.reset();
+//            }
 
             telemetry.addData("Detect Freight", loaded);
             telemetry.update();
