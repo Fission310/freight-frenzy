@@ -10,18 +10,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Lift extends Mechanism{
 
     public static double SLIDE_RESET =  1.0;
-    public static double SLIDE_HIGH = 0.58;
+    public static double SLIDE_HIGH = 0.6;
 
+    // Teleop Servo Settings
     public static double CUP_RESET = 0;
-    public static double CUP_TEMP = 0.05;
-    public static double CUP_TIP = 0.8;
+    public static double CUP_TEMP = 0.03;
+    public static double CUP_TIP = 0.7;
 
+    // Auton Servo Settinggs
     public static double CUP_LOW = 0.95;
     public static double CUP_MID = 0.8;
-    public static double CUP_HIGH = 0.67;
+    public static double CUP_HIGH = 0.7;
 
-    public static double ROOF_OPEN = 1.0;
-    public static double ROOF_CLOSE = 0.0;
+    public static double ROOF_CLOSE = 1.0;
+    public static double ROOF_AUTO = 0.3;
+    public static double ROOF_OPEN = 0.0;
 
     private Servo slide;
     private Servo cup;
@@ -118,6 +121,15 @@ public class Lift extends Mechanism{
     public void close(){
         roof.setPosition(ROOF_CLOSE);
     }
+
+    public void autonOpen(){ roof.setPosition(ROOF_AUTO);}
+
+    public void lowPlace(){ cup.setPosition(CUP_LOW);}
+
+    public void midPlace(){  cup.setPosition(CUP_MID);}
+
+    public void highPlace(){  cup.setPosition(CUP_HIGH);}
+
 
 
 

@@ -15,14 +15,13 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 
 
 @Autonomous
-public class CameraAuto extends LinearOpMode {
+public class CameraAutoBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
         Webcam webcam = new Webcam(this);
         Lift lift = new Lift(this);
         Carousel carousel = new Carousel(this);
-
 
 
         webcam.init(hardwareMap);
@@ -39,11 +38,25 @@ public class CameraAuto extends LinearOpMode {
         lift.toggleSlide();
 
         TrajectorySequence strafe = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(24)
+                .strafeRight(28)
+                .forward(10)
                 .build();
 
         TrajectorySequence lowPlace = drive.trajectorySequenceBuilder(strafe.end())
-                .forward(15)
+                .addTemporalMarker(() ->{
+                    lift.lowPlace();
+                })
+                .waitSeconds(1)
+                .back(12)
+                .addTemporalMarker(() -> {
+                    lift.autonOpen();
+                })
+                .waitSeconds(1)
+                .addTemporalMarker(() ->{
+                    lift.close();
+                    lift.temp();
+                })
+                .forward(17)
                 .build();
 
         TrajectorySequence highPlace = drive.trajectorySequenceBuilder(strafe.end())
@@ -60,20 +73,47 @@ public class CameraAuto extends LinearOpMode {
                     lift.close();
                     lift.temp();
                 })
-                .forward(15)
+                .forward(17)
                 .build();
 
         TrajectorySequence midPlace = drive.trajectorySequenceBuilder(strafe.end())
-                .forward(8)
+                .addTemporalMarker(() ->{
+                    lift.midPlace();
+                })
+                .waitSeconds(1)
+                .back(14)
+                .addTemporalMarker(() -> {
+                    lift.open();
+                })
+                .waitSeconds(1)
+                .addTemporalMarker(() ->{
+                    lift.close();
+                    lift.temp();
+                })
+                .forward(17)
                 .build();
 
 
-
-
-
-
         drive.followTrajectorySequence(strafe);
-        drive.followTrajectorySequence(highPlace);
+
+        Pose2d placeEnd = new Pose2d();
+        switch (location){
+            case LEFT: //low
+                drive.followTrajectorySequence(lowPlace);
+                placeEnd = lowPlace.end();
+                break;
+
+            case MIDDLE:
+                drive.followTrajectorySequence(midPlace);
+                placeEnd = midPlace.end();
+                break;
+            case RIGHT:
+                drive.followTrajectorySequence(highPlace);
+                placeEnd = highPlace.end();
+                break;
+        }
+
+
 
 
 
