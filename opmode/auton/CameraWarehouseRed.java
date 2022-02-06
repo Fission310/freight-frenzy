@@ -4,25 +4,20 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Carousel;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 import org.firstinspires.ftc.teamcode.hardware.Webcam;
-import org.firstinspires.ftc.teamcode.hardware.Webcam.Location;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-
 
 @Autonomous
-public class CameraAutoRed extends LinearOpMode {
+public class CameraWarehouseRed extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
         Webcam webcam = new Webcam(this);
         Lift lift = new Lift(this);
         Carousel carousel = new Carousel(this);
-
 
 
         webcam.init(hardwareMap);
@@ -33,13 +28,13 @@ public class CameraAutoRed extends LinearOpMode {
 
 
         waitForStart();
-        Location location = webcam.location();
+        Webcam.Location location = webcam.location();
 
-        lift.close();
+        lift.toggleRoof();
         lift.toggleSlide();
 
         TrajectorySequence strafe = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(28)
+                .strafeRight(28)
                 .forward(10)
                 .build();
 
@@ -48,16 +43,16 @@ public class CameraAutoRed extends LinearOpMode {
                     lift.lowPlace();
                 })
                 .waitSeconds(1)
-                .back(13)
+                .back(15)
                 .addTemporalMarker(() -> {
                     lift.autonOpen();
                 })
                 .waitSeconds(1)
+                .forward(17)
                 .addTemporalMarker(() ->{
                     lift.close();
                     lift.temp();
                 })
-                .forward(17)
                 .build();
 
         TrajectorySequence highPlace = drive.trajectorySequenceBuilder(strafe.end())
@@ -114,28 +109,14 @@ public class CameraAutoRed extends LinearOpMode {
                 break;
         }
 
-        TrajectorySequence toCarousel = drive.trajectorySequenceBuilder(placeEnd)
-                .back(5)
-                .strafeRight(54)
-                .forward(4)
-                .addTemporalMarker(() -> {
-                    carousel.spin();
-                })
-                .waitSeconds(4)
-                .addTemporalMarker(() ->{
-                    carousel.stop();
-                })
+
+        TrajectorySequence park = drive.trajectorySequenceBuilder(placeEnd)
+                .turn(Math.toRadians(130))
+                .strafeRight(12)
+                .forward(55)
                 .build();
 
-        TrajectorySequence park = drive.trajectorySequenceBuilder(toCarousel.end())
-                .back(18)
-                .strafeRight(8)
-                .build();
-
-        drive.followTrajectorySequence(toCarousel);
         drive.followTrajectorySequence(park);
-
-
 
         webcam.stopStreaming();
     }

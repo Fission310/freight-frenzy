@@ -33,6 +33,8 @@ public class Lift extends Mechanism{
 
     private boolean tipped;
     private boolean raised;
+    private boolean closed;
+    private boolean low;
 
     public Lift(LinearOpMode opMode){
         this.opMode = opMode;
@@ -46,16 +48,19 @@ public class Lift extends Mechanism{
 
         down();
         reset();
+        open();
 
         tipped = false;
         raised = false;
+        closed = false;
+        low = false;
     }
 
     private void reset(){
         ElapsedTime t = new ElapsedTime();
         t.reset();
 
-        while(t.seconds() < 0.25) slide.setPosition(SLIDE_RESET);
+        while(t.seconds() < 0.1) slide.setPosition(SLIDE_RESET);
 
         cup.setPosition(CUP_RESET);
     }
@@ -65,7 +70,7 @@ public class Lift extends Mechanism{
         ElapsedTime t = new ElapsedTime();
         t.reset();
 
-        while(t.seconds() < 0.5) cup.setPosition(CUP_TEMP);
+        while(t.seconds() < 0.1) cup.setPosition(CUP_TEMP);
 
         slide.setPosition(SLIDE_HIGH);
 
@@ -73,7 +78,7 @@ public class Lift extends Mechanism{
 
     public void toggleSlide(){
 
-        if(tipped) return;
+        if(tipped || low) return;
 
         if(raised){
 
@@ -103,6 +108,8 @@ public class Lift extends Mechanism{
 
         if(!raised) return;
 
+        if(low) return;
+
         if(tipped){
             temp();
         }
@@ -114,12 +121,41 @@ public class Lift extends Mechanism{
         tipped = !tipped;
     }
 
+    public void toggleShared(){
+        if (!raised) return;
+        if(tipped) return;
+
+        if(low){
+            temp();
+            low = false;
+        }
+        else if(!tipped){
+            lowPlace();
+            low = true;
+        }
+
+
+    }
+
     public void open(){
         roof.setPosition(ROOF_OPEN);
     }
 
     public void close(){
         roof.setPosition(ROOF_CLOSE);
+    }
+
+    public void toggleRoof(){
+
+        if(closed){
+            open();
+        }
+        else{
+            close();
+        }
+
+        closed = !closed;
+
     }
 
     public void autonOpen(){ roof.setPosition(ROOF_AUTO);}

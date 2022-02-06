@@ -15,13 +15,14 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 
 
 @Autonomous
-public class CameraAutoBlue extends LinearOpMode {
+public class CameraCarouselRed extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
         Webcam webcam = new Webcam(this);
         Lift lift = new Lift(this);
         Carousel carousel = new Carousel(this);
+
 
 
         webcam.init(hardwareMap);
@@ -34,11 +35,11 @@ public class CameraAutoBlue extends LinearOpMode {
         waitForStart();
         Location location = webcam.location();
 
-        lift.close();
+        lift.toggleRoof();
         lift.toggleSlide();
 
         TrajectorySequence strafe = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(28)
+                .strafeLeft(28)
                 .forward(10)
                 .build();
 
@@ -47,16 +48,16 @@ public class CameraAutoBlue extends LinearOpMode {
                     lift.lowPlace();
                 })
                 .waitSeconds(1)
-                .back(12)
+                .back(15)
                 .addTemporalMarker(() -> {
                     lift.autonOpen();
                 })
                 .waitSeconds(1)
+                .forward(17)
                 .addTemporalMarker(() ->{
                     lift.close();
                     lift.temp();
                 })
-                .forward(17)
                 .build();
 
         TrajectorySequence highPlace = drive.trajectorySequenceBuilder(strafe.end())
@@ -113,7 +114,26 @@ public class CameraAutoBlue extends LinearOpMode {
                 break;
         }
 
+        TrajectorySequence toCarousel = drive.trajectorySequenceBuilder(placeEnd)
+                .back(5)
+                .strafeRight(54)
+                .forward(6)
+                .addTemporalMarker(() -> {
+                    carousel.spin();
+                })
+                .waitSeconds(4)
+                .addTemporalMarker(() ->{
+                    carousel.stop();
+                })
+                .build();
 
+        TrajectorySequence park = drive.trajectorySequenceBuilder(toCarousel.end())
+                .back(18)
+                .strafeRight(8)
+                .build();
+
+        drive.followTrajectorySequence(toCarousel);
+        drive.followTrajectorySequence(park);
 
 
 

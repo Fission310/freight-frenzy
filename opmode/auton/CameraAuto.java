@@ -20,63 +20,23 @@ public class CameraAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Webcam webcam = new Webcam(this);
-        Lift lift = new Lift(this);
-        Carousel carousel = new Carousel(this);
-
-
-
         webcam.init(hardwareMap);
-        lift.init(hardwareMap);
-        carousel.init(hardwareMap);
-
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
 
         waitForStart();
-        Location location = webcam.location();
-
-        lift.close();
-        lift.toggleSlide();
-
-        TrajectorySequence strafe = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(24)
-                .build();
-
-        TrajectorySequence lowPlace = drive.trajectorySequenceBuilder(strafe.end())
-                .forward(15)
-                .build();
-
-        TrajectorySequence highPlace = drive.trajectorySequenceBuilder(strafe.end())
-                .back(15)
-                .addTemporalMarker(() ->{
-                    lift.highPlace();
-                })
-                .waitSeconds(1)
-                .addTemporalMarker(() -> {
-                    lift.open();
-                })
-                .waitSeconds(1)
-                .addTemporalMarker(() ->{
-                    lift.close();
-                    lift.temp();
-                })
-                .forward(15)
-                .build();
-
-        TrajectorySequence midPlace = drive.trajectorySequenceBuilder(strafe.end())
-                .forward(8)
-                .build();
-
-
-
-
-
-
-        drive.followTrajectorySequence(strafe);
-        drive.followTrajectorySequence(highPlace);
-
-
-
+        switch (webcam.location()) {
+            case LEFT:
+                // ...
+                break;
+            case MIDDLE:
+                // ...
+                break;
+            case RIGHT:
+                // ...
+                break;
+            case NOT_FOUND:
+                // ...
+                break;
+        }
         webcam.stopStreaming();
     }
 }
