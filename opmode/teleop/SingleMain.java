@@ -27,7 +27,7 @@ public class SingleMain extends LinearOpMode{
 
     private SampleMecanumDrive rrDrive;
 
-    private boolean loaded = false;
+    private boolean intaking;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -43,13 +43,13 @@ public class SingleMain extends LinearOpMode{
 
         ElapsedTime slideWait = new ElapsedTime();
         ElapsedTime cupWait = new ElapsedTime();
-        ElapsedTime freightWait = new ElapsedTime();
 
         waitForStart();
 
+        intaking = true;
+
         slideWait.reset();
         cupWait.reset();
-        freightWait.reset();
 
 
         while(opModeIsActive() && !isStopRequested()){
@@ -88,8 +88,13 @@ public class SingleMain extends LinearOpMode{
 //            );
 
             //Acquirer
-            if(gamepad1.right_trigger > 0) acquirer.acquire();
-            else if(gamepad1.left_trigger > 0) acquirer.reverse();
+            if(gamepad1.right_trigger > 0) {
+                if (intaking) acquirer.acquire();
+                else acquirer.reverse();
+            }
+            else if(gamepad1.left_trigger > 0) {
+                acquirer.reverse();
+            }
             else acquirer.stop();
 
             //Carousel
@@ -120,17 +125,19 @@ public class SingleMain extends LinearOpMode{
 
 
             if (sensor.hasFreight()) {
-                loaded = true;
+                intaking = false;
+
+                if(!lift.raised){
+                    lift.toggleSlide();
+                }
+
+
             } else {
-                loaded = false;
+                intaking = true;
             }
 
-//            if(loaded){
-//                lift.toggleSlide();
-//                slideWait.reset();
-//            }
 
-            telemetry.addData("Detect Freight", loaded);
+            telemetry.addData("Detect Freight", !intaking);
             telemetry.update();
 
 

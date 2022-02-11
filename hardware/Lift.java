@@ -30,10 +30,10 @@ public class Lift extends Mechanism{
     private Servo cup;
     private Servo roof;
 
+    public boolean raised;
+    public boolean closed;
 
     private boolean tipped;
-    private boolean raised;
-    private boolean closed;
     private boolean low;
 
     public Lift(LinearOpMode opMode){
@@ -50,10 +50,13 @@ public class Lift extends Mechanism{
         reset();
         open();
 
-        tipped = false;
+
         raised = false;
         closed = false;
+
+
         low = false;
+        tipped = false;
     }
 
     private void reset(){
@@ -106,9 +109,7 @@ public class Lift extends Mechanism{
 
     public void toggleCup(){
 
-        if(!raised) return;
-
-        if(low) return;
+        if(!raised || low) return;
 
         if(tipped){
             temp();
@@ -122,17 +123,16 @@ public class Lift extends Mechanism{
     }
 
     public void toggleShared(){
-        if (!raised) return;
-        if(tipped) return;
+        if (!raised || tipped) return;
 
         if(low){
             temp();
-            low = false;
         }
-        else if(!tipped){
+        else{
             lowPlace();
-            low = true;
         }
+
+        low = !low;
 
 
     }
