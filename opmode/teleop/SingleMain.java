@@ -54,38 +54,38 @@ public class SingleMain extends LinearOpMode{
 
         while(opModeIsActive() && !isStopRequested()){
 
-            //Inputs for the stick and triggers
-            // Sticks are [0,1], triggers are [-1,1] as a sum
-            double slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
+//            //Inputs for the stick and triggers
+//            // Sticks are [0,1], triggers are [-1,1] as a sum
+//            double slideInput = -gamepad1.left_trigger + gamepad1.right_trigger;
+//
+//            //How far the stick goes
+//            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+//
+//            //Scuffed way to smooth inputs by cubing
+//            r = Math.pow(r, 3);
+//
+//            //Angle of the stick
+//            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+//
+//            //How far the right stick goes from side to side (turning)
+//            double rightX = gamepad1.right_stick_x;
+//
+//            // Strafing
+//            if (gamepad1.dpad_left)  drive.strafeLeft();
+//            else if (gamepad1.dpad_right)  drive.strafeRight();
+//
+//            // Slow and regular driving
+//            else if (gamepad1.right_trigger > 0.3) drive.teleDrive(r / 3, robotAngle, rightX / 3);
+//            else drive.teleDrive(r , robotAngle, rightX );
 
-            //How far the stick goes
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
 
-            //Scuffed way to smooth inputs by cubing
-            r = Math.pow(r, 3);
-
-            //Angle of the stick
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-
-            //How far the right stick goes from side to side (turning)
-            double rightX = gamepad1.right_stick_x;
-
-            // Strafing
-            if (gamepad1.dpad_left)  drive.strafeLeft();
-            else if (gamepad1.dpad_right)  drive.strafeRight();
-
-            // Slow and regular driving
-            else if (gamepad1.right_trigger > 0.3) drive.teleDrive(r / 3, robotAngle, rightX / 3);
-            else drive.teleDrive(r , robotAngle, rightX );
-
-
-//            rrDrive.setWeightedDrivePower(
-//                    new Pose2d(
-//                            -gamepad1.left_stick_y,
-//                            -gamepad1.left_stick_x,
-//                            -gamepad1.right_stick_x
-//                    )
-//            );
+            rrDrive.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
 
             //Acquirer
             if(gamepad1.right_trigger > 0) {
@@ -138,6 +138,10 @@ public class SingleMain extends LinearOpMode{
 
 
             telemetry.addData("Detect Freight", !intaking);
+            telemetry.addData("left x", gamepad1.left_stick_x);
+            telemetry.addData("left y", gamepad1.left_stick_y);
+            telemetry.addData("right x", gamepad1.right_stick_x);
+            telemetry.addData("right y", gamepad1.right_stick_y);
             telemetry.update();
 
 
