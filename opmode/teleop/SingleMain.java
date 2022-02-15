@@ -15,9 +15,15 @@ import org.firstinspires.ftc.teamcode.hardware.Carousel;
 import org.firstinspires.ftc.teamcode.hardware.FreightSensor;
 import org.firstinspires.ftc.teamcode.hardware.Lift;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @Config
 @TeleOp(name="SingleMain", group="Test")
 public class SingleMain extends LinearOpMode{
+
+
 
     private Drivetrain drive = new Drivetrain(this);
     private Acquirer acquirer = new Acquirer(this);
@@ -31,6 +37,27 @@ public class SingleMain extends LinearOpMode{
 
     @Override
     public void runOpMode() throws InterruptedException{
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+
+        Runnable lower = new Runnable() {
+            @Override
+            public void run() {
+                lift.toggleSlide();
+            }
+        };
+
+        Runnable resetArm = new Runnable() {
+            @Override
+            public void run() {
+                if(lift.closed) lift.toggleRoof();
+
+                if(lift.tipped) lift.toggleCup();
+                else if(lift.low) lift.toggleShared();
+
+                service.schedule(lower, 1000, TimeUnit.MILLISECONDS);
+            }
+        };
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.init(hardwareMap);
@@ -43,6 +70,7 @@ public class SingleMain extends LinearOpMode{
 
         ElapsedTime slideWait = new ElapsedTime();
         ElapsedTime cupWait = new ElapsedTime();
+        ElapsedTime roofWait = new ElapsedTime();
 
         waitForStart();
 
@@ -50,6 +78,7 @@ public class SingleMain extends LinearOpMode{
 
         slideWait.reset();
         cupWait.reset();
+        roofWait.reset();
 
 
         while(opModeIsActive() && !isStopRequested()){
@@ -103,23 +132,35 @@ public class SingleMain extends LinearOpMode{
             else carousel.stop();
 
             //Lift
-            if(gamepad1.y && slideWait.seconds() > 0.5) {
+            if(gamepad1.y && slideWait.seconds() > 0.5 && !(sensor.hasFreight() && lift.raised))  {
+
                 lift.toggleSlide();
                 slideWait.reset();
             }
             if(gamepad1.x && cupWait.seconds() > 0.5) {
                 lift.toggleCup();
                 cupWait.reset();
+
+                if(lift.tipped)service.schedule(resetArm, 1000, TimeUnit.MILLISECONDS);
+
             }
 
             if(gamepad1.right_bumper && cupWait.seconds() > 0.5){
                 lift.toggleShared();
                 cupWait.reset();
+
+                
+
+                if(lift.low)service.schedule(resetArm, 1000, TimeUnit.MILLISECONDS);
             }
 
             //Roof
-            if(gamepad1.dpad_up) lift.open();
-            else if(gamepad1.dpad_down) lift.close();
+            if(gamepad1.dpad_up && roofWait.seconds() > 0.5){
+                lift.toggleRoof();
+                roofWait.reset();
+            }
+
+
 
 
 
@@ -128,20 +169,25 @@ public class SingleMain extends LinearOpMode{
                 intaking = false;
 
                 if(!lift.raised){
+                    gamepad1.rumble(250);
                     lift.toggleSlide();
+
+                    if(!lift.closed) lift.toggleRoof();
                 }
 
 
             } else {
+
+
                 intaking = true;
             }
 
 
-            telemetry.addData("Detect Freight", !intaking);
-            telemetry.addData("left x", gamepad1.left_stick_x);
-            telemetry.addData("left y", gamepad1.left_stick_y);
-            telemetry.addData("right x", gamepad1.right_stick_x);
-            telemetry.addData("right y", gamepad1.right_stick_y);
+            telemetry.addData("Detect Freight", sensor.hasFreight());
+            telemetry.addData("Raised?", lift.raised);
+            telemetry.addData("Tipped?", lift.tipped);
+            telemetry.addData("Low?", lift.low);
+            telemetry.addData("Closed?", lift.closed);
             telemetry.update();
 
 

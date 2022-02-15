@@ -33,8 +33,8 @@ public class Lift extends Mechanism{
     public boolean raised;
     public boolean closed;
 
-    private boolean tipped;
-    private boolean low;
+    public boolean tipped;
+    public boolean low;
 
     public Lift(LinearOpMode opMode){
         this.opMode = opMode;
