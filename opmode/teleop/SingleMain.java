@@ -23,7 +23,8 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name="SingleMain", group="Test")
 public class SingleMain extends LinearOpMode{
 
-
+    public static int reverseDelay = 200;
+    public static int reverseDuration = 1000;
 
     private Drivetrain drive = new Drivetrain(this);
     private Acquirer acquirer = new Acquirer(this);
@@ -58,6 +59,25 @@ public class SingleMain extends LinearOpMode{
             }
         };
 
+
+        Runnable resetIntake = new Runnable() {
+            @Override
+            public void run() {
+                intaking = true;
+            }
+        };
+
+        Runnable tempReverse = new Runnable() {
+            @Override
+            public void run() {
+                intaking = false;
+
+                service.schedule(resetIntake, reverseDuration, TimeUnit.MILLISECONDS);
+            }
+
+
+        };
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.init(hardwareMap);
@@ -82,6 +102,8 @@ public class SingleMain extends LinearOpMode{
 
 
         while(opModeIsActive() && !isStopRequested()){
+
+            Pose2d poseEstimate = rrDrive.getPoseEstimate();
 
 //            //Inputs for the stick and triggers
 //            // Sticks are [0,1], triggers are [-1,1] as a sum
@@ -115,6 +137,8 @@ public class SingleMain extends LinearOpMode{
                             -gamepad1.right_stick_x
                     )
             );
+
+
 
             //Acquirer
             if(gamepad1.right_trigger > 0) {
@@ -166,7 +190,9 @@ public class SingleMain extends LinearOpMode{
 
 
             if (sensor.hasFreight()) {
-                intaking = false;
+
+                service.schedule(tempReverse, reverseDelay, TimeUnit.MILLISECONDS);
+//                intaking = false;
 
                 if(!lift.raised){
                     gamepad1.rumble(250);
@@ -179,7 +205,7 @@ public class SingleMain extends LinearOpMode{
             } else {
 
 
-                intaking = true;
+//                intaking = true;
             }
 
 
