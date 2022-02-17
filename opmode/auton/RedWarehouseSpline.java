@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class RedWarehouseSpline extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         waitForStart();
