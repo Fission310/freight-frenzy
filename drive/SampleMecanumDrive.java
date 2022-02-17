@@ -258,7 +258,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
         for (DcMotorEx motor : motors) {
-//            if(motor.equals(leftRear) || motor.equals(rightRear)) wheelPositions.add(encoderTicksToInches(-motor.getCurrentPosition()));
 
             wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()));
 
@@ -271,7 +270,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         List<Double> wheelVelocities = new ArrayList<>();
         for (DcMotorEx motor : motors) {
 
-//            if(motor.equals(leftRear) || motor.equals(rightRear)) wheelVelocities.add(encoderTicksToInches(-motor.getVelocity()));
 
             wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
 
