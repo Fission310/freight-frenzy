@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Config
 public class Slides extends Mechanism {
 
     private DcMotor leftSlide;
@@ -29,7 +31,7 @@ public class Slides extends Mechanism {
     ElapsedTime slideTimer = new ElapsedTime();
     ElapsedTime cupTimer = new ElapsedTime();
 
-    private static double DUMP_TIME = 1.5;
+    public static double DUMP_TIME = 1.5;
     public static double CUP_TIME = DUMP_TIME + 1;
     // =================== //
 
