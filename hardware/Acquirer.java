@@ -53,7 +53,7 @@ public class Acquirer extends Mechanism {
                 if (gamepad1.right_trigger > 0) {
                     intake();
                     if (freightSensor.hasFreight()) {
-                        acquirerState = AcquirerState.ACQUIRER_PREVENT;
+                        acquirerState = AcquirerState.ACQUIRER_DELAY;
                         outtakeDelay.reset();
                     }
                 } else if (gamepad1.left_trigger > 0) {
