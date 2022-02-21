@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-public class Drivetrain extends SampleMecanumDrive {
+public class Drivetrain extends Mechanism {
+    SampleMecanumDrive rrDrive;
 
     public enum DriveMode{
         ROBOT_CENTRIC,
@@ -16,14 +18,16 @@ public class Drivetrain extends SampleMecanumDrive {
     }
     DriveMode driveMode;
 
-    public Drivetrain(HardwareMap hardwareMap) {
-        super(hardwareMap);
+    public Drivetrain(LinearOpMode opMode) { this.opMode = opMode; }
 
+    @Override
+    public void init(HardwareMap hwMap) {
+        rrDrive = new SampleMecanumDrive(hwMap);
         driveMode = DriveMode.ROBOT_CENTRIC;
     }
 
     public void strafeLeft(){
-        setWeightedDrivePower(
+        rrDrive.setWeightedDrivePower(
                 new Pose2d(
                         0,
                         -1,
@@ -33,7 +37,7 @@ public class Drivetrain extends SampleMecanumDrive {
     }
 
     public void strafeRight(){
-        setWeightedDrivePower(
+        rrDrive.setWeightedDrivePower(
                 new Pose2d(
                         0,
                         1,
@@ -44,12 +48,12 @@ public class Drivetrain extends SampleMecanumDrive {
 
     public void loop(Gamepad gamepad){
 
-        Pose2d poseEstimate = getPoseEstimate();
+        Pose2d poseEstimate = rrDrive.getPoseEstimate();
         Vector2d input;
 
         switch(driveMode){
             case ROBOT_CENTRIC:
-                setWeightedDrivePower(
+                rrDrive.setWeightedDrivePower(
                         new Pose2d(
                                 -gamepad.left_stick_y,
                                 -gamepad.left_stick_x,
@@ -68,7 +72,7 @@ public class Drivetrain extends SampleMecanumDrive {
 
                 // Pass in the rotated input + right stick value for rotation
                 // Rotation is not part of the rotated input thus must be passed in separately
-                setWeightedDrivePower(
+                rrDrive.setWeightedDrivePower(
                         new Pose2d(
                                 input.getX(),
                                 input.getY(),
@@ -86,7 +90,7 @@ public class Drivetrain extends SampleMecanumDrive {
 
                 // Pass in the rotated input + right stick value for rotation
                 // Rotation is not part of the rotated input thus must be passed in separately
-                setWeightedDrivePower(
+                rrDrive.setWeightedDrivePower(
                         new Pose2d(
                                 input.getX(),
                                 input.getY(),
