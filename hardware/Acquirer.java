@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Acquirer extends Mechanism {
 
     private DcMotor pasta;
-    private FreightSensor freightSensor;
+    private FreightSensor freightSensor = new FreightSensor(opMode);
 
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
@@ -46,6 +46,8 @@ public class Acquirer extends Mechanism {
     public void intake() { pasta.setPower(1); }
     public void outtake() { pasta.setPower(-1); }
     public void stop() { pasta.setPower(0); }
+
+    public boolean sensorStatus() { return freightSensor.hasFreight(); }
 
     public void loop(Gamepad gamepad1) {
         switch (acquirerState) {
