@@ -55,9 +55,9 @@ public class SingleMain extends LinearOpMode {
 
             telemetry.addData("Cup pos", slides.getCupPos());
             telemetry.addData("Cup timer", slides.getCupTimer());
-            telemetry.addData("Motor position", slidesTest.getPos());
-            telemetry.addData("Target position", slidesTest.getTarget());
-            telemetry.addData("BUsy?", slidesTest.testMotor.isBusy());
+//            telemetry.addData("Motor position", slidesTest.getPos());
+//            telemetry.addData("Target position", slidesTest.getTarget());
+            telemetry.addData("Busy?", slidesTest.testMotor.isBusy());
             telemetry.update();
 
         }
