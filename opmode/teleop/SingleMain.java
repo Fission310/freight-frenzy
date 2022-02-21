@@ -68,11 +68,8 @@ public class SingleMain extends LinearOpMode {
             telemetry.addData("Cup timer", slides.getCupTimer());
 //            telemetry.addData("Motor position", slidesTest.getPos());
 //            telemetry.addData("Target position", slidesTest.getTarget());
-<<<<<<< Updated upstream
             telemetry.addData("Busy?", slidesTest.testMotor.isBusy());
-=======
             telemetry.addData("Has Freight?", acquirer.sensorStatus());
->>>>>>> Stashed changes
             telemetry.update();
 
         }
