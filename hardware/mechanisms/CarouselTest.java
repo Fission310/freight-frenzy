@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class CarouselTest extends Mechanism {
-    private CRServo supaspeed;
+    private CRServo carouselRight;
 
     public static double POWER = 1;
 
@@ -16,17 +16,17 @@ public class CarouselTest extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        supaspeed = hwMap.get(CRServo.class, "CRServo");
+        carouselRight = hwMap.get(CRServo.class, "carouselRight");
     }
 
     public void rotate() {
-        supaspeed.setPower(POWER);
+        carouselRight.setPower(POWER);
     }
     public void reverse() {
-        supaspeed.setPower(-POWER);
+        carouselRight.setPower(-POWER);
     }
     public void stop() {
-        supaspeed.setPower(0);
+        carouselRight.setPower(0);
     }
 
     public void loop(Gamepad gamepad1) {
