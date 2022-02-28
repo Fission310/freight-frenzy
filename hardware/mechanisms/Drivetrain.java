@@ -55,8 +55,8 @@ public class Drivetrain extends Mechanism {
             case ROBOT_CENTRIC:
                 rrDrive.setWeightedDrivePower(
                         new Pose2d(
+                                gamepad.left_stick_x,
                                 -gamepad.left_stick_y,
-                                -gamepad.left_stick_x,
                                 -gamepad.right_stick_x
                         )
                 );
