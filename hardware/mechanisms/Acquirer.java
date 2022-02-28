@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 public class Acquirer extends Mechanism {
 
-    private DcMotor pasta;
-    private FreightSensor freightSensor = new FreightSensor(opMode);
+    private DcMotor intakeRight;
+    private DcMotor intakeLeft;
+
+    public static double POWER = 0.85;
 
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
@@ -33,30 +35,40 @@ public class Acquirer extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        pasta = hwMap.dcMotor.get("pasta");
-        pasta.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeRight = hwMap.dcMotor.get("intakeRight");
+        intakeRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        freightSensor.init(hwMap);
+        intakeLeft = hwMap.dcMotor.get("intakeLeft");
+        intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         outtakeDelay.reset();
         outtakeDuration.reset();
     }
 
-    public void intake() { pasta.setPower(1); }
-    public void outtake() { pasta.setPower(-1); }
-    public void stop() { pasta.setPower(0); }
+    public void intake() {
+        intakeRight.setPower(-POWER);
+        intakeLeft.setPower(POWER);
+    }
+    public void outtake() {
+        intakeRight.setPower(POWER);
+        intakeLeft.setPower(-POWER);
+    }
+    public void stop() {
+        intakeRight.setPower(0);
+        intakeLeft.setPower(0);
+    }
 
-    public boolean sensorStatus() { return freightSensor.hasFreight(); }
+//    public boolean sensorStatus() { return freightSensor.hasFreight(); }
 
     public void loop(Gamepad gamepad1) {
         switch (acquirerState) {
             case ACQUIRER_START:
                 if (gamepad1.right_trigger > 0) {
                     intake();
-                    if (freightSensor.hasFreight()) {
-                        acquirerState = AcquirerState.ACQUIRER_DELAY;
-                        outtakeDelay.reset();
-                    }
+//                    if (freightSensor.hasFreight()) {
+//                        acquirerState = AcquirerState.ACQUIRER_DELAY;
+//                        outtakeDelay.reset();
+//                    }
                 } else if (gamepad1.left_trigger > 0) {
                     outtake();
                 } else {
