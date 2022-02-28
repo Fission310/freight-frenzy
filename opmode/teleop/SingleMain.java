@@ -12,9 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.MeccRobot;
 @TeleOp (name = "SingleMain", group = "Test")
 public class SingleMain extends LinearOpMode {
 
-    // ===== TESTING ===== //
     private MeccRobot robot = new MeccRobot(this);
-    // =================== //
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,7 +24,6 @@ public class SingleMain extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             robot.loop(gamepad1);
-            robot.telemetry(telemetry);
             telemetry.update();
         }
     }
