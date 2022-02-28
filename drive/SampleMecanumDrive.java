@@ -99,10 +99,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
-        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        leftFront = hardwareMap.get(DcMotorEx.class, "hubRight");
+        leftRear = hardwareMap.get(DcMotorEx.class, "hubLeft");
+        rightRear = hardwareMap.get(DcMotorEx.class, "wallLeft");
+        rightFront = hardwareMap.get(DcMotorEx.class, "wallRight");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
