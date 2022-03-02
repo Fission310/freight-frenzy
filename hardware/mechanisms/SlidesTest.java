@@ -17,8 +17,8 @@ public class SlidesTest extends Mechanism {
     public static int SLIDE_EXTEND_POS = 700;
     public static int SLIDE_RETRACT_POS = 0;
 
-    public static double WHEEL_RADIUS = 1.81102;
-    public static double TICKS_PER_REV = 145.1;
+    public static double WHEEL_RADIUS = 1.37795;
+    public static double TICKS_PER_REV = 537.6;
     public static double GEAR_RATIO = 1.0;
 
     public static double targetPosition;
@@ -36,7 +36,7 @@ public class SlidesTest extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        testMotor = hwMap.get(DcMotorEx.class, "testMotor");
+        testMotor = hwMap.get(DcMotorEx.class, "slidesMotor");
         testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
