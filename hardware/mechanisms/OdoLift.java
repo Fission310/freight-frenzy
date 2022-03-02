@@ -12,8 +12,14 @@ public class OdoLift extends Mechanism {
     private Servo hubOdoServo;
     private Servo perpOdoServo;
 
-    public static double LIFT_HEIGHT = 1;
-    public static double LOWER_HEIGHT = 0;
+    public static double PERP_LIFT_HEIGHT = 0.75;
+    public static double PERP_LOWER_HEIGHT = 0;
+
+    public static double HUB_LIFT_HEIGHT = 1;
+    public static double HUB_LOWER_HEIGHT = 0;
+
+    public static double WALL_LIFT_HEIGHT = 1;
+    public static double WALL_LOWER_HEIGHT = 0;
 
     public OdoLift (LinearOpMode opMode) { this.opMode = opMode; }
 
@@ -22,17 +28,21 @@ public class OdoLift extends Mechanism {
         wallOdoServo = hwMap.get(Servo.class, "wallOdoServo");
         hubOdoServo = hwMap.get(Servo.class, "hubOdoServo");
         perpOdoServo = hwMap.get(Servo.class, "perpOdoServo");
+
+        hubOdoServo.setDirection(Servo.Direction.FORWARD);
+        hubOdoServo.setDirection(Servo.Direction.REVERSE);
+        perpOdoServo.setDirection(Servo.Direction.REVERSE);
     }
 
     public void lift() {
-        wallOdoServo.setPosition(LIFT_HEIGHT);
-        hubOdoServo.setPosition(LIFT_HEIGHT);
-        perpOdoServo.setPosition(LIFT_HEIGHT);
+        wallOdoServo.setPosition(WALL_LIFT_HEIGHT);
+        hubOdoServo.setPosition(HUB_LIFT_HEIGHT);
+        perpOdoServo.setPosition(PERP_LIFT_HEIGHT);
     }
     public void lower() {
-        wallOdoServo.setPosition(LOWER_HEIGHT);
-        hubOdoServo.setPosition(LOWER_HEIGHT);
-        perpOdoServo.setPosition(LOWER_HEIGHT);
+        wallOdoServo.setPosition(WALL_LOWER_HEIGHT);
+        hubOdoServo.setPosition(HUB_LOWER_HEIGHT);
+        perpOdoServo.setPosition(PERP_LOWER_HEIGHT);
     }
 
     public void loop(Gamepad gamepad1) {
