@@ -11,27 +11,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 public class Slides extends Mechanism {
 
-    private DcMotor leftSlide;
-    private DcMotor rightSlide;
+    private Servo leftSlide;
+    private Servo rightSlide;
 
     private Servo freightServo;
 
-    // ===== TESTING ===== //
-    public static double SLIDE_RESET =  1.0;
-    public static double SLIDE_HIGH = 0.6;
+    public static double FREIGHT_LOAD = 0;
+    public static double FREIGHT_DUMP = 1;
 
-    public static double CUP_TEMP = 0.03;
-    public static double CUP_TIP = 0.7;
+    public static double LEFT_SLIDE_LOAD = 0;
+    public static double LEFT_SLIDE_DUMP = 1;
 
-    private Servo slide;
-    private Servo cup;
+    public static double RIGHT_SLIDE_LOAD = 0;
+    public static double RIGHT_SLIDE_DUMP = 1;
 
-    ElapsedTime slideTimer = new ElapsedTime();
-    ElapsedTime cupTimer = new ElapsedTime();
-
-    public static double DUMP_TIME = 1.5;
-    public static double CUP_TIME = DUMP_TIME + 1;
-    // =================== //
 
     public enum SlidesState {
         SLIDES_START,
@@ -39,100 +32,52 @@ public class Slides extends Mechanism {
         SLIDES_DUMP,
         SLIDES_RESET
     }
-
-    SlidesState slidesState = SlidesState.SLIDES_START;
+    SlidesState slidesState;
 
     public Slides(LinearOpMode opMode) { this.opMode = opMode; }
 
     @Override
     public void init(HardwareMap hwMap) {
-        /*
-          front (slides)
-        |---------------|
-        | left    right |
-        |---------------|
-            wall side
-         */
-//        leftSlide = hwMap.dcMotor.get("leftSlide");
-//        rightSlide = hwMap.dcMotor.get("rightSlide");
+        leftSlide = hwMap.get(Servo.class, "leftSlide");
+        rightSlide = hwMap.get(Servo.class, "rightSlide");
+        freightServo = hwMap.get(Servo.class, "freightServo");
 
-        // ===== TESTING ===== //
-        slide = hwMap.servo.get("slide");
-        cup = hwMap.servo.get("cup");
+        slidesState = SlidesState.SLIDES_START;
 
-        slideTimer.reset();
-        cupTimer.reset();
-        // =================== //
+        leftSlide.setDirection(Servo.Direction.FORWARD);
+        rightSlide.setDirection(Servo.Direction.FORWARD);
+        freightServo.setDirection(Servo.Direction.FORWARD);
     }
 
-    /*
-    FSM:
-    Y is pressed -> extend slides
-    when slides are fully extended -> dump freightServo
-    when freight is dumped -> reset freightServo, reset slide position
-    when everything is reset -> back at start
-     */
 
-    // need to sync leftSlide and rightSlide
-    // extends to max length (wall to hub)
     public void extend() {
 
     }
 
     // tips carriage to score
     public void dumpFreight() {
-
+        leftSlide.setPosition(LEFT_SLIDE_DUMP);
+        rightSlide.setPosition(RIGHT_SLIDE_DUMP);
+        freightServo.setPosition(FREIGHT_DUMP);
     }
 
-    // ===== TESTING ===== //
-    public void loop(Gamepad gamepad1) {
-        switch (slidesState) {
+    public void resetFreight(){
+        leftSlide.setPosition(LEFT_SLIDE_LOAD);
+        rightSlide.setPosition(RIGHT_SLIDE_LOAD);
+        freightServo.setPosition(FREIGHT_LOAD);
+    }
+
+   public void loop(Gamepad gamepad){
+        switch (slidesState){
             case SLIDES_START:
-                if (gamepad1.y) {
-                    slide.setPosition(SLIDE_HIGH);
-                    slidesState = SlidesState.SLIDES_MAX;
+                if(gamepad.b){
+                    dumpFreight();
                 }
-                break;
-            case SLIDES_MAX:
-                // check if slides have fully extended
-                if (Math.abs(slide.getPosition() - SLIDE_HIGH) < 10) {
-                    // threshold 10 ticks
-                    // tip cup
-                    cup.setPosition(CUP_TIP);
-
-                    slideTimer.reset();
-                    cupTimer.reset();
-                    slidesState = SlidesState.SLIDES_DUMP;
+                else if(gamepad.b){
+                    resetFreight();
                 }
-                break;
-            case SLIDES_DUMP:
-                // if freight is dumped
-                if (slideTimer.seconds() >= DUMP_TIME) {
-                    // reset freightServo
-                    cup.setPosition(CUP_TEMP);
-                    if (cupTimer.seconds() >= CUP_TIME) {
-                        slide.setPosition(SLIDE_RESET);
-                        slidesState = SlidesState.SLIDES_RESET;
-                    }
-                }
-                break;
-            case SLIDES_RESET:
-                // check if slides have fully retracted
-                if (Math.abs(slide.getPosition() - SLIDE_RESET) < 10) {
-                    slidesState = SlidesState.SLIDES_START;
-                }
-                break;
-            default:
-                slidesState = SlidesState.SLIDES_START;
         }
+   }
 
-        if (gamepad1.a && slidesState != SlidesState.SLIDES_START) {
-            slidesState = SlidesState.SLIDES_START;
-        }
-    }
-    // =================== //
-
-    public double getCupPos() { return cup.getPosition(); }
-    public double getCupTimer() { return cupTimer.seconds(); }
 
 }
