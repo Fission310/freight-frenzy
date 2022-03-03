@@ -15,10 +15,10 @@ public class OdoLift extends Mechanism {
     public static double PERP_LIFT_HEIGHT = 0.75;
     public static double PERP_LOWER_HEIGHT = 0;
 
-    public static double HUB_LIFT_HEIGHT = 1;
+    public static double HUB_LIFT_HEIGHT = 0.65;
     public static double HUB_LOWER_HEIGHT = 0;
 
-    public static double WALL_LIFT_HEIGHT = 1;
+    public static double WALL_LIFT_HEIGHT = 0.8;
     public static double WALL_LOWER_HEIGHT = 0;
 
     public OdoLift (LinearOpMode opMode) { this.opMode = opMode; }
