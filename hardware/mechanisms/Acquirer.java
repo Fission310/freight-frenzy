@@ -7,11 +7,15 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Config
 public class Acquirer extends Mechanism {
 
     private DcMotor intakeRight;
     private DcMotor intakeLeft;
+
+    private FreightSensor sensor;
 
     public static double POWER = 0.85;
 
@@ -26,12 +30,13 @@ public class Acquirer extends Mechanism {
         ACQUIRER_DELAY,
         ACQUIRER_PREVENT
     }
-
-    AcquirerState acquirerState = AcquirerState.ACQUIRER_START;
+    AcquirerState acquirerState;
 
     public Acquirer(LinearOpMode opMode) {
         this.opMode = opMode;
     }
+
+    int i = 0;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -40,6 +45,11 @@ public class Acquirer extends Mechanism {
 
         intakeLeft = hwMap.dcMotor.get("intakeLeft");
         intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        sensor = new FreightSensor(opMode);
+        sensor.init(hwMap);
+
+        acquirerState = AcquirerState.ACQUIRER_START;
 
         outtakeDelay.reset();
         outtakeDuration.reset();
@@ -60,7 +70,18 @@ public class Acquirer extends Mechanism {
 
 //    public boolean sensorStatus() { return freightSensor.hasFreight(); }
 
+    public void telemetry(Telemetry telemetry){
+
+        if(sensor.hasFreightLeft())i++;
+
+        telemetry.addData("Left Sensor", sensor.hasFreightLeft());
+        telemetry.addData("Times", i);
+
+        sensor.telemetry(telemetry);
+    }
+
     public void loop(Gamepad gamepad1) {
+
         switch (acquirerState) {
             case ACQUIRER_START:
                 if (gamepad1.right_trigger > 0) {
