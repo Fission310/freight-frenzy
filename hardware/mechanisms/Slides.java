@@ -32,8 +32,8 @@ public class Slides extends Mechanism {
     public static double SLIDE_DUMP3 = 1;
 
     // prevent double inputs
-    ElapsedTime delay = new ElapsedTime();
-    public static double DELAY_TIME = 0.5;
+    ElapsedTime servoDelay = new ElapsedTime();
+    public static double SERVO_DELAY_TIME = 1;
 
     // ====================== //
 
@@ -49,8 +49,8 @@ public class Slides extends Mechanism {
 
     // PID constants //
     private static double WHEEL_RADIUS = 1.37795;
-    public static double TICKS_PER_REV = 537.6;
-    public static double GEAR_RATIO = 1.0;
+    private static double TICKS_PER_REV = 537.6;
+    private static double GEAR_RATIO = 1.0;
 
     public static PIDCoefficients coeffs = new PIDCoefficients(0.1, 0, 0);
     PIDFController controller;
@@ -62,7 +62,8 @@ public class Slides extends Mechanism {
         SLIDES_START,
         SLIDES_MAX,
         SLIDES_DUMP1,
-        SLIDES_DUMP3
+        SLIDES_DUMP3,
+        SERVOS_RESET
     }
     SlidesState slidesState;
 
@@ -86,6 +87,8 @@ public class Slides extends Mechanism {
         controller = new PIDFController(coeffs);
 
         slidesState = SlidesState.SLIDES_START;
+
+        servoDelay.reset();
     }
 
 
@@ -154,15 +157,19 @@ public class Slides extends Mechanism {
             // TODO: slow down actions so carriage can reset before slides retract
             case SLIDES_DUMP1:
                 dump1();
-                if (gamepad.y) {
-                    slidesState = SlidesState.SLIDES_START;
-                }
+                servoDelay.reset();
+                slidesState = SlidesState.SERVOS_RESET;
+                break;
             case SLIDES_DUMP3:
                 dump3();
-                if (gamepad.y) {
+                servoDelay.reset();
+                slidesState = SlidesState.SERVOS_RESET;
+                break;
+            case SERVOS_RESET:
+                resetServos();
+                if (servoDelay.seconds() >= SERVO_DELAY_TIME) {
                     slidesState = SlidesState.SLIDES_START;
                 }
-                break;
             default:
                 slidesState = SlidesState.SLIDES_START;
         }
@@ -173,6 +180,7 @@ public class Slides extends Mechanism {
         telemetry.addData("Target Position", targetPosition);
         telemetry.addData("Close?", close());
         telemetry.addData("Current State", slidesState);
+        telemetry.addData("servo delay", servoDelay.seconds());
    }
 
     public static double encoderTicksToInches(double ticks) {
