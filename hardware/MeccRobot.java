@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Carousel;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.OdoLift;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
 
 public class MeccRobot extends Mechanism {
 
@@ -19,8 +19,7 @@ public class MeccRobot extends Mechanism {
     private Acquirer acquirer = new Acquirer(opMode);
     private Carousel carousel = new Carousel(opMode);
     private OdoLift odoLift = new OdoLift(opMode);
-    private Arm arm = new Arm(opMode);
-
+    private Slides slides = new Slides(opMode);
 
     public MeccRobot(LinearOpMode opMode) { this.opMode = opMode; }
 
@@ -30,7 +29,7 @@ public class MeccRobot extends Mechanism {
         acquirer.init(hwMap);
         carousel.init(hwMap);
         odoLift.init(hwMap);
-        arm.init(hwMap);
+        slides.init(hwMap);
     }
 
 
@@ -39,7 +38,11 @@ public class MeccRobot extends Mechanism {
         acquirer.loop(gamepad1);
         carousel.loop(gamepad1);
         odoLift.loop(gamepad1);
-        arm.loop(gamepad1);
+        slides.loop(gamepad1);
+    }
+
+    public void telemetry(Telemetry telemetry){
+        slides.telemetry(telemetry);
     }
 
 }
