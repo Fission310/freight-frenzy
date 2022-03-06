@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,13 +19,13 @@ public class Acquirer extends Mechanism {
 
     private FreightSensor sensor;
 
-    public static double POWER = 0.85;
+    public static double POWER = 1;
 
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
 
-    public static double OUTTAKE_DELAY_TIME = 0.2;
-    public static double OUTTAKE_DURATION_TIME = 0.5;
+    public static double OUTTAKE_DELAY_TIME = -1;
+    public static double OUTTAKE_DURATION_TIME = -1;
 
     public enum AcquirerState {
         ACQUIRER_START,
@@ -32,11 +34,13 @@ public class Acquirer extends Mechanism {
     }
     AcquirerState acquirerState;
 
+    private boolean leftOuttake = false;
+
     public Acquirer(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
-    int i = 0;
+    private int i = 0;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -45,6 +49,9 @@ public class Acquirer extends Mechanism {
 
         intakeLeft = hwMap.dcMotor.get("intakeLeft");
         intakeLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         sensor = new FreightSensor(opMode);
         sensor.init(hwMap);
@@ -56,13 +63,24 @@ public class Acquirer extends Mechanism {
     }
 
     public void intake() {
-        intakeRight.setPower(-POWER);
+        intakeRight.setPower(POWER);
         intakeLeft.setPower(POWER);
     }
-    public void outtake() {
-        intakeRight.setPower(POWER);
+
+    public void outtakeLeft() {
         intakeLeft.setPower(-POWER);
     }
+
+    public void outtakeRight() {
+        intakeRight.setPower(-POWER);
+    }
+
+    public void outtake(){
+        intakeLeft.setPower(-POWER);
+        intakeRight.setPower(-POWER);
+    }
+
+
     public void stop() {
         intakeRight.setPower(0);
         intakeLeft.setPower(0);
@@ -72,10 +90,14 @@ public class Acquirer extends Mechanism {
 
     public void telemetry(Telemetry telemetry){
 
-        if(sensor.hasFreightLeft())i++;
+        if(sensor.hasFreight())i++;
 
         telemetry.addData("Left Sensor", sensor.hasFreightLeft());
+        telemetry.addData("Right Sensor", sensor.hasFreightRight());
+        telemetry.addData("Delay", outtakeDelay.seconds());
         telemetry.addData("Times", i);
+
+
 
         sensor.telemetry(telemetry);
     }
@@ -86,10 +108,20 @@ public class Acquirer extends Mechanism {
             case ACQUIRER_START:
                 if (gamepad1.right_trigger > 0) {
                     intake();
-//                    if (freightSensor.hasFreight()) {
-//                        acquirerState = AcquirerState.ACQUIRER_DELAY;
-//                        outtakeDelay.reset();
-//                    }
+
+                    if (sensor.hasFreightLeft()) {
+                        leftOuttake = true;
+
+                        acquirerState = AcquirerState.ACQUIRER_DELAY;
+                        outtakeDelay.reset();
+                    }
+                    else if  (sensor.hasFreightRight()) {
+                        leftOuttake = false;
+
+                        acquirerState = AcquirerState.ACQUIRER_DELAY;
+                        outtakeDelay.reset();
+                    }
+
                 } else if (gamepad1.left_trigger > 0) {
                     outtake();
                 } else {
@@ -100,7 +132,8 @@ public class Acquirer extends Mechanism {
                 if (outtakeDelay.seconds() >= OUTTAKE_DELAY_TIME) {
                     acquirerState = AcquirerState.ACQUIRER_PREVENT;
                     outtakeDuration.reset();
-                } else {
+                }
+                else {
                     intake();
                 }
                 break;
@@ -108,7 +141,8 @@ public class Acquirer extends Mechanism {
                 if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
                     acquirerState = AcquirerState.ACQUIRER_START;
                 } else {
-                    outtake();
+                    if(leftOuttake) outtakeLeft();
+                    else outtakeRight();
                 }
         }
     }

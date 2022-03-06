@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
+@Autonomous(group = "red")
 public class RedCycles extends LinearOpMode {
 
     private static final double WALL_POS = -70.5+(12.5/2.0);
@@ -37,14 +37,6 @@ public class RedCycles extends LinearOpMode {
                 .lineToLinearHeading(SCORE)
                 .waitSeconds(0.5)
                 .lineToLinearHeading(WAREHOUSE_2)
-                .waitSeconds(0.15)
-                .lineToLinearHeading(SCORE)
-                .waitSeconds(0.5)
-                .lineToLinearHeading(WAREHOUSE_3)
-                .waitSeconds(0.15)
-                .lineToLinearHeading(SCORE)
-                .waitSeconds(0.5)
-                .lineToLinearHeading(WAREHOUSE_4)
                 .waitSeconds(0.15)
                 .lineToLinearHeading(SCORE)
                 .waitSeconds(0.5)

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class Drivetrain extends Mechanism {
-    SampleMecanumDrive rrDrive;
+    public SampleMecanumDrive rrDrive;
 
     public enum DriveMode{
         ROBOT_CENTRIC,
@@ -29,8 +29,8 @@ public class Drivetrain extends Mechanism {
     public void strafeLeft(){
         rrDrive.setWeightedDrivePower(
                 new Pose2d(
-                        0,
                         -1,
+                        0,
                         0
                 )
         );
@@ -39,8 +39,8 @@ public class Drivetrain extends Mechanism {
     public void strafeRight(){
         rrDrive.setWeightedDrivePower(
                 new Pose2d(
-                        0,
                         1,
+                        0,
                         0
                 )
         );
@@ -60,6 +60,13 @@ public class Drivetrain extends Mechanism {
                                 -gamepad.right_stick_x
                         )
                 );
+                if(gamepad.dpad_left){
+                    strafeLeft();
+                }
+                else if(gamepad.dpad_right){
+                    strafeRight();
+                }
+
                 break;
             case FIELD_CENTRIC_BLUE:
 

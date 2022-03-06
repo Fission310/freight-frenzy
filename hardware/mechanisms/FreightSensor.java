@@ -12,8 +12,8 @@ public class FreightSensor extends Mechanism {
     ColorSensor colorLeft;
     ColorSensor colorRight;
 
-    public static int YELLOW_THRESHOLD = 700;
-    public static int WHITE_THRESHOLD = 500;
+    public static int YELLOW_THRESHOLD = 350;
+    public static int WHITE_THRESHOLD = 350;
 
     public FreightSensor(LinearOpMode opMode){
         this.opMode = opMode;
@@ -23,14 +23,22 @@ public class FreightSensor extends Mechanism {
     public void init(HardwareMap hwMap) {
 
         colorLeft = hwMap.get(ColorSensor.class, "colorLeft");
-//        colorRight = hwMap.get(ColorSensor.class, "colorRight");
+        colorRight = hwMap.get(ColorSensor.class, "colorRight");
+    }
+
+    private int getWhite(ColorSensor color){
+        return (color.red() + color.green() + color.blue()) / 3;
+    }
+
+    private int getYellow(ColorSensor color){
+        return (color.red() + color.green()) / 2;
     }
 
     public boolean hasFreightSensor(ColorSensor color) {
-        int yellow = (color.red() + color.green()) / 2;
-        int white = (color.red() + color.green() + color.blue()) / 3;
+        int yellow = getYellow(color);
+        int white = getWhite(color);
 
-        return ((yellow > color.blue() && yellow >= YELLOW_THRESHOLD) || white >= WHITE_THRESHOLD); //idk how this works mannn
+        return ((yellow > color.blue() && yellow >= YELLOW_THRESHOLD) || white >= WHITE_THRESHOLD);
     }
 
     public boolean hasFreightLeft() {
@@ -38,22 +46,25 @@ public class FreightSensor extends Mechanism {
         return hasFreightSensor(colorLeft);
     }
 
+    public boolean hasFreightRight() {
+
+        return hasFreightSensor(colorRight);
+    }
+
+    public boolean hasFreight(){
+        return hasFreightLeft() || hasFreightRight();
+    }
+
 
     public void telemetry(Telemetry telemetry){
 
-        int yellow = (colorLeft.red() + colorLeft.green()) / 2;
-        int white = (colorLeft.red() + colorLeft.green() + colorLeft.blue()) / 3;
+        telemetry.addData("yellowLeft",getYellow(colorLeft));
+        telemetry.addData("whiteLeft", getWhite(colorLeft));
 
-        telemetry.addData("yellow",yellow);
+        telemetry.addData("yellowRight",getYellow(colorRight));
+        telemetry.addData("whiteRight", getWhite(colorRight));
 
-        telemetry.addData("white", white);
 
-        telemetry.addData("red", colorLeft.red());
-        telemetry.addData("blue", colorLeft.blue());
-        telemetry.addData("green", colorLeft.green());
     }
 
-//    public boolean hasFreightRight(){
-//        return hasFreightSensor(colorRight);
-//    }
 }

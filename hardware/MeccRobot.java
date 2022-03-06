@@ -30,6 +30,8 @@ public class MeccRobot extends Mechanism {
         carousel.init(hwMap);
         odoLift.init(hwMap);
         slides.init(hwMap);
+
+        odoLift.lift();
     }
 
 
