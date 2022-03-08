@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Webcam;
 
-@Autonomous
+@Autonomous(group = "test")
 public class CameraTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

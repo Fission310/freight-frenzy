@@ -26,16 +26,16 @@ public class Slides extends Mechanism {
     private Servo freightServo;
 
     // TODO: tune freight servo
-    public static double FREIGHT_LOAD = 0.48;
+    public static double FREIGHT_LOAD = 0.45;
     public static double FREIGHT_DUMP1 = 1;
-    public static double FREIGHT_TEMP1 = 0.7;
+    public static double FREIGHT_TEMP1 = 0.8;
     public static double FREIGHT_TEMP2 = 0;
     public static double FREIGHT_DUMP2 = 0.25;
     public static double FREIGHT_DUMP3 = 0.6;
     public static double FREIGHT_SHARED = 1;
 
-    public static double SLIDE_LOAD = 0.15;
-    public static double SLIDE_DUMP1 = 0; // TODO: tune
+    public static double SLIDE_LOAD = 0.18;
+    public static double SLIDE_DUMP1 = 0.1; // TODO: tune
     public static double SLIDE_TEMP2 = 1; // TODO: tune
     public static double SLIDE_DUMP3 = 0.7;
 
@@ -51,9 +51,12 @@ public class Slides extends Mechanism {
     ElapsedTime omg = new ElapsedTime();
     public static double OMG_TIME = 0.5;
 
+    ElapsedTime noSlidesLvl3 = new ElapsedTime();
+    public static double NOSLIDESLVL3_TIME = 1;
+
     public static double SERVO_DELAY_TIME = 0.7;
     public static double SERVO1_DELAY_TIME = 1.6;
-    public static double SLIDES_DELAY_TIME = 0.1;
+    public static double SLIDES_DELAY_TIME = 0;
     public static double SHARED_DELAY_TIME = 0.5;
     public static double TEMP2_DELAY_TIME = 1;
     public static double DUMP2_DELAY_TIME = 0.8;
@@ -64,14 +67,15 @@ public class Slides extends Mechanism {
     // ======= SPOOL ======= //
     public DcMotorEx spool;
 
-    public static double SLIDE_EXTEND_POS = 7.5;
-    public static double SLIDE_LEVEL2_POS = 4.5;
-    public static double SLIDE_LEVEL1_POS = 7;
+    public static double SLIDE_EXTEND_POS = 12;
+    public static double SLIDE_LEVEL2_POS = 6;
+    public static double SLIDE_LEVEL1_POS = 7.25;
     public static double SLIDE2_RETRACT_POS = -2;
     public static double SLIDE1_RETRACT_POS = -2.2;
-    public static double SLIDE_RETRACT_POS = -1;
+    public static double SLIDE_RETRACT_POS = -4.1;
     public static double SLIDE_SHARED_RETRACT_POS = -0.3;
-    public static double SLIDE_SHARED_POS = 1.85;
+    public static double SLIDE_SHARED_POS = 4;
+    public static double SLIDE_FAR_SHARED_POS = 2.2;
 
     public static double TOLERANCE = 4;
 
@@ -90,6 +94,7 @@ public class Slides extends Mechanism {
     // ============ //
 
     public int lvl = 0;
+    public boolean farShared = false;
 
     public enum SlidesState {
         SLIDES_START,
@@ -100,6 +105,7 @@ public class Slides extends Mechanism {
         SLIDES_DUMP2,
         SLIDES_TEMP2,
         SLIDES_SHARED,
+        NOSLIDE,
         SERVOS_RESET
     }
     SlidesState slidesState;
@@ -185,6 +191,10 @@ public class Slides extends Mechanism {
         setTargetPosition(SLIDE_SHARED_POS);
     }
 
+    public void sharedFar(){
+        setTargetPosition(SLIDE_FAR_SHARED_POS);
+    }
+
     private boolean close() {
         return Math.abs(getPosition() - targetPosition) <= TOLERANCE;
     }
@@ -230,6 +240,7 @@ public class Slides extends Mechanism {
         freightServo.setPosition(FREIGHT_LOAD);
     }
 
+
    public void loop(Gamepad gamepad){
         switch (slidesState){
             case SLIDES_START:
@@ -242,22 +253,37 @@ public class Slides extends Mechanism {
                     lvl = 2;
                     temp2Delay.reset();
                     slidesState = SlidesState.SLIDES_TEMP2;
-                } else if (gamepad.x) { // lvl 1 scoring
-                    lvl = 1;
-                    slidesDelay.reset();
-                    omg.reset();
-                    slidesState = SlidesState.SLIDES_MAX;
+                } else if (gamepad.x) { // NO SLIDES
+//                            lvl = 1;
+//                            slidesDelay.reset();
+//                            omg.reset();
+//                            slidesState = SlidesState.SLIDES_MAX;
+                    dump3();
+                    noSlidesLvl3.reset();
+                    slidesState = SlidesState.NOSLIDE;
+
+//                    farShared = true;
+//                    sharedDelay.reset();
+//                    slidesState = SlidesState.SLIDES_SHARED;
                 } else if(gamepad.b){
+                    farShared = false;
                     sharedDelay.reset();
                     slidesState = SlidesState.SLIDES_SHARED;
                 }
                 break;
+            case NOSLIDE:
+                if (noSlidesLvl3.seconds() >= NOSLIDESLVL3_TIME) {
+                    slidesState = SlidesState.SLIDES_START;
+                }
             case SLIDES_MAX:
                 if(lvl == 3) extend();
                 else if(lvl == 2) level2Extend();
 
                 if(slidesDelay.seconds() >= SLIDES_DELAY_TIME){
-                    if(lvl == 3) slidesState = SlidesState.SLIDES_DUMP3;
+                    if(lvl == 3){
+                        dump3();
+                        slidesState = SlidesState.SLIDES_DUMP3;
+                    }
                     else if(lvl == 2) {
                         dump2Delay.reset();
                         slidesState = SlidesState.SLIDES_DUMP2;
@@ -306,7 +332,7 @@ public class Slides extends Mechanism {
                 }
                 break;
             case SLIDES_DUMP3:
-                dump3();
+                //dump3();
                 if (servoDelay.seconds() >= SERVO_DELAY_TIME) {
                     retract();
                     slidesState = SlidesState.SLIDES_START;
@@ -314,7 +340,9 @@ public class Slides extends Mechanism {
                 }
                 break;
             case SLIDES_SHARED:
-                shared();
+                if(farShared) sharedFar();
+                else shared();
+
                 dumpShared();
                 if (sharedDelay.seconds() >= SHARED_DELAY_TIME) {
                     retractFar();
@@ -332,11 +360,15 @@ public class Slides extends Mechanism {
    }
 
    public void telemetry(Telemetry telemetry) {
-        telemetry.addData("Current Position", getPosition());
-        telemetry.addData("Target Position", targetPosition);
-        telemetry.addData("Close?", close());
-        telemetry.addData("Current State", slidesState);
-        telemetry.addData("servo delay", servoDelay.seconds());
+        telemetry.addData("left", leftSlide.getPosition());
+       telemetry.addData("right", rightSlide.getPosition());
+       telemetry.addData("freight", freightServo.getPosition());
+       telemetry.addData("current state", slidesState);
+//        telemetry.addData("Current Position", getPosition());
+//        telemetry.addData("Target Position", targetPosition);
+//        telemetry.addData("Close?", close());
+//        telemetry.addData("Current State", slidesState);
+//        telemetry.addData("servo delay", servoDelay.seconds());
    }
 
     public static double encoderTicksToInches(double ticks) {

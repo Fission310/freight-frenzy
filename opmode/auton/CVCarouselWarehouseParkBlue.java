@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Carousel;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.OdoLift;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
@@ -17,13 +18,19 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-@Autonomous(group = "red")
+@Autonomous(group = "blue")
 @Config
-public class CVWarehouseParkRed extends LinearOpMode {
+public class CVCarouselWarehouseParkBlue extends LinearOpMode {
+
+    public static double SCORE_DISTANCE = 23;
+    public static double CAROUSEL_STRAFE_DISTANCE = 5;
+    public static double CAROUSEL_MOVE_DISTANCE = 37;
+    public static double PARK_DISTANCE = 65;
 
     public enum DriveState{
         STRAFE,
         PLACE,
+        CAROUSEL,
         PARK,
         FINISH
     }
@@ -36,11 +43,13 @@ public class CVWarehouseParkRed extends LinearOpMode {
         Webcam webcam = new Webcam(this);
         Slides slides = new Slides(this);
         OdoLift odo = new OdoLift(this);
+        Carousel carousel = new Carousel(this);
         Drivetrain drive = new Drivetrain(this);
 
         webcam.init(hardwareMap);
         slides.init(hardwareMap);
         drive.init(hardwareMap);
+        carousel.init(hardwareMap);
         odo.init(hardwareMap);
 
         odo.lower();
@@ -50,7 +59,7 @@ public class CVWarehouseParkRed extends LinearOpMode {
         state = DriveState.STRAFE;
 
         TrajectorySequence strafe = drive.rrDrive.trajectorySequenceBuilder(new Pose2d())
-                .back(26)
+                .back(SCORE_DISTANCE)
                 .build();
 
         TrajectorySequence level3 = drive.rrDrive.trajectorySequenceBuilder(strafe.end())
@@ -72,7 +81,7 @@ public class CVWarehouseParkRed extends LinearOpMode {
         TrajectorySequence level2 = drive.rrDrive.trajectorySequenceBuilder(strafe.end())
                 .forward(0.01)
                 .addTemporalMarker(() ->{
-                   slides.temp2();
+                    slides.temp2();
                 })
                 .waitSeconds(Slides.TEMP2_DELAY_TIME)
                 .addTemporalMarker(() ->{
@@ -109,6 +118,8 @@ public class CVWarehouseParkRed extends LinearOpMode {
                 })
                 .build();
         TrajectorySequence placeBlock = level3;
+        TrajectorySequence toCarousel = level3;
+        TrajectorySequence park = level3;
 
 
         waitForStart();
@@ -127,7 +138,7 @@ public class CVWarehouseParkRed extends LinearOpMode {
 
                     if(!drive.rrDrive.isBusy()){
                         drive.rrDrive.followTrajectorySequenceAsync(strafe);
-                        state = DriveState.PARK;
+                        state = DriveState.CAROUSEL;
                     }
                     break;
                 case PLACE:
@@ -146,14 +157,34 @@ public class CVWarehouseParkRed extends LinearOpMode {
 
                     if(!drive.rrDrive.isBusy()){
                         drive.rrDrive.followTrajectorySequenceAsync(placeBlock);
-                        state = DriveState.PARK;
+                        state = DriveState.CAROUSEL;
                     }
 
                     break;
+                case CAROUSEL:
+                    if(!drive.rrDrive.isBusy()){
+                        toCarousel = drive.rrDrive.trajectorySequenceBuilder(placeBlock.end())
+                                .strafeLeft(CAROUSEL_STRAFE_DISTANCE)
+                                .forward(CAROUSEL_MOVE_DISTANCE)
+                                .addTemporalMarker(() ->{
+                                    carousel.rotate();
+                                })
+                                .waitSeconds(5)
+                                .addTemporalMarker(() ->{
+                                    carousel.stop();
+                                })
+                                .build();
+
+                        drive.rrDrive.followTrajectorySequenceAsync(toCarousel);
+                        state = DriveState.FINISH;
+                    }
+                    break;
                 case PARK:
                     if(!drive.rrDrive.isBusy()){
-                        TrajectorySequence park = drive.rrDrive.trajectorySequenceBuilder(placeBlock.end())
-                                .forward(50)
+                        park = drive.rrDrive.trajectorySequenceBuilder(toCarousel.end())
+                                .back(CAROUSEL_MOVE_DISTANCE)
+                                .strafeRight(CAROUSEL_STRAFE_DISTANCE)
+                                .back(PARK_DISTANCE)
                                 .build();
 
                         drive.rrDrive.followTrajectorySequenceAsync(park);

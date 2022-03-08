@@ -17,9 +17,12 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-@Autonomous(group = "red")
+@Autonomous(group = "blue")
 @Config
-public class CVWarehouseParkRed extends LinearOpMode {
+public class CVWarehouseParkBlue extends LinearOpMode {
+
+    public static double SCORE_DISTANCE = 20;
+    public static double PARK_DISTANCE = 55;
 
     public enum DriveState{
         STRAFE,
@@ -50,7 +53,7 @@ public class CVWarehouseParkRed extends LinearOpMode {
         state = DriveState.STRAFE;
 
         TrajectorySequence strafe = drive.rrDrive.trajectorySequenceBuilder(new Pose2d())
-                .back(26)
+                .forward(SCORE_DISTANCE)
                 .build();
 
         TrajectorySequence level3 = drive.rrDrive.trajectorySequenceBuilder(strafe.end())
@@ -72,7 +75,7 @@ public class CVWarehouseParkRed extends LinearOpMode {
         TrajectorySequence level2 = drive.rrDrive.trajectorySequenceBuilder(strafe.end())
                 .forward(0.01)
                 .addTemporalMarker(() ->{
-                   slides.temp2();
+                    slides.temp2();
                 })
                 .waitSeconds(Slides.TEMP2_DELAY_TIME)
                 .addTemporalMarker(() ->{
@@ -153,7 +156,7 @@ public class CVWarehouseParkRed extends LinearOpMode {
                 case PARK:
                     if(!drive.rrDrive.isBusy()){
                         TrajectorySequence park = drive.rrDrive.trajectorySequenceBuilder(placeBlock.end())
-                                .forward(50)
+                                .back(PARK_DISTANCE)
                                 .build();
 
                         drive.rrDrive.followTrajectorySequenceAsync(park);

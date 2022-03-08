@@ -24,8 +24,8 @@ public class SingleMain extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             robot.loop(gamepad1);
-//            robot.telemetry(telemetry);
-//            telemetry.update();
+            robot.telemetry(telemetry);
+            telemetry.update();
         }
     }
 
