@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,71 +20,23 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class Slides extends Mechanism {
 
-    public static String cameraLvl;
-    public static boolean done;
 
     // ======= SERVOS ======= //
     private Servo leftSlide;
     private Servo rightSlide;
     private Servo freightServo;
 
-    // TODO: tune freight servo
-    public static double FREIGHT_LOAD = 0.45;
-    public static double FREIGHT_DUMP1 = 1;
-    public static double FREIGHT_TEMP1 = 0.8;
-    public static double FREIGHT_TEMP2 = 0;
-    public static double FREIGHT_DUMP2 = 0.25;
-    public static double FREIGHT_DUMP3 = 0.6;
-    public static double FREIGHT_SHARED = 1;
-
-    public static double SLIDE_LOAD = 0.18;
-    public static double SLIDE_DUMP1 = 0.1; // TODO: tune
-    public static double SLIDE_TEMP2 = 1; // TODO: tune
-    public static double SLIDE_DUMP3 = 0.7;
-
-    // Timers
-    ElapsedTime servoDelay = new ElapsedTime();
-    ElapsedTime servo1Delay = new ElapsedTime();
-    ElapsedTime slidesDelay = new ElapsedTime();
-    ElapsedTime sharedDelay = new ElapsedTime();
-    ElapsedTime temp2Delay = new ElapsedTime();
-    ElapsedTime dump2Delay = new ElapsedTime();
-    ElapsedTime lvl1Delay = new ElapsedTime();
-
-    ElapsedTime omg = new ElapsedTime();
-    public static double OMG_TIME = 0.5;
-
-    ElapsedTime noSlidesLvl3 = new ElapsedTime();
-    public static double NOSLIDESLVL3_TIME = 1;
-
-    public static double SERVO_DELAY_TIME = 0.7;
-    public static double SERVO1_DELAY_TIME = 1.6;
-    public static double SLIDES_DELAY_TIME = 0;
-    public static double SHARED_DELAY_TIME = 0.5;
-    public static double TEMP2_DELAY_TIME = 1;
-    public static double DUMP2_DELAY_TIME = 0.8;
-    public static double LVL1_DELAY_TIME = 0;
-
     // ====================== //
 
     // ======= SPOOL ======= //
     public DcMotorEx spool;
 
-    public static double SLIDE_EXTEND_POS = 12;
-    public static double SLIDE_LEVEL2_POS = 6;
-    public static double SLIDE_LEVEL1_POS = 7.25;
-    public static double SLIDE2_RETRACT_POS = -2;
-    public static double SLIDE1_RETRACT_POS = -2.2;
-    public static double SLIDE_RETRACT_POS = -4.1;
-    public static double SLIDE_SHARED_RETRACT_POS = -0.3;
-    public static double SLIDE_SHARED_POS = 4;
-    public static double SLIDE_FAR_SHARED_POS = 2.2;
-
-    public static double TOLERANCE = 4;
-
     private double targetPosition;
 
     // PID constants //
+    public static double EXTEND_POS = 11;
+    public static double MAX_VEL = 10;
+    public static double MAX_ACCEL = 10;
     private static double WHEEL_RADIUS = 1.37795;
     private static double TICKS_PER_REV = 537.6;
     private static double GEAR_RATIO = 1.0;
@@ -91,6 +46,9 @@ public class Slides extends Mechanism {
 
     public static PIDCoefficients coeffs = new PIDCoefficients(1.2, 0, 0);
     PIDFController controller = new PIDFController(coeffs, 0, 0, 0, (position, velocity) -> kF);
+    MotionProfile profile;
+
+    public static ElapsedTime profileTimer = new ElapsedTime();
     // ============ //
 
     public int lvl = 0;
@@ -98,15 +56,6 @@ public class Slides extends Mechanism {
 
     public enum SlidesState {
         SLIDES_START,
-        SLIDES_MAX,
-        SLIDES_DUMP1,
-        SLIDES_TEMP1,
-        SLIDES_DUMP3,
-        SLIDES_DUMP2,
-        SLIDES_TEMP2,
-        SLIDES_SHARED,
-        NOSLIDE,
-        SERVOS_RESET
     }
     SlidesState slidesState;
 
@@ -126,19 +75,12 @@ public class Slides extends Mechanism {
         spool.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         spool.setDirection(DcMotorSimple.Direction.REVERSE);
         spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        targetPosition = SLIDE_RETRACT_POS;
 
-        retract();
-        resetServos();
+        setTargetPosition(0);
 
         slidesState = SlidesState.SLIDES_START;
 
-        servoDelay.reset();
-
-        cameraLvl = "NULL";
-        done = false;
     }
-
 
     // PID methods //
     public double getPosition() {
@@ -148,227 +90,49 @@ public class Slides extends Mechanism {
         return encoderTicksToInches(spool.getVelocity());
     }
 
+    public MotionProfile generateProfile(double target){
+        MotionState start = new MotionState(getPosition(), getVelocity(), 0, 0);
+        MotionState goal = new MotionState(targetPosition, 0, 0, 0);
+
+        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
+    }
+
     public void update() {
+        MotionState state = profile.get(profileTimer.seconds());
+
+        controller.setTargetPosition(state.getX());
+        controller.setTargetVelocity(state.getV());
+        controller.setTargetAcceleration(state.getA());
+
         double power = controller.update(getPosition(), getVelocity());
-        if((targetPosition == SLIDE_RETRACT_POS) || (targetPosition == SLIDE2_RETRACT_POS) || (targetPosition == SLIDE1_RETRACT_POS)) power *= RETRACT_MULTIPLIER;
 
         spool.setPower(power);
     }
 
     public void setTargetPosition(double target){
         targetPosition = target;
+        profile = generateProfile(targetPosition);
+        profileTimer.reset();
+
         controller.setTargetPosition(target);
     }
     // ========= //
 
-    public void extend() {
-        setTargetPosition(SLIDE_EXTEND_POS);
-    }
-
-    public void level2Extend() {
-        setTargetPosition(SLIDE_LEVEL2_POS);
-    }
-
-    public void level1Extend() {
-        setTargetPosition(SLIDE_LEVEL1_POS);
-    }
-    public void retract() {
-        setTargetPosition(SLIDE_RETRACT_POS);
-    }
-    public void retract1() {
-        setTargetPosition(SLIDE1_RETRACT_POS);
-    }
-    public void retract2() {
-        setTargetPosition(SLIDE2_RETRACT_POS);
-    }
-
-    public void retractFar(){
-        setTargetPosition(SLIDE_SHARED_RETRACT_POS);
-    }
-
-
-    public void shared(){
-        setTargetPosition(SLIDE_SHARED_POS);
-    }
-
-    public void sharedFar(){
-        setTargetPosition(SLIDE_FAR_SHARED_POS);
-    }
-
-    private boolean close() {
-        return Math.abs(getPosition() - targetPosition) <= TOLERANCE;
-    }
-
-    // tips carriage to score
-    public void temp1() {
-        freightServo.setPosition(FREIGHT_TEMP1);
-    }
-    public void dump1() {
-        leftSlide.setPosition(SLIDE_DUMP1);
-        rightSlide.setPosition(SLIDE_DUMP1);
-        freightServo.setPosition(FREIGHT_DUMP1);
-    }
-
-    public void temp2(){
-        leftSlide.setPosition(SLIDE_TEMP2);
-        rightSlide.setPosition(SLIDE_TEMP2);
-        freightServo.setPosition(FREIGHT_TEMP2);
-    }
-
-    public void dump2(){
-        leftSlide.setPosition(SLIDE_TEMP2);
-        rightSlide.setPosition(SLIDE_TEMP2);
-        freightServo.setPosition(FREIGHT_DUMP2);
-    }
-
-
-    public void dump3() {
-        leftSlide.setPosition(SLIDE_DUMP3);
-        rightSlide.setPosition(SLIDE_DUMP3);
-        freightServo.setPosition(FREIGHT_DUMP3);
-    }
-
-    public void dumpShared(){
-        leftSlide.setPosition(SLIDE_LOAD);
-        rightSlide.setPosition(SLIDE_LOAD);
-        freightServo.setPosition(FREIGHT_SHARED);
-    }
-
-    public void resetServos(){
-        leftSlide.setPosition(SLIDE_LOAD);
-        rightSlide.setPosition(SLIDE_LOAD);
-        freightServo.setPosition(FREIGHT_LOAD);
-    }
 
 
    public void loop(Gamepad gamepad){
-        switch (slidesState){
-            case SLIDES_START:
-                resetServos();
-                if (gamepad.y) { // lvl 3 scoring
-                    lvl = 3;
-                    slidesDelay.reset();
-                    slidesState = SlidesState.SLIDES_MAX;
-                } else if (gamepad.a){
-                    lvl = 2;
-                    temp2Delay.reset();
-                    slidesState = SlidesState.SLIDES_TEMP2;
-                } else if (gamepad.x) { // NO SLIDES
-//                            lvl = 1;
-//                            slidesDelay.reset();
-//                            omg.reset();
-//                            slidesState = SlidesState.SLIDES_MAX;
-                    dump3();
-                    noSlidesLvl3.reset();
-                    slidesState = SlidesState.NOSLIDE;
-
-//                    farShared = true;
-//                    sharedDelay.reset();
-//                    slidesState = SlidesState.SLIDES_SHARED;
-                } else if(gamepad.b){
-                    farShared = false;
-                    sharedDelay.reset();
-                    slidesState = SlidesState.SLIDES_SHARED;
-                }
-                break;
-            case NOSLIDE:
-                if (noSlidesLvl3.seconds() >= NOSLIDESLVL3_TIME) {
-                    slidesState = SlidesState.SLIDES_START;
-                }
-            case SLIDES_MAX:
-                if(lvl == 3) extend();
-                else if(lvl == 2) level2Extend();
-
-                if(slidesDelay.seconds() >= SLIDES_DELAY_TIME){
-                    if(lvl == 3){
-                        dump3();
-                        slidesState = SlidesState.SLIDES_DUMP3;
-                    }
-                    else if(lvl == 2) {
-                        dump2Delay.reset();
-                        slidesState = SlidesState.SLIDES_DUMP2;
-                    }
-                    else if(lvl == 1) {
-                        slidesState = SlidesState.SLIDES_TEMP1;
-                    }
-
-                    servoDelay.reset();
-                    servo1Delay.reset();
-                }
-
-                break;
-            // TODO: slow down actions so carriage can reset before slides retract
-            case SLIDES_TEMP1:
-                temp1();
-                if(omg.seconds() >= OMG_TIME) {
-                    level1Extend();
-                    slidesState = SlidesState.SLIDES_DUMP1;
-                    lvl1Delay.reset();
-                }
-                break;
-            case SLIDES_DUMP1:
-                if (lvl1Delay.seconds() >= LVL1_DELAY_TIME) {
-                    dump1();
-
-                    if (servo1Delay.seconds() >= SERVO1_DELAY_TIME) {
-                        retract1();
-                        slidesState = SlidesState.SLIDES_START;
-                        done = true;
-                    }
-                }
-                break;
-            case SLIDES_TEMP2: // Initial servo temp position
-                temp2();
-                if (temp2Delay.seconds() >= TEMP2_DELAY_TIME) {
-                    slidesState = SlidesState.SLIDES_MAX;
-                }
-                break;
-            case SLIDES_DUMP2: // Actually placing
-                dump2();
-                if (dump2Delay.seconds() >= DUMP2_DELAY_TIME) {
-                    retract2();
-                    slidesState = SlidesState.SLIDES_START;
-                    done = true;
-                }
-                break;
-            case SLIDES_DUMP3:
-                //dump3();
-                if (servoDelay.seconds() >= SERVO_DELAY_TIME) {
-                    retract();
-                    slidesState = SlidesState.SLIDES_START;
-                    done = true;
-                }
-                break;
-            case SLIDES_SHARED:
-                if(farShared) sharedFar();
-                else shared();
-
-                dumpShared();
-                if (sharedDelay.seconds() >= SHARED_DELAY_TIME) {
-                    retractFar();
-                    slidesState = SlidesState.SLIDES_START;
-                }
-                break;
-//            case SERVOS_RESET:
-//                resetServos();
-//                slidesState = SlidesState.SLIDES_START;
-//                break;
-            default:
-                slidesState = SlidesState.SLIDES_START;
+        if(gamepad.b){
+            setTargetPosition(EXTEND_POS);
+        }
+        else if(gamepad.a){
+            setTargetPosition(0);
         }
         update();
    }
 
    public void telemetry(Telemetry telemetry) {
-        telemetry.addData("left", leftSlide.getPosition());
-       telemetry.addData("right", rightSlide.getPosition());
-       telemetry.addData("freight", freightServo.getPosition());
-       telemetry.addData("current state", slidesState);
-//        telemetry.addData("Current Position", getPosition());
-//        telemetry.addData("Target Position", targetPosition);
-//        telemetry.addData("Close?", close());
-//        telemetry.addData("Current State", slidesState);
-//        telemetry.addData("servo delay", servoDelay.seconds());
+       telemetry.addData("Velocity", getVelocity());
+       telemetry.addData("Position", getPosition());
    }
 
     public static double encoderTicksToInches(double ticks) {
