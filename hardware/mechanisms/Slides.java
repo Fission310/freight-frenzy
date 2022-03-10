@@ -25,34 +25,29 @@ public class Slides extends Mechanism {
     private Servo leftSlide;
     private Servo rightSlide;
     private Servo freightServo;
-
     // ====================== //
 
     // ======= SPOOL ======= //
-    public DcMotorEx spool;
-
-    private double targetPosition;
+    private DcMotorEx spool;
+    public double targetPosition;
 
     // PID constants //
     public static double EXTEND_POS = 11;
     public static double MAX_VEL = 10;
     public static double MAX_ACCEL = 10;
+
     private static double WHEEL_RADIUS = 1.37795;
     private static double TICKS_PER_REV = 537.6;
     private static double GEAR_RATIO = 1.0;
-    public static double RETRACT_MULTIPLIER = 0.05;
 
     public static double kF = 0.08;
-
     public static PIDCoefficients coeffs = new PIDCoefficients(1.2, 0, 0);
+
     PIDFController controller = new PIDFController(coeffs, 0, 0, 0, (position, velocity) -> kF);
     MotionProfile profile;
 
     public static ElapsedTime profileTimer = new ElapsedTime();
     // ============ //
-
-    public int lvl = 0;
-    public boolean farShared = false;
 
     public enum SlidesState {
         SLIDES_START,
@@ -113,8 +108,6 @@ public class Slides extends Mechanism {
         targetPosition = target;
         profile = generateProfile(targetPosition);
         profileTimer.reset();
-
-        controller.setTargetPosition(target);
     }
     // ========= //
 
