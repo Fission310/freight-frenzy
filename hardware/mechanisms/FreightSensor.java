@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -56,6 +58,7 @@ public class FreightSensor extends Mechanism {
     }
 
 
+    @Override
     public void telemetry(Telemetry telemetry){
 
         telemetry.addData("yellowLeft",getYellow(colorLeft));

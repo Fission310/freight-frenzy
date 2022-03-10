@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -47,6 +49,7 @@ public class TestDistSensor extends Mechanism {
         return distanceSensor.getDistance(DistanceUnit.INCH);
     }
 
+    @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("IN", getIN());
         telemetry.addData("CM", getCM());

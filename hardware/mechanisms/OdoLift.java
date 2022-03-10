@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -45,11 +47,12 @@ public class OdoLift extends Mechanism {
         perpOdoServo.setPosition(PERP_LOWER_HEIGHT);
     }
 
-    public void loop(Gamepad gamepad1) {
-        if (gamepad1.dpad_up) {
+    @Override
+    public void loop(Gamepad gamepad) {
+        if (gamepad.dpad_up) {
             lift();
         }
-        if (gamepad1.dpad_down) {
+        if (gamepad.dpad_down) {
             lower();
         }
     }

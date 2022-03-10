@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -88,6 +90,7 @@ public class Acquirer extends Mechanism {
 
 //    public boolean sensorStatus() { return freightSensor.hasFreight(); }
 
+    @Override
     public void telemetry(Telemetry telemetry){
 
         if(sensor.hasFreight())i++;
@@ -102,11 +105,12 @@ public class Acquirer extends Mechanism {
         sensor.telemetry(telemetry);
     }
 
-    public void loop(Gamepad gamepad1) {
+    @Override
+    public void loop(Gamepad gamepad) {
 
         switch (acquirerState) {
             case ACQUIRER_START:
-                if (gamepad1.right_trigger > 0) {
+                if (gamepad.right_trigger > 0) {
                     intake();
 
                     if (sensor.hasFreightLeft()) {
@@ -122,7 +126,7 @@ public class Acquirer extends Mechanism {
                         outtakeDelay.reset();
                     }
 
-                } else if (gamepad1.left_trigger > 0) {
+                } else if (gamepad.left_trigger > 0) {
                     outtake();
                 } else {
                     stop();

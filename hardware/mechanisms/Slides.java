@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
@@ -113,7 +115,8 @@ public class Slides extends Mechanism {
 
 
 
-   public void loop(Gamepad gamepad){
+    @Override
+    public void loop(Gamepad gamepad){
         if(gamepad.b){
             setTargetPosition(EXTEND_POS);
         }
@@ -121,12 +124,13 @@ public class Slides extends Mechanism {
             setTargetPosition(0);
         }
         update();
-   }
+    }
 
-   public void telemetry(Telemetry telemetry) {
+    @Override
+    public void telemetry(Telemetry telemetry) {
        telemetry.addData("Velocity", getVelocity());
        telemetry.addData("Position", getPosition());
-   }
+    }
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

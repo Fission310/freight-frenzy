@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -34,10 +36,11 @@ public class Carousel extends Mechanism {
         carouselLeft.setPower(0);
     }
 
-    public void loop(Gamepad gamepad1) {
-        if (gamepad1.right_bumper) {
+    @Override
+    public void loop(Gamepad gamepad) {
+        if (gamepad.right_bumper) {
             rotate();
-        } else if (gamepad1.left_bumper) {
+        } else if (gamepad.left_bumper) {
             reverse();
         } else {
             stop();
