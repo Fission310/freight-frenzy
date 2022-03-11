@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.KalmanFilter;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.LowPassFilter;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.checkerframework.checker.units.qual.K;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -19,10 +21,14 @@ public class TestDistSensor extends Mechanism {
 
     // higher gain values -> smoother graph (more averaged values) but
     // significantly higher lag
-    public static double HIGH_GAIN = 0.9;
-    public static double LOW_GAIN = 0.2;
-    LowPassFilter highFilter = new LowPassFilter(HIGH_GAIN);
-    LowPassFilter lowFilter = new LowPassFilter(LOW_GAIN);
+    public static double GAIN = 0.2;
+    LowPassFilter lowPassFilter = new LowPassFilter(GAIN);
+
+    // Kalman filter
+    public static double Q = 0.3;
+    public static double R = 3;
+    public static int N = 3;
+    KalmanFilter kalmanFilter = new KalmanFilter(Q,R,N);
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -32,29 +38,25 @@ public class TestDistSensor extends Mechanism {
     public double getCM() {
         return distanceSensor.getDistance(DistanceUnit.CM);
     }
-    public double getFilteredHighCM() {
-        double currentvalHigh = distanceSensor.getDistance(DistanceUnit.CM);
-        double estimateHigh = highFilter.estimate(currentvalHigh);
-        return estimateHigh;
+
+    public double getLowPass() {
+        double currentValue = distanceSensor.getDistance(DistanceUnit.CM);
+        double estimate = lowPassFilter.estimate(currentValue);
+        return estimate;
     }
-    public double getFilteredLowCM() {
-        double currentvalLow = distanceSensor.getDistance(DistanceUnit.CM);
-        double estimateLow = lowFilter.estimate(currentvalLow);
-        return estimateLow;
-    }
-    public double getMM() {
-        return distanceSensor.getDistance(DistanceUnit.MM);
-    }
-    public double getIN() {
-        return distanceSensor.getDistance(DistanceUnit.INCH);
+
+    public double getKalman() {
+        double currentValue = distanceSensor.getDistance(DistanceUnit.CM);  // imaginary, noisy sensor
+        double estimate = kalmanFilter.estimate(currentValue); // smoothed sensor
+        return estimate;
     }
 
     @Override
     public void telemetry(Telemetry telemetry) {
-        telemetry.addData("IN", getIN());
         telemetry.addData("CM", getCM());
-        telemetry.addData("Filtered High CM", getFilteredHighCM());
-        telemetry.addData("Filtered Low CM", getFilteredLowCM());
-        telemetry.addData("MM", getMM());
+        telemetry.addData("Low Pass", getLowPass());
+        telemetry.addData("Kalman", getKalman());
+        telemetry.addData("Low Pass Offset", Math.abs(getCM() - getLowPass()));
+        telemetry.addData("Kalman Offset", Math.abs(getCM() - getKalman()));
     }
 }
