@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
-import com.stuyfission.fissionlib.util.Mechanism;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
@@ -17,6 +15,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.stuyfission.fissionlib.util.Mechanism;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
@@ -27,23 +27,24 @@ public class Slides extends Mechanism {
     private Servo leftSlide;
     private Servo rightSlide;
     private Servo freightServo;
+
     // ====================== //
 
     // ======= SPOOL ======= //
-    private DcMotorEx spool;
-    public double targetPosition;
+    public DcMotorEx spool;
+
+    private double targetPosition;
 
     // PID constants //
     public static double EXTEND_POS = 11;
     public static double MAX_VEL = 10;
     public static double MAX_ACCEL = 10;
-
     private static double WHEEL_RADIUS = 1.37795;
     private static double TICKS_PER_REV = 537.6;
     private static double GEAR_RATIO = 1.0;
 
-    public static double kF = 0.08;
-    public static PIDCoefficients coeffs = new PIDCoefficients(1.2, 0, 0);
+    public static double kF = 0;
+    public static PIDCoefficients coeffs = new PIDCoefficients(0.2, 0, 0);
 
     PIDFController controller = new PIDFController(coeffs, 0, 0, 0, (position, velocity) -> kF);
     MotionProfile profile;
@@ -115,7 +116,6 @@ public class Slides extends Mechanism {
 
 
 
-    @Override
     public void loop(Gamepad gamepad){
         if(gamepad.b){
             setTargetPosition(EXTEND_POS);
@@ -126,10 +126,9 @@ public class Slides extends Mechanism {
         update();
     }
 
-    @Override
     public void telemetry(Telemetry telemetry) {
-       telemetry.addData("Velocity", getVelocity());
-       telemetry.addData("Position", getPosition());
+        telemetry.addData("Velocity", getVelocity());
+        telemetry.addData("Position", getPosition());
     }
 
     public static double encoderTicksToInches(double ticks) {
