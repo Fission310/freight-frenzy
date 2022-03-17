@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.TestDistSensor;
 
-@TeleOp (name = "TestingDistance", group = "Test")
-public class TestingDistance extends LinearOpMode {
+@TeleOp (name = "DistanceTest", group = "Test")
+public class DistanceTest extends LinearOpMode {
 
     private TestDistSensor distSensor = new TestDistSensor(this);
 
