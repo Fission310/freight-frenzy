@@ -21,13 +21,13 @@ public class Acquirer extends Mechanism {
 
     private FreightSensor sensor;
 
-    public static double POWER = 1;
+    public static double POWER = 0.85;
 
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
 
-    public static double OUTTAKE_DELAY_TIME = -1;
-    public static double OUTTAKE_DURATION_TIME = -1;
+    public static double OUTTAKE_DELAY_TIME = 0.2;
+    public static double OUTTAKE_DURATION_TIME = 1;
 
     public enum AcquirerState {
         ACQUIRER_START,
