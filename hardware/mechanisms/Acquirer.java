@@ -21,7 +21,8 @@ public class Acquirer extends Mechanism {
 
     private FreightSensor sensor;
 
-    public static double POWER = 0.85;
+    public static double LEFT_POWER = 0.85;
+    public static double RIGHT_POWER = 0.85;
 
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
@@ -65,21 +66,21 @@ public class Acquirer extends Mechanism {
     }
 
     public void intake() {
-        intakeRight.setPower(POWER);
-        intakeLeft.setPower(POWER);
+        intakeRight.setPower(RIGHT_POWER);
+        intakeLeft.setPower(LEFT_POWER);
     }
 
     public void outtakeLeft() {
-        intakeLeft.setPower(-POWER);
+        intakeLeft.setPower(-LEFT_POWER);
     }
 
     public void outtakeRight() {
-        intakeRight.setPower(-POWER);
+        intakeRight.setPower(-RIGHT_POWER);
     }
 
     public void outtake(){
-        intakeLeft.setPower(-POWER);
-        intakeRight.setPower(-POWER);
+        intakeRight.setPower(-RIGHT_POWER);
+        intakeLeft.setPower(-LEFT_POWER);
     }
 
 
