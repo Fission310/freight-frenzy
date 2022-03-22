@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
 
-@TeleOp(name = "SlidesProfileTest", group = "Test")
-public class SlidesProfileTest extends LinearOpMode {
+@TeleOp(name = "SlidesTest", group = "Test")
+public class SlidesTest extends LinearOpMode {
     Slides slides = new Slides(this);
 
     @Override
