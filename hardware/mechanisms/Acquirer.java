@@ -21,8 +21,8 @@ public class Acquirer extends Mechanism {
 
     private FreightSensor sensor;
 
-    public static double LEFT_POWER = 0.85;
-    public static double RIGHT_POWER = 0.85;
+    public static double LEFT_POWER = 1;
+    public static double RIGHT_POWER = 1;
 
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
