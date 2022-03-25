@@ -15,13 +15,21 @@ public class Carriage extends Mechanism {
     Servo armLeft;
     Servo armRight;
 
-    public static double CUP_MAX = 0.7;
-    public static double CUP_REST = 0.08;
-    public static double CUP_MIN = 0;
+    public static double CUP_LEVEL3 = 0.35;
+    public static double CUP_LEVEL3_TIP = 0.7;
+    public static double CUP_LEVEL2 = 0;
+    public static double CUP_LEVEL2_TIP = 0.55;
+    public static double CUP_LEVEL1 = 0.9;
+    public static double CUP_LEVEL1_TIP = 1;
+    public static double CUP_REST = 0.79;
 
-    public static double ARM_MAX = 1;
-    public static double ARM_REST = 0.21;
-    public static double ARM_MIN = 0;
+    public static double ARM_LEVEL3 = 0.80;
+    public static double ARM_LEVEL2 = 1;
+    public static double ARM_LEVEL1 = 0;
+    public static double ARM_REST = 0.23;
+
+    public static double CUP_TEST = 0.77;
+    public static double ARM_TEST = 0.21;
 
     public Carriage(LinearOpMode opMode) { this.opMode = opMode; }
 
@@ -43,30 +51,50 @@ public class Carriage extends Mechanism {
         cup.setPosition(CUP_REST);
     }
 
-    public void lvl3() {
-        armLeft.setPosition(ARM_MAX);
-        armRight.setPosition(ARM_MAX);
-        //TODO: cup.setPosition
+    public void level3Temp() {
+        armLeft.setPosition(ARM_LEVEL3);
+        armRight.setPosition(ARM_LEVEL3);
+        cup.setPosition(CUP_LEVEL3);
+    }
+    public void level3Tip() {
+        armLeft.setPosition(ARM_LEVEL3);
+        armRight.setPosition(ARM_LEVEL3);
+        cup.setPosition(CUP_LEVEL3_TIP);
+    }
+    public void level2Temp(){
+        armLeft.setPosition(ARM_LEVEL2);
+        armRight.setPosition(ARM_LEVEL2);
+        cup.setPosition(CUP_LEVEL2);
+    }
+    public void level2Tip(){
+        armLeft.setPosition(ARM_LEVEL2);
+        armRight.setPosition(ARM_LEVEL2);
+        cup.setPosition(CUP_LEVEL2_TIP);
     }
 
-    public void lvl1() {
-        armLeft.setPosition(ARM_MIN);
-        armRight.setPosition(ARM_MIN);
-        //TODO: cup.setPosition
+    public void level1Temp(){
+        armLeft.setPosition(ARM_LEVEL1);
+        armRight.setPosition(ARM_LEVEL1);
+        cup.setPosition(CUP_LEVEL1);
+    }
+    public void level1Tip() {
+        armLeft.setPosition(ARM_LEVEL1);
+        armRight.setPosition(ARM_LEVEL1);
+        cup.setPosition(CUP_LEVEL1_TIP);
     }
 
-    @Override
-    public void loop(Gamepad gamepad) {
-        if (gamepad.x) {
-            rest();
-        }
-        if (gamepad.dpad_up) {
-            lvl3();
-        }
-        if (gamepad.dpad_down) {
-            lvl1();
-        }
-    }
+//    @Override
+//    public void loop(Gamepad gamepad) {
+//        if (gamepad.x) {
+//            rest();
+//        }
+//        if (gamepad.dpad_up) {
+//            lvl3();
+//        }
+//        if (gamepad.dpad_down) {
+//            lvl1();
+//        }
+//    }
 
     @Override
     public void telemetry(Telemetry telemetry) {

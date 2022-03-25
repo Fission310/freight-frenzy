@@ -16,18 +16,23 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class SlidesProfile extends Mechanism {
 
     MotionProfiledDcMotor spool;
+    Carriage carriage = new Carriage(opMode);
 
-    public static double EXTEND_POS = 7;
-    public static double MAX_VEL = 30;
-    public static double MAX_ACCEL = 30;
+    public static double EXTEND_POS_LEVEL3 = 7.3;
+    public static double EXTEND_POS_LEVEL2 = 5;
+    public static double EXTEND_POS_LEVEL1 = 6;
+    public static double EXTEND_POS_SHARED = 3;
+
+    public static double MAX_VEL = 60;
+    public static double MAX_ACCEL = 35;
     public static double RETRACTION_MULTIPLIER = 0.5;
     private static final double WHEEL_RADIUS = 1.37795;
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
 
-    public static double kP = 1.6;
+    public static double kP = 1.8;
     public static double kI = 0;
-    public static double kD = 0;
+    public static double kD = 0.001;
     public static double kF = 0;
 
     public SlidesProfile(LinearOpMode opMode) { this.opMode = opMode; }
@@ -42,20 +47,49 @@ public class SlidesProfile extends Mechanism {
         spool.setRetractionMultiplier(RETRACTION_MULTIPLIER);
         spool.setDirection(DcMotorSimple.Direction.REVERSE);
         spool.setTargetPosition(0);
+
+        carriage.init(hwMap);
     }
-    @Override
-    public void loop(Gamepad gamepad) {
-        if (gamepad.b) {
-            spool.setTargetPosition(EXTEND_POS);
-        } else if (gamepad.a) {
-            spool.setTargetPosition(0);
-        }
+
+    public void rest() {
+        spool.setTargetPosition(0);
+        carriage.rest();
+    }
+    public void level3Temp() {
+        spool.setTargetPosition(EXTEND_POS_LEVEL3);
+    }
+    public void CARRIAGElevel3Temp() {
+        carriage.level3Temp();
+    }
+    public void level3Tip() {
+        carriage.level3Tip();
+    }
+    public void update() {
         spool.update();
     }
+
+//    @Override
+//    public void loop(Gamepad gamepad) {
+//        if (gamepad.y) {
+//            spool.setTargetPosition(EXTEND_POS_LEVEL3);
+//        } else if (gamepad.b) {
+//            spool.setTargetPosition(0);
+//        }
+//        spool.update();
+//
+//        if (gamepad.x) {
+//            carriage.level3Temp();
+//        } else if (gamepad.a) {
+//            carriage.level3Tip();
+//        } else if (gamepad.dpad_down) {
+//            carriage.rest();
+//        }
+//    }
 
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("position", spool.getPosition());
         telemetry.addData("velocity", spool.getVelocity());
+        carriage.telemetry(telemetry);
     }
 }
