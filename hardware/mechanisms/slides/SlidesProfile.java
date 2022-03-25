@@ -55,10 +55,10 @@ public class SlidesProfile extends Mechanism {
         spool.setTargetPosition(0);
         carriage.rest();
     }
-    public void level3Temp() {
+    public void extendLevel3() {
         spool.setTargetPosition(EXTEND_POS_LEVEL3);
     }
-    public void CARRIAGElevel3Temp() {
+    public void level3Temp() {
         carriage.level3Temp();
     }
     public void level3Tip() {

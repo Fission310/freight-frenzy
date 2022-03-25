@@ -23,8 +23,9 @@ public class Slides extends Mechanism {
     public Slides(LinearOpMode opMode) { this.opMode = opMode; }
 
     public enum SlidesState {
+        WAIT,
         REST,
-        LEVEL3_TEMP,
+        LEVEL3_EXTEND,
         LEVEL3_TIP
     }
 
@@ -34,6 +35,7 @@ public class Slides extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
         slides.init(hwMap);
+
         state = SlidesState.REST;
         time.reset();
     }
@@ -44,30 +46,29 @@ public class Slides extends Mechanism {
         switch(state) {
             case REST:
                 slides.rest();
+                state = SlidesState.WAIT;
+                break;
+            case WAIT:
                 if (gamepad.y) {
-                    state = SlidesState.LEVEL3_TEMP;
+                    slides.extendLevel3();
+                    slides.level3Temp();
+
+                    state = SlidesState.LEVEL3_EXTEND;
                     time.reset();
                 }
                 break;
-            case LEVEL3_TEMP:
-                if (time.seconds() > 0.5)
-                    slides.CARRIAGElevel3Temp();
-                slides.level3Temp();
+            case LEVEL3_EXTEND:
                 if (gamepad.x) {
+                    slides.level3Tip();
                     state = SlidesState.LEVEL3_TIP;
                 }
                 break;
             case LEVEL3_TIP:
-                slides.level3Tip();
-                if (gamepad.a) {
+                if(gamepad.a){
                     state = SlidesState.REST;
                 }
                 break;
-            default:
-                slides.rest();
-                break;
         }
-        slides.update();
     }
 
     @Override
