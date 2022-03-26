@@ -16,7 +16,7 @@ public class Carriage extends Mechanism {
     Servo armRight;
 
     public static double CUP_LEVEL3 = 0.35;
-    public static double CUP_LEVEL3_TIP = 0.7;
+    public static double CUP_LEVEL3_TIP = 0.8;
     public static double CUP_LEVEL2 = 0;
     public static double CUP_LEVEL2_TIP = 0.55;
     public static double CUP_LEVEL1 = 0.9;
@@ -26,7 +26,7 @@ public class Carriage extends Mechanism {
     public static double ARM_LEVEL3 = 0.80;
     public static double ARM_LEVEL2 = 1;
     public static double ARM_LEVEL1 = 0;
-    public static double ARM_REST = 0.23;
+    public static double ARM_REST = 0.22;
 
     public static double CUP_TEST = 0.77;
     public static double ARM_TEST = 0.21;
