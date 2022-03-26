@@ -23,14 +23,17 @@ public class Slides extends Mechanism {
     public Slides(LinearOpMode opMode) { this.opMode = opMode; }
 
     public enum SlidesState {
-        WAIT,
         REST,
-        LEVEL3_EXTEND,
-        LEVEL3_TIP
+        WAIT,
+        CARRIAGE_DELAY,
+        LEVEL3_EXTENDED,
+        LEVEL3_TIPPING,
     }
 
     SlidesState state;
     ElapsedTime time = new ElapsedTime();
+    public static double CARRIAGE_DELAYTIME = 0.25;
+    public static double LEVEL3_DELAYTIME = 0.5;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -51,20 +54,25 @@ public class Slides extends Mechanism {
             case WAIT:
                 if (gamepad.y) {
                     slides.extendLevel3();
-                    slides.level3Temp();
-
-                    state = SlidesState.LEVEL3_EXTEND;
+                    state = SlidesState.CARRIAGE_DELAY;
                     time.reset();
                 }
                 break;
-            case LEVEL3_EXTEND:
-                if (gamepad.x) {
-                    slides.level3Tip();
-                    state = SlidesState.LEVEL3_TIP;
+            case CARRIAGE_DELAY:
+                if (time.seconds() > CARRIAGE_DELAYTIME) {
+                    slides.level3Temp();
+                    state = SlidesState.LEVEL3_EXTENDED;
                 }
                 break;
-            case LEVEL3_TIP:
-                if(gamepad.a){
+            case LEVEL3_EXTENDED:
+                if (gamepad.x) {
+                    slides.level3Tip();
+                    time.reset();
+                    state = SlidesState.LEVEL3_TIPPING;
+                }
+                break;
+            case LEVEL3_TIPPING:
+                if (time.seconds() > LEVEL3_DELAYTIME) {
                     state = SlidesState.REST;
                 }
                 break;
@@ -74,6 +82,7 @@ public class Slides extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("case", state);
+        telemetry.addData("timer", time.seconds());
         slides.telemetry(telemetry);
     }
 }

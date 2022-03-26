@@ -24,15 +24,15 @@ public class SlidesProfile extends Mechanism {
     public static double EXTEND_POS_SHARED = 3;
 
     public static double MAX_VEL = 60;
-    public static double MAX_ACCEL = 35;
-    public static double RETRACTION_MULTIPLIER = 0.5;
+    public static double MAX_ACCEL = 30;
+    public static double RETRACTION_MULTIPLIER = 0.6;
     private static final double WHEEL_RADIUS = 1.37795;
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
 
-    public static double kP = 1.8;
+    public static double kP = 0.8;
     public static double kI = 0;
-    public static double kD = 0.001;
+    public static double kD = 0;
     public static double kF = 0;
 
     public SlidesProfile(LinearOpMode opMode) { this.opMode = opMode; }
