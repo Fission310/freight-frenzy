@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 @Config
-public class SlidesProfile extends Mechanism {
+public class SlideMechanism extends Mechanism {
 
     MotionProfiledDcMotor spool;
     Carriage carriage = new Carriage(opMode);
@@ -35,7 +35,7 @@ public class SlidesProfile extends Mechanism {
     public static double kD = 0;
     public static double kF = 0;
 
-    public SlidesProfile(LinearOpMode opMode) { this.opMode = opMode; }
+    public SlideMechanism(LinearOpMode opMode) { this.opMode = opMode; }
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -64,27 +64,21 @@ public class SlidesProfile extends Mechanism {
     public void level3Tip() {
         carriage.level3Tip();
     }
+
+    public void extendLevel2() {
+        spool.setTargetPosition(EXTEND_POS_LEVEL2);
+    }
+    public void level2Temp() {
+        carriage.level2Temp();
+    }
+    public void level2Tip() {
+        carriage.level2Tip();
+    }
+
     public void update() {
         spool.update();
     }
 
-//    @Override
-//    public void loop(Gamepad gamepad) {
-//        if (gamepad.y) {
-//            spool.setTargetPosition(EXTEND_POS_LEVEL3);
-//        } else if (gamepad.b) {
-//            spool.setTargetPosition(0);
-//        }
-//        spool.update();
-//
-//        if (gamepad.x) {
-//            carriage.level3Temp();
-//        } else if (gamepad.a) {
-//            carriage.level3Tip();
-//        } else if (gamepad.dpad_down) {
-//            carriage.rest();
-//        }
-//    }
 
     @Override
     public void telemetry(Telemetry telemetry) {
