@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.Carriage;
-import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlidesProfile;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
 
 /**
  * FSM for slides scoring
@@ -18,28 +17,36 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlidesProfile;
 @Config
 public class Slides extends Mechanism {
 
-    SlidesProfile slides = new SlidesProfile(opMode);
+    SlideMechanism slides = new SlideMechanism(opMode);
 
     public Slides(LinearOpMode opMode) { this.opMode = opMode; }
 
     public enum SlidesState {
         REST,
         WAIT,
-        CARRIAGE_DELAY,
-        LEVEL3_EXTENDED,
-        LEVEL3_TIPPING,
+        DELAY,
+        EXTENDED,
+        TIPPING,
     }
-
     SlidesState state;
+
+    public enum LevelState {
+        LEVEL1,
+        LEVEL2,
+        LEVEL3
+    }
+    LevelState level;
+
     ElapsedTime time = new ElapsedTime();
     public static double CARRIAGE_DELAYTIME = 0.25;
-    public static double LEVEL3_DELAYTIME = 0.5;
+    public static double TIPPING_DELAYTIME = 0.5;
 
     @Override
     public void init(HardwareMap hwMap) {
         slides.init(hwMap);
 
         state = SlidesState.REST;
+        level = LevelState.LEVEL1;
         time.reset();
     }
 
@@ -53,26 +60,56 @@ public class Slides extends Mechanism {
                 break;
             case WAIT:
                 if (gamepad.y) {
+                    level = LevelState.LEVEL3;
                     slides.extendLevel3();
-                    state = SlidesState.CARRIAGE_DELAY;
+                    state = SlidesState.DELAY;
+                    time.reset();
+                }
+                if (gamepad.b) {
+                    level = LevelState.LEVEL2;
+                    slides.extendLevel2();
+                    state = SlidesState.DELAY;
                     time.reset();
                 }
                 break;
-            case CARRIAGE_DELAY:
-                if (time.seconds() > CARRIAGE_DELAYTIME) {
-                    slides.level3Temp();
-                    state = SlidesState.LEVEL3_EXTENDED;
+            case DELAY:
+                switch(level) {
+                    case LEVEL1:
+                        break;
+                    case LEVEL2:
+                        if (time.seconds() > CARRIAGE_DELAYTIME) {
+                            slides.level2Temp();
+                            state = SlidesState.EXTENDED;
+                        }
+                        break;
+                    case LEVEL3:
+                        if (time.seconds() > CARRIAGE_DELAYTIME) {
+                            slides.level3Temp();
+                            state = SlidesState.EXTENDED;
+                        }
+                        break;
                 }
                 break;
-            case LEVEL3_EXTENDED:
+            case EXTENDED:
                 if (gamepad.x) {
-                    slides.level3Tip();
-                    time.reset();
-                    state = SlidesState.LEVEL3_TIPPING;
+                    switch(level) {
+                        case LEVEL1:
+                            break;
+                        case LEVEL2:
+                            slides.level2Tip();
+                            time.reset();
+                            state = SlidesState.TIPPING;
+                            break;
+                        case LEVEL3:
+                            slides.level3Tip();
+                            time.reset();
+                            state = SlidesState.TIPPING;
+                            break;
+                    }
                 }
                 break;
-            case LEVEL3_TIPPING:
-                if (time.seconds() > LEVEL3_DELAYTIME) {
+            case TIPPING:
+                if (time.seconds() > TIPPING_DELAYTIME) {
                     state = SlidesState.REST;
                 }
                 break;
