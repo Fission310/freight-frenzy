@@ -15,14 +15,14 @@ public class AcquirerTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         acquirer.init(hardwareMap);
 
-//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
             acquirer.loop(gamepad1);
-//            acquirer.telemetry(telemetry);
-//            telemetry.update();
+            acquirer.telemetry(telemetry);
+            telemetry.update();
         }
     }
 }
