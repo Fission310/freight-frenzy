@@ -94,16 +94,56 @@ public class Acquirer extends Mechanism {
     @Override
     public void telemetry(Telemetry telemetry){
 
-        if(sensor.hasFreight())i++;
+//        if(sensor.hasFreight())i++;
 
         telemetry.addData("Left Sensor", sensor.hasFreightLeft());
         telemetry.addData("Right Sensor", sensor.hasFreightRight());
-        telemetry.addData("Delay", outtakeDelay.seconds());
-        telemetry.addData("Times", i);
+//        telemetry.addData("Delay", outtakeDelay.seconds());
+//        telemetry.addData("Times", i);
 
 
 
         sensor.telemetry(telemetry);
+
+    }
+
+    public void autonLoop(){
+        switch (acquirerState){
+            case ACQUIRER_START:
+                intake();
+                if (sensor.hasFreightLeft()) {
+                    leftOuttake = true;
+
+
+                    acquirerState = AcquirerState.ACQUIRER_DELAY;
+                    outtakeDelay.reset();
+                }
+                else if  (sensor.hasFreightRight()) {
+                    leftOuttake = false;
+
+
+                    acquirerState = AcquirerState.ACQUIRER_DELAY;
+                    outtakeDelay.reset();
+                }
+                break;
+
+            case ACQUIRER_DELAY:
+                if (outtakeDelay.seconds() >= OUTTAKE_DELAY_TIME) {
+                    acquirerState = AcquirerState.ACQUIRER_PREVENT;
+                    outtakeDuration.reset();
+                }
+                else {
+                    intake();
+                }
+                break;
+            case ACQUIRER_PREVENT:
+                if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
+                    acquirerState = AcquirerState.ACQUIRER_START;
+                } else {
+                    if(leftOuttake) outtakeLeft();
+                    else outtakeRight();
+                }
+        }
     }
 
     @Override
@@ -117,11 +157,15 @@ public class Acquirer extends Mechanism {
                     if (sensor.hasFreightLeft()) {
                         leftOuttake = true;
 
+                        gamepad.rumble(200);
+
                         acquirerState = AcquirerState.ACQUIRER_DELAY;
                         outtakeDelay.reset();
                     }
                     else if  (sensor.hasFreightRight()) {
                         leftOuttake = false;
+
+                        gamepad.rumble(200);
 
                         acquirerState = AcquirerState.ACQUIRER_DELAY;
                         outtakeDelay.reset();
