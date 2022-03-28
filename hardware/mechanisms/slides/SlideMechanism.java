@@ -18,8 +18,8 @@ public class SlideMechanism extends Mechanism {
     MotionProfiledDcMotor spool;
     Carriage carriage = new Carriage(opMode);
 
-    public static double EXTEND_POS_LEVEL3 = 7.3;
-    public static double EXTEND_POS_LEVEL2 = 5;
+    public static double EXTEND_POS_LEVEL3 = 7.7;
+    public static double EXTEND_POS_LEVEL2 = 5.1;
     public static double EXTEND_POS_LEVEL1 = 6;
     public static double EXTEND_POS_SHARED = 3;
 
@@ -30,7 +30,7 @@ public class SlideMechanism extends Mechanism {
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
 
-    public static double kP = 0.8;
+    public static double kP = 0.2;
     public static double kI = 0;
     public static double kD = 0;
     public static double kF = 0;
@@ -53,6 +53,9 @@ public class SlideMechanism extends Mechanism {
 
     public void rest() {
         spool.setTargetPosition(0);
+        carriage.rest();
+    }
+    public void resetServos(){
         carriage.rest();
     }
     public void extendLevel3() {

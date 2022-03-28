@@ -38,8 +38,10 @@ public class Slides extends Mechanism {
     LevelState level;
 
     ElapsedTime time = new ElapsedTime();
-    public static double CARRIAGE_DELAYTIME = 0.25;
-    public static double TIPPING_DELAYTIME = 0.5;
+    public static double CARRIAGE2_DELAYTIME = 0.25;
+    public static double CARRIAGE3_DELAYTIME = 0.4;
+    public static double TIPPING2_DELAYTIME = 0.7;
+    public static double TIPPING3_DELAYTIME = 0.6;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -77,13 +79,13 @@ public class Slides extends Mechanism {
                     case LEVEL1:
                         break;
                     case LEVEL2:
-                        if (time.seconds() > CARRIAGE_DELAYTIME) {
+                        if (time.seconds() > CARRIAGE2_DELAYTIME) {
                             slides.level2Temp();
                             state = SlidesState.EXTENDED;
                         }
                         break;
                     case LEVEL3:
-                        if (time.seconds() > CARRIAGE_DELAYTIME) {
+                        if (time.seconds() > CARRIAGE3_DELAYTIME) {
                             slides.level3Temp();
                             state = SlidesState.EXTENDED;
                         }
@@ -109,8 +111,19 @@ public class Slides extends Mechanism {
                 }
                 break;
             case TIPPING:
-                if (time.seconds() > TIPPING_DELAYTIME) {
-                    state = SlidesState.REST;
+                switch (level) {
+                    case LEVEL1:
+                        break;
+                    case LEVEL2:
+                        if (time.seconds() > TIPPING2_DELAYTIME) {
+                            state = SlidesState.REST;
+                        }
+                        break;
+                    case LEVEL3:
+                        if (time.seconds() > TIPPING3_DELAYTIME) {
+                            state = SlidesState.REST;
+                        }
+                        break;
                 }
                 break;
         }
