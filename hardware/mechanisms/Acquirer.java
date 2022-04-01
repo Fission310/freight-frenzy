@@ -67,7 +67,7 @@ public class Acquirer extends Mechanism {
 
     public void intake() {
         intakeRight.setPower(RIGHT_POWER);
-        intakeLeft.setPower(LEFT_POWER);
+        //intakeLeft.setPower(LEFT_POWER);
     }
 
     public void outtakeLeft() {
@@ -111,14 +111,14 @@ public class Acquirer extends Mechanism {
         switch (acquirerState){
             case ACQUIRER_START:
                 intake();
-                if (sensor.hasFreightLeft()) {
-                    leftOuttake = true;
-
-
-                    acquirerState = AcquirerState.ACQUIRER_DELAY;
-                    outtakeDelay.reset();
-                }
-                else if  (sensor.hasFreightRight()) {
+//                if (sensor.hasFreightLeft()) {
+//                    leftOuttake = true;
+//
+//
+//                    acquirerState = AcquirerState.ACQUIRER_DELAY;
+//                    outtakeDelay.reset();
+//                }
+                if  (sensor.hasFreightRight()) {
                     leftOuttake = false;
 
 
@@ -140,8 +140,9 @@ public class Acquirer extends Mechanism {
                 if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
                     acquirerState = AcquirerState.ACQUIRER_START;
                 } else {
-                    if(leftOuttake) outtakeLeft();
-                    else outtakeRight();
+//                    if(leftOuttake) outtakeLeft();
+//                    else outtakeRight();
+                    outtakeRight();
                 }
         }
     }

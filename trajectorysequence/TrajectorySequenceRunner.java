@@ -263,6 +263,11 @@ public class TrajectorySequenceRunner {
         DashboardUtil.drawRobot(fieldOverlay, poseEstimate);
     }
 
+    public void breakFollowing() {
+        currentTrajectorySequence = null;
+        remainingMarkers.clear();
+    }
+
     public Pose2d getLastPoseError() {
         return lastPoseError;
     }
