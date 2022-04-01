@@ -18,7 +18,7 @@ public class Carriage extends Mechanism {
     public static double CUP_LEVEL3 = 0.25;
     public static double CUP_LEVEL3_TIP = 0.8;
     public static double CUP_LEVEL2 = 0;
-    public static double CUP_LEVEL2_TIP = 0.55;
+    public static double CUP_LEVEL2_TIP = 0.65;
     public static double CUP_LEVEL1 = 0.9;
     public static double CUP_LEVEL1_TIP = 1;
     public static double CUP_REST = 0.81;

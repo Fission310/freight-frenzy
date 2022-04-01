@@ -25,17 +25,17 @@ public class REDcycles extends LinearOpMode {
     private static final Pose2d SCORE_0 = new Pose2d(-11, WALL_POS+1);
     private static final Pose2d SCORE_1 = new Pose2d(-11+1, WALL_POS+1);
     private static final Pose2d SCORE_2 = new Pose2d(-11, WALL_POS+1);
-    private static final Pose2d SCORE_3 = new Pose2d(-11-1, WALL_POS+1);
-    private static final Pose2d SCORE_4 = new Pose2d(-11-2, WALL_POS+1);
-    private static final Pose2d SCORE_5 = new Pose2d(-11-3, WALL_POS+1);
+    private static final Pose2d SCORE_3 = new Pose2d(-11, WALL_POS+1);
+    private static final Pose2d SCORE_4 = new Pose2d(-11-1, WALL_POS+1);
+    private static final Pose2d SCORE_5 = new Pose2d(-11-1, WALL_POS+1);
 
     private static final Pose2d PARK = new Pose2d(41+3, WALL_POS+2);
     private static final Pose2d WAREHOUSE_0 = new Pose2d(47, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_1 = new Pose2d(49, WALL_POS+2.25);
-    private static final Pose2d WAREHOUSE_2 = new Pose2d(52, WALL_POS+2.5);
-    private static final Pose2d WAREHOUSE_3 = new Pose2d(55, WALL_POS+3);
-    private static final Pose2d WAREHOUSE_4 = new Pose2d(56, WALL_POS+3);
-    private static final Pose2d WAREHOUSE_5 = new Pose2d(57, WALL_POS+3);
+    private static final Pose2d WAREHOUSE_1 = new Pose2d(52, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_2 = new Pose2d(54, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_3 = new Pose2d(56, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_4 = new Pose2d(58, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS+2);
 
     public static double LVL2_WAIT = 0.37;
     public static double LVL3_WAIT = 0.35;
@@ -90,10 +90,10 @@ public class REDcycles extends LinearOpMode {
                 .addTemporalMarker(() ->{
                     slides.extendLevel2();
                 })
-                .addTemporalMarker( ()->{
+
+                .UNSTABLE_addDisplacementMarkerOffset(0.2,  ()->{
                     slides.level2ArmTemp();
                 })
-
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () ->{
                     slides.level2CupTemp();
                 })
@@ -180,20 +180,20 @@ public class REDcycles extends LinearOpMode {
                     slides.rest();
                 })
 
-                .lineToLinearHeading(WAREHOUSE_5)
-                .waitSeconds(WAREHOUSE_WAIT)
-
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
-                    slides.extendLevel3();
-                    slides.level3Temp();
-                })
-                .lineToLinearHeading(SCORE_5)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT,  () ->{
-                    slides.level3Tip();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, ()->{
-                    slides.rest();
-                })
+//                .lineToLinearHeading(WAREHOUSE_5)
+//                .waitSeconds(WAREHOUSE_WAIT)
+//
+//                .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
+//                    slides.extendLevel3();
+//                    slides.level3Temp();
+//                })
+//                .lineToLinearHeading(SCORE_5)
+//                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT,  () ->{
+//                    slides.level3Tip();
+//                })
+//                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, ()->{
+//                    slides.rest();
+//                })
 
                 .lineToLinearHeading(PARK)
                 .build();
