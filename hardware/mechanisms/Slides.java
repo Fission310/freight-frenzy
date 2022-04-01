@@ -25,6 +25,7 @@ public class Slides extends Mechanism {
         REST,
         WAIT,
         DELAY,
+        LEVEL2_TEMP_DELAY,
         EXTENDED,
         TIPPING,
     }
@@ -39,9 +40,10 @@ public class Slides extends Mechanism {
 
     ElapsedTime time = new ElapsedTime();
     public static double CARRIAGE2_DELAYTIME = 0.25;
+    public static double CARRIAGE2_TEMP_DELAYTIME = 0.2;
     public static double CARRIAGE3_DELAYTIME = 0.4;
     public static double TIPPING2_DELAYTIME = 0.7;
-    public static double TIPPING3_DELAYTIME = 0.6;
+    public static double TIPPING3_DELAYTIME = 0.5;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -80,8 +82,9 @@ public class Slides extends Mechanism {
                         break;
                     case LEVEL2:
                         if (time.seconds() > CARRIAGE2_DELAYTIME) {
-                            slides.level2Temp();
-                            state = SlidesState.EXTENDED;
+                            slides.level2ArmTemp();
+                            time.reset();
+                            state = SlidesState.LEVEL2_TEMP_DELAY;
                         }
                         break;
                     case LEVEL3:
@@ -90,6 +93,12 @@ public class Slides extends Mechanism {
                             state = SlidesState.EXTENDED;
                         }
                         break;
+                }
+                break;
+            case LEVEL2_TEMP_DELAY:
+                if (time.seconds() > CARRIAGE2_TEMP_DELAYTIME) {
+                    slides.level2CupTemp();
+                    state = SlidesState.EXTENDED;
                 }
                 break;
             case EXTENDED:
