@@ -34,7 +34,8 @@ public class Slides extends Mechanism {
     public enum LevelState {
         LEVEL1,
         LEVEL2,
-        LEVEL3
+        LEVEL3_CLOSE,
+        LEVEL3_FAR
     }
     LevelState level;
 
@@ -64,14 +65,14 @@ public class Slides extends Mechanism {
                 break;
             case WAIT:
                 if (gamepad.y) {
-                    level = LevelState.LEVEL3;
+                    level = LevelState.LEVEL3_FAR;
                     slides.extendLevel3();
                     state = SlidesState.DELAY;
                     time.reset();
                 }
                 if (gamepad.b) {
-                    level = LevelState.LEVEL2;
-                    slides.extendLevel2();
+                    level = LevelState.LEVEL3_CLOSE;
+                    slides.extendLevel3();
                     state = SlidesState.DELAY;
                     time.reset();
                 }
@@ -80,14 +81,13 @@ public class Slides extends Mechanism {
                 switch(level) {
                     case LEVEL1:
                         break;
-                    case LEVEL2:
-                        if (time.seconds() > CARRIAGE2_DELAYTIME) {
-                            slides.level2ArmTemp();
-                            time.reset();
-                            state = SlidesState.LEVEL2_TEMP_DELAY;
+                    case LEVEL3_CLOSE:
+                        if (time.seconds() > CARRIAGE3_DELAYTIME) {
+                            slides.level3TempClose();
+                            state = SlidesState.EXTENDED;
                         }
                         break;
-                    case LEVEL3:
+                    case LEVEL3_FAR:
                         if (time.seconds() > CARRIAGE3_DELAYTIME) {
                             slides.level3Temp();
                             state = SlidesState.EXTENDED;
@@ -106,12 +106,12 @@ public class Slides extends Mechanism {
                     switch(level) {
                         case LEVEL1:
                             break;
-                        case LEVEL2:
-                            slides.level2Tip();
+                        case LEVEL3_CLOSE:
+                            slides.level3TipClose();
                             time.reset();
                             state = SlidesState.TIPPING;
                             break;
-                        case LEVEL3:
+                        case LEVEL3_FAR:
                             slides.level3Tip();
                             time.reset();
                             state = SlidesState.TIPPING;
@@ -123,12 +123,12 @@ public class Slides extends Mechanism {
                 switch (level) {
                     case LEVEL1:
                         break;
-                    case LEVEL2:
-                        if (time.seconds() > TIPPING2_DELAYTIME) {
+                    case LEVEL3_CLOSE:
+                        if (time.seconds() > TIPPING3_DELAYTIME) {
                             state = SlidesState.REST;
                         }
                         break;
-                    case LEVEL3:
+                    case LEVEL3_FAR:
                         if (time.seconds() > TIPPING3_DELAYTIME) {
                             state = SlidesState.REST;
                         }
