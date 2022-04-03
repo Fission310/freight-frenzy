@@ -24,8 +24,8 @@ public class SlideMechanism extends Mechanism {
     public static double EXTEND_POS_SHARED = 3;
 
     public static double MAX_VEL = 60;
-    public static double MAX_ACCEL = 30;
-    public static double RETRACTION_MULTIPLIER = 0.6;
+    public static double MAX_ACCEL = 50;
+    public static double RETRACTION_MULTIPLIER = 0.35;
     private static final double WHEEL_RADIUS = 1.37795;
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
@@ -64,8 +64,14 @@ public class SlideMechanism extends Mechanism {
     public void level3Temp() {
         carriage.level3Temp();
     }
+    public void level3TempClose() {
+        carriage.level3TempClose();
+    }
     public void level3Tip() {
         carriage.level3Tip();
+    }
+    public void level3TipClose() {
+        carriage.level3TipClose();
     }
 
     public void extendLevel2() {

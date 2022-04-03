@@ -16,14 +16,16 @@ public class Carriage extends Mechanism {
     Servo armRight;
 
     public static double CUP_LEVEL3 = 0.25;
-    public static double CUP_LEVEL3_TIP = 0.8;
+    public static double CUP_LEVEL3_TIP = 0.7;
+    public static double CUP_LEVEL3_TIP_CLOSE = 0.85;
     public static double CUP_LEVEL2 = 0;
     public static double CUP_LEVEL2_TIP = 0.65;
     public static double CUP_LEVEL1 = 0.9;
     public static double CUP_LEVEL1_TIP = 1;
     public static double CUP_REST = 0.81;
 
-    public static double ARM_LEVEL3 = 0.80;
+    public static double ARM_LEVEL3 = 0.85;
+    public static double ARM_LEVEL3_CLOSE = 0.8;
     public static double ARM_LEVEL2 = 1;
     public static double ARM_LEVEL1 = 0;
     public static double ARM_REST = 0.20;
@@ -60,6 +62,16 @@ public class Carriage extends Mechanism {
         armLeft.setPosition(ARM_LEVEL3);
         armRight.setPosition(ARM_LEVEL3);
         cup.setPosition(CUP_LEVEL3_TIP);
+    }
+    public void level3TempClose() {
+        armLeft.setPosition(ARM_LEVEL3_CLOSE);
+        armRight.setPosition(ARM_LEVEL3_CLOSE);
+        cup.setPosition(CUP_LEVEL3);
+    }
+    public void level3TipClose() {
+        armLeft.setPosition(ARM_LEVEL3_CLOSE);
+        armRight.setPosition(ARM_LEVEL3_CLOSE);
+        cup.setPosition(CUP_LEVEL3_TIP_CLOSE);
     }
     public void level2Temp(){
         armLeft.setPosition(ARM_LEVEL2);

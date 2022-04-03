@@ -27,8 +27,8 @@ public class Acquirer extends Mechanism {
     ElapsedTime outtakeDelay = new ElapsedTime();
     ElapsedTime outtakeDuration = new ElapsedTime();
 
-    public static double OUTTAKE_DELAY_TIME = 0.2;
-    public static double OUTTAKE_DURATION_TIME = 1;
+    public static double OUTTAKE_DELAY_TIME = 0.12;
+    public static double OUTTAKE_DURATION_TIME = 0.8;
 
     public enum AcquirerState {
         ACQUIRER_START,

@@ -25,22 +25,22 @@ public class REDcycles extends LinearOpMode {
     private static final Pose2d SCORE_0 = new Pose2d(-11, WALL_POS+1);
     private static final Pose2d SCORE_1 = new Pose2d(-11+1, WALL_POS+1);
     private static final Pose2d SCORE_2 = new Pose2d(-11, WALL_POS+1);
-    private static final Pose2d SCORE_3 = new Pose2d(-11, WALL_POS+1);
-    private static final Pose2d SCORE_4 = new Pose2d(-11-1, WALL_POS+1);
+    private static final Pose2d SCORE_3 = new Pose2d(-11+1, WALL_POS+1);
+    private static final Pose2d SCORE_4 = new Pose2d(-11+1, WALL_POS+1);
     private static final Pose2d SCORE_5 = new Pose2d(-11-1, WALL_POS+1);
 
     private static final Pose2d PARK = new Pose2d(41+3, WALL_POS+2);
-    private static final Pose2d WAREHOUSE_0 = new Pose2d(47, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_1 = new Pose2d(52, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_0 = new Pose2d(44, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_1 = new Pose2d(50, WALL_POS+2);
     private static final Pose2d WAREHOUSE_2 = new Pose2d(54, WALL_POS+2);
-    private static final Pose2d WAREHOUSE_3 = new Pose2d(56, WALL_POS+2);
-    private static final Pose2d WAREHOUSE_4 = new Pose2d(58, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_3 = new Pose2d(58, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_4 = new Pose2d(60, WALL_POS+2);
     private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS+2);
 
-    public static double LVL2_WAIT = 0.37;
+    public static double LVL2_WAIT = 0.43;
     public static double LVL3_WAIT = 0.35;
-    public static double SCORE_ANTI_WAIT = 0.2;
-    public static double WAREHOUSE_WAIT = 0.05;
+    public static double SCORE_ANTI_WAIT = 0.1;
+    public static double WAREHOUSE_WAIT = 0.15;
 
     enum AutonState{
         PRELOAD_PLACE,
@@ -94,7 +94,7 @@ public class REDcycles extends LinearOpMode {
                 .UNSTABLE_addDisplacementMarkerOffset(0.2,  ()->{
                     slides.level2ArmTemp();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.3, () ->{
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () ->{
                     slides.level2CupTemp();
                 })
                 .lineToLinearHeading(SCORE_0)
@@ -113,10 +113,10 @@ public class REDcycles extends LinearOpMode {
                     slides.level3Temp();
                 })
                 .lineToLinearHeading(SCORE_0)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT,  () ->{
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + 0.05,  () ->{
                     slides.level3Tip();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, ()->{
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT + 0.05, ()->{
                     slides.rest();
                 })
 
