@@ -22,12 +22,15 @@ public class Carriage extends Mechanism {
     public static double CUP_LEVEL2_TIP = 0.65;
     public static double CUP_LEVEL1 = 0.9;
     public static double CUP_LEVEL1_TIP = 1;
+    public static double CUP_SHARED = 0.81;
+    public static double CUP_SHARED_TIP = 1;
     public static double CUP_REST = 0.81;
 
     public static double ARM_LEVEL3 = 0.85;
     public static double ARM_LEVEL3_CLOSE = 0.8;
     public static double ARM_LEVEL2 = 1;
     public static double ARM_LEVEL1 = 0;
+    public static double ARM_SHARED = 0.20;
     public static double ARM_REST = 0.20;
 
     public static double CUP_TEST = 0.77;
@@ -103,6 +106,15 @@ public class Carriage extends Mechanism {
         armLeft.setPosition(ARM_LEVEL1);
         armRight.setPosition(ARM_LEVEL1);
         cup.setPosition(CUP_LEVEL1_TIP);
+    }
+
+    public void sharedTemp() {
+        armLeft.setPosition(ARM_SHARED);
+        armRight.setPosition(ARM_SHARED);
+        cup.setPosition(CUP_SHARED);
+    }
+    public void sharedTip() {
+        cup.setPosition(CUP_SHARED_TIP);
     }
 
 //    @Override

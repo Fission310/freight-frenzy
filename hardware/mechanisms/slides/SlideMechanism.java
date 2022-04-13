@@ -90,6 +90,15 @@ public class SlideMechanism extends Mechanism {
         carriage.level2CupTemp();
     }
 
+    public void extendShared() {
+        spool.setTargetPosition(EXTEND_POS_SHARED);
+    }
+    public void sharedTemp() {
+        carriage.sharedTemp();
+    }
+    public void sharedTip() {
+        carriage.sharedTip();
+    }
 
     public void update() {
         spool.update();

@@ -25,25 +25,28 @@ public class Slides extends Mechanism {
         REST,
         WAIT,
         DELAY,
-        LEVEL2_TEMP_DELAY,
+//        LEVEL2_TEMP_DELAY,
         EXTENDED,
         TIPPING,
     }
     SlidesState state;
 
     public enum LevelState {
+        SHARED,
         LEVEL1,
-        LEVEL2,
+//        LEVEL2,
         LEVEL3_CLOSE,
         LEVEL3_FAR
     }
     LevelState level;
 
     ElapsedTime time = new ElapsedTime();
-    public static double CARRIAGE2_DELAYTIME = 0.25;
-    public static double CARRIAGE2_TEMP_DELAYTIME = 0.2;
+//    public static double CARRIAGE2_DELAYTIME = 0.25;
+    public static double CARRIAGESHARED_DELAYTIME = 0.1;
+//    public static double CARRIAGE2_TEMP_DELAYTIME = 0.2;
     public static double CARRIAGE3_DELAYTIME = 0.4;
-    public static double TIPPING2_DELAYTIME = 0.7;
+//    public static double TIPPING2_DELAYTIME = 0.7;
+    public static double TIPPINGSHARED_DELAYTIME = 0.1;
     public static double TIPPING3_DELAYTIME = 0.5;
 
     @Override
@@ -76,9 +79,21 @@ public class Slides extends Mechanism {
                     state = SlidesState.DELAY;
                     time.reset();
                 }
+                if (gamepad.a) {
+                    level = LevelState.SHARED;
+                    slides.extendShared();
+                    state = SlidesState.DELAY;
+                    time.reset();
+                }
                 break;
             case DELAY:
                 switch(level) {
+                    case SHARED:
+                        if (time.seconds() > CARRIAGESHARED_DELAYTIME) {
+                            slides.sharedTemp();
+                            state = SlidesState.EXTENDED;
+                        }
+                        break;
                     case LEVEL1:
                         break;
                     case LEVEL3_CLOSE:
@@ -95,15 +110,14 @@ public class Slides extends Mechanism {
                         break;
                 }
                 break;
-            case LEVEL2_TEMP_DELAY:
-                if (time.seconds() > CARRIAGE2_TEMP_DELAYTIME) {
-                    slides.level2CupTemp();
-                    state = SlidesState.EXTENDED;
-                }
-                break;
             case EXTENDED:
                 if (gamepad.x) {
                     switch(level) {
+                        case SHARED:
+                            slides.sharedTip();
+                            time.reset();
+                            state = SlidesState.TIPPING;
+                            break;
                         case LEVEL1:
                             break;
                         case LEVEL3_CLOSE:
@@ -121,13 +135,13 @@ public class Slides extends Mechanism {
                 break;
             case TIPPING:
                 switch (level) {
+                    case SHARED:
+                        if (time.seconds() > TIPPINGSHARED_DELAYTIME) {
+                            state = SlidesState.REST;
+                        }
                     case LEVEL1:
                         break;
                     case LEVEL3_CLOSE:
-                        if (time.seconds() > TIPPING3_DELAYTIME) {
-                            state = SlidesState.REST;
-                        }
-                        break;
                     case LEVEL3_FAR:
                         if (time.seconds() > TIPPING3_DELAYTIME) {
                             state = SlidesState.REST;
