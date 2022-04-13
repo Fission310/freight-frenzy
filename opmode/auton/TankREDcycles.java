@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -44,7 +45,7 @@ public class TankREDcycles extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap); // MAX VELO/ACCEL: 47
+        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
 
         SlideMechanism slides = new SlideMechanism(this);
         Acquirer acquirer = new Acquirer(this);
