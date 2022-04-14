@@ -28,6 +28,7 @@ public class Slides extends Mechanism {
 //        LEVEL2_TEMP_DELAY,
         EXTENDED,
         TIPPING,
+        SHARED_DELAY
     }
     SlidesState state;
 
@@ -46,8 +47,10 @@ public class Slides extends Mechanism {
 //    public static double CARRIAGE2_TEMP_DELAYTIME = 0.2;
     public static double CARRIAGE3_DELAYTIME = 0.4;
 //    public static double TIPPING2_DELAYTIME = 0.7;
-    public static double TIPPINGSHARED_DELAYTIME = 0.1;
+    public static double TIPPINGSHARED_DELAYTIME = 1;
     public static double TIPPING3_DELAYTIME = 0.5;
+
+    public static double SHARED_WAIT = 0.5;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -63,8 +66,18 @@ public class Slides extends Mechanism {
         slides.update();
         switch(state) {
             case REST:
-                slides.rest();
-                state = SlidesState.WAIT;
+                switch(level) {
+                    case SHARED:
+                        slides.sharedRest();
+                        state = SlidesState.WAIT;
+                        break;
+                    case LEVEL1:
+                    case LEVEL3_FAR:
+                    case LEVEL3_CLOSE:
+                        slides.rest();
+                        state = SlidesState.WAIT;
+                        break;
+                }
                 break;
             case WAIT:
                 if (gamepad.y) {
@@ -137,8 +150,11 @@ public class Slides extends Mechanism {
                 switch (level) {
                     case SHARED:
                         if (time.seconds() > TIPPINGSHARED_DELAYTIME) {
-                            state = SlidesState.REST;
+                            time.reset();
+                            slides.sharedRestTemp();
+                            state = SlidesState.SHARED_DELAY;
                         }
+                        break;
                     case LEVEL1:
                         break;
                     case LEVEL3_CLOSE:
@@ -147,6 +163,11 @@ public class Slides extends Mechanism {
                             state = SlidesState.REST;
                         }
                         break;
+                }
+                break;
+            case SHARED_DELAY:
+                if (time.seconds() > SHARED_WAIT) {
+                    state = SlidesState.REST;
                 }
                 break;
         }

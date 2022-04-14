@@ -67,7 +67,7 @@ public class Acquirer extends Mechanism {
 
     public void intake() {
         intakeRight.setPower(RIGHT_POWER);
-        //intakeLeft.setPower(LEFT_POWER);
+        intakeLeft.setPower(LEFT_POWER);
     }
 
     public void outtakeLeft() {

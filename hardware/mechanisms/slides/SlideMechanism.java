@@ -21,7 +21,7 @@ public class SlideMechanism extends Mechanism {
     public static double EXTEND_POS_LEVEL3 = 7.5; //7.7
     public static double EXTEND_POS_LEVEL2 = 4.7; //5.1
     public static double EXTEND_POS_LEVEL1 = 6;
-    public static double EXTEND_POS_SHARED = 3;
+    public static double EXTEND_POS_SHARED = 4;
 
     public static double MAX_VEL = 60;
     public static double MAX_ACCEL = 50;
@@ -51,9 +51,22 @@ public class SlideMechanism extends Mechanism {
         carriage.init(hwMap);
     }
 
+    public void sharedRestTemp() {
+        spool.setTargetPosition(0);
+        carriage.restCup();
+        carriage.sharedArmRestTemp();
+    }
     public void rest() {
         spool.setTargetPosition(0);
         carriage.rest();
+    }
+    public void sharedRest() {
+
+
+        spool.setRetractionMultiplier(1);
+        spool.setTargetPosition(0);
+        carriage.rest();
+        spool.setRetractionMultiplier(RETRACTION_MULTIPLIER);
     }
     public void resetServos(){
         carriage.rest();
