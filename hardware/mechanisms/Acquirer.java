@@ -32,8 +32,10 @@ public class Acquirer extends Mechanism {
 
     public enum AcquirerState {
         ACQUIRER_START,
-        ACQUIRER_DELAY,
-        ACQUIRER_PREVENT
+        ACQUIRER_DELAY_LEFT,
+        ACQUIRER_DELAY_RIGHT,
+        ACQUIRER_PREVENT_LEFT,
+        ACQUIRER_PREVENT_RIGHT
     }
     AcquirerState acquirerState;
 
@@ -68,6 +70,14 @@ public class Acquirer extends Mechanism {
     public void intake() {
         intakeRight.setPower(RIGHT_POWER);
         intakeLeft.setPower(LEFT_POWER);
+
+//        leftOuttake = false;
+    }
+    public void intakeLeft() {
+        intakeLeft.setPower(LEFT_POWER);
+    }
+    public void intakeRight() {
+        intakeRight.setPower(RIGHT_POWER);
     }
 
     public void outtakeLeft() {
@@ -98,6 +108,8 @@ public class Acquirer extends Mechanism {
 
         telemetry.addData("Left Sensor", sensor.hasFreightLeft());
         telemetry.addData("Right Sensor", sensor.hasFreightRight());
+
+        telemetry.addData("leftOuttake", leftOuttake);
 //        telemetry.addData("Delay", outtakeDelay.seconds());
 //        telemetry.addData("Times", i);
 
@@ -110,40 +122,49 @@ public class Acquirer extends Mechanism {
     public void autonLoop(){
         switch (acquirerState){
             case ACQUIRER_START:
+//                leftOuttake = false;
                 intake();
-//                if (sensor.hasFreightLeft()) {
+                if (sensor.hasFreightLeft()) {
 //                    leftOuttake = true;
-//
-//
-//                    acquirerState = AcquirerState.ACQUIRER_DELAY;
-//                    outtakeDelay.reset();
-//                }
+
+
+                    acquirerState = AcquirerState.ACQUIRER_DELAY_LEFT;
+                    outtakeDelay.reset();
+                }
                 if  (sensor.hasFreightRight()) {
-                    leftOuttake = false;
+//                    leftOuttake = false;
 
 
-                    acquirerState = AcquirerState.ACQUIRER_DELAY;
+                    acquirerState = AcquirerState.ACQUIRER_DELAY_RIGHT;
                     outtakeDelay.reset();
                 }
                 break;
 
-            case ACQUIRER_DELAY:
+            case ACQUIRER_DELAY_LEFT:
                 if (outtakeDelay.seconds() >= OUTTAKE_DELAY_TIME) {
-                    acquirerState = AcquirerState.ACQUIRER_PREVENT;
+                    acquirerState = AcquirerState.ACQUIRER_PREVENT_LEFT;
                     outtakeDuration.reset();
                 }
                 else {
                     intake();
                 }
                 break;
-            case ACQUIRER_PREVENT:
+            case ACQUIRER_PREVENT_LEFT:
                 if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
                     acquirerState = AcquirerState.ACQUIRER_START;
                 } else {
-//                    if(leftOuttake) outtakeLeft();
-//                    else outtakeRight();
-                    outtakeRight();
+                    outtakeLeft();
+                    intakeRight();
                 }
+                break;
+            case ACQUIRER_PREVENT_RIGHT:
+                if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
+                    acquirerState = AcquirerState.ACQUIRER_START;
+                } else {
+                    outtakeRight();
+                    intakeLeft();
+                }
+                break;
         }
     }
 
@@ -156,19 +177,18 @@ public class Acquirer extends Mechanism {
                     intake();
 
                     if (sensor.hasFreightLeft()) {
-                        leftOuttake = true;
-
+//                        leftOuttake = true;
                         gamepad.rumble(200);
 
-                        acquirerState = AcquirerState.ACQUIRER_DELAY;
+                        acquirerState = AcquirerState.ACQUIRER_DELAY_LEFT;
                         outtakeDelay.reset();
                     }
                     else if  (sensor.hasFreightRight()) {
-                        leftOuttake = false;
+//                        leftOuttake = false;
 
                         gamepad.rumble(200);
 
-                        acquirerState = AcquirerState.ACQUIRER_DELAY;
+                        acquirerState = AcquirerState.ACQUIRER_DELAY_RIGHT;
                         outtakeDelay.reset();
                     }
 
@@ -178,22 +198,40 @@ public class Acquirer extends Mechanism {
                     stop();
                 }
                 break;
-            case ACQUIRER_DELAY:
+            case ACQUIRER_DELAY_LEFT:
                 if (outtakeDelay.seconds() >= OUTTAKE_DELAY_TIME) {
-                    acquirerState = AcquirerState.ACQUIRER_PREVENT;
+                    acquirerState = AcquirerState.ACQUIRER_PREVENT_LEFT;
                     outtakeDuration.reset();
                 }
                 else {
                     intake();
                 }
                 break;
-            case ACQUIRER_PREVENT:
+            case ACQUIRER_DELAY_RIGHT:
+                if (outtakeDelay.seconds() >= OUTTAKE_DELAY_TIME) {
+                    acquirerState = AcquirerState.ACQUIRER_PREVENT_RIGHT;
+                    outtakeDuration.reset();
+                }
+                else {
+                    intake();
+                }
+                break;
+            case ACQUIRER_PREVENT_LEFT:
                 if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
                     acquirerState = AcquirerState.ACQUIRER_START;
                 } else {
-                    if(leftOuttake) outtakeLeft();
-                    else outtakeRight();
+                    outtakeLeft();
+                    intakeRight();
                 }
+                break;
+            case ACQUIRER_PREVENT_RIGHT:
+                if (outtakeDuration.seconds() >= OUTTAKE_DURATION_TIME) {
+                    acquirerState = AcquirerState.ACQUIRER_START;
+                } else {
+                    outtakeRight();
+                    intakeLeft();
+                }
+                break;
         }
     }
 
