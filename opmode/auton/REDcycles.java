@@ -31,8 +31,8 @@ public class REDcycles extends LinearOpMode {
     private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS+2);
 
     public static double LVL2_WAIT = 0.43;
-    public static double LVL3_WAIT = 0.35;
-    public static double SCORE_ANTI_WAIT = 0.1;
+    public static double LVL3_WAIT = 0.3;
+    public static double SCORE_ANTI_WAIT = 0.15;
     public static double WAREHOUSE_WAIT = 0.15;
 
     enum AutonState{
