@@ -22,16 +22,16 @@ public class Carriage extends Mechanism {
     public static double CUP_LEVEL2_TIP = 0.65;
     public static double CUP_LEVEL1 = 0.9;
     public static double CUP_LEVEL1_TIP = 1;
-    public static double CUP_SHARED = 0.81;
-    public static double CUP_SHARED_TIP = 0.2;
+    public static double CUP_SHARED = 0.15;
+    public static double CUP_SHARED_TIP = 0.7;
     public static double CUP_REST = 0.81;
 
     public static double ARM_LEVEL3 = 0.85;
     public static double ARM_LEVEL3_CLOSE = 0.8;
     public static double ARM_LEVEL2 = 1;
     public static double ARM_LEVEL1 = 0;
-    public static double ARM_SHARED = 0.30;
-    public static double ARM_SHARED_TEMP = 0.25;
+    public static double ARM_SHARED = 1;
+    public static double ARM_SHARED_TEMP = 0.3;
     public static double ARM_REST = 0.20;
 
     public static double CUP_TEST = 0.77;

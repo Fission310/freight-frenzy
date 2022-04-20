@@ -43,7 +43,7 @@ public class Slides extends Mechanism {
 
     ElapsedTime time = new ElapsedTime();
 //    public static double CARRIAGE2_DELAYTIME = 0.25;
-    public static double CARRIAGESHARED_DELAYTIME = 0.1;
+    public static double CARRIAGESHARED_DELAYTIME = 0.2;
 //    public static double CARRIAGE2_TEMP_DELAYTIME = 0.2;
     public static double CARRIAGE3_DELAYTIME = 0.4;
 //    public static double TIPPING2_DELAYTIME = 0.7;
