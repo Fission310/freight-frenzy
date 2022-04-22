@@ -1,25 +1,28 @@
 # FTC Fission 310 2021-2022 Freight Frenzy
 Managed by Lucas Lee and Paul Serbanescu
 
-## Setting up your coding environment
+## Installation
 - Download Java 8 by following these [instructions](https://dojo.stuycs.org/resources/software_installation_and_tips/installation_instructions/programming_languages/installing_jdk.html)
-- Create a GitHub account
-- Download [Git](https://git-scm.com/downloads)
 - Download [Android Studio](https://developer.android.com/studio)
-- Clone the [roadrunner quickstart repository](https://github.com/acmerobotics/road-runner-quickstart) by using `git clone` in your terminal or by downloading the .zip  
-- Using your terminal, change directories into the following path `road-runner-quickstart\TeamCode\src\main\java\org\firstinspires\ftc`
-- Delete the teamcode directory
-- Clone this repository into the above path and rename its directory to teamcode
-- Open Android Studio and click "Open an existing Android Studio project"
-- Open the directory that holds the ftc_app repository
+- Follow the [road-runner template installation](https://github.com/Fission310/road-runner-template#installation)
+- In Android Studio:
+  - `File > Open... > road-runner-template`
+  - Perform a test build by going to `Build > Make Project`, pressing `⌘F9`, or finding the green hammer in the toolbar
 
 ## Deploying code to the robot
-- You may need to download [Motorola Mobile Drivers](https://support.motorola.com/us/en/solution/MS88481) to allow your computer to correctly transfer files onto the phones.
-- Connect the RobotController phone to your computer via USB.
-- Click the green play button in Android Studio (Run 'TeamCode') or press Shift + F10.
-- Wait until the code is completely deployed
-- Connect the RobotController to the REV Expansion Hub.
+### Using a REV Control Hub
+- Make sure the control hub is powered
+- Follow REV setup instructions starting [here](https://docs.revrobotics.com/rev-control-system/control-hub-gs)
+- Connect to the control hub's wifi
+- Navigate to http://192.168.43.1:8080 in your web browser to view the control hub's status
+- Inside Android Studio, open the terminal by clicking on it in the bottom toolbar or pressing `⌥F12`
+  - Type `adb connect 192.168.43.1:5555`
+  - You should now be connected to the control hub and able to wirelessly push code
+    <img width="395" alt="image" src="https://user-images.githubusercontent.com/61565464/164758656-5a7678cf-33ec-4916-a37f-d24263afad52.png">
+  - Press the green play button or `^R`
+  #### Common Issues:
+  - If your computer loses wifi connection from the control hub and regains it at a later point `adb connect` may not work to reconnect to the control hub.
+  - In that case, type `adb kill-server` to reset the adb server (this may take a couple minutes). Afterwards, `adb connect` again
 
-## Helpful resources
-- [FTC Java Docs](https://ftctechnh.github.io/ftc_app/doc/javadoc/index.html)
-- [Stem Robotics](https://stemrobotics.cs.pdx.edu/)
+## FissionLib
+This project uses [FissionLib](https://github.com/Fission310/FissionLib), our FTC library.
