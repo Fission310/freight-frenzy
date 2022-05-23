@@ -36,7 +36,6 @@ public class SlideMechanism extends Mechanism {
     public static double kF = 0;
 
     public SlideMechanism(LinearOpMode opMode) { this.opMode = opMode; }
-
     @Override
     public void init(HardwareMap hwMap) {
         // init motor
@@ -61,10 +60,8 @@ public class SlideMechanism extends Mechanism {
         carriage.rest();
     }
     public void sharedRest() {
-        spool.setRetractionMultiplier(1);
-        spool.setTargetPosition(0);
+        spool.setTargetPosition(0, 1);
         carriage.rest();
-        spool.setRetractionMultiplier(RETRACTION_MULTIPLIER);
     }
     public void resetServos(){
         carriage.rest();

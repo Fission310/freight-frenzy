@@ -35,7 +35,9 @@ public class DriveConstants {
      */
     public static final boolean RUN_USING_ENCODER = true;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(40, 0, 16.5,
-            13.1);
+            4.5);
+//    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(40, 0, 16.5,
+//            13.1);
 
     // p : 40, d : 16.5, f : 13.1
 
@@ -48,7 +50,7 @@ public class DriveConstants {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 1.8898; // in
-    public static double GEAR_RATIO = 1.1; // output (wheel) speed / input (motor) speed
+    public static double GEAR_RATIO = (4.0)/(3.0); // output (wheel) speed / input (motor) speed
     public static double TRACK_WIDTH = 13.08; // in
 
     /*
@@ -89,8 +91,8 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 50; // 47 for 5 cycles; 67 for 6 cycles
-    public static double MAX_ACCEL = 50; // 47 for 5 cycles; 67 for 6 cycles
+    public static double MAX_VEL = 70; // 47 for 5 cycles; 67 for 6 cycles
+    public static double MAX_ACCEL = 70; // 47 for 5 cycles; 67 for 6 cycles
     public static double MAX_ANG_VEL = Math.toRadians(250);
     public static double MAX_ANG_ACCEL = Math.toRadians(250);
 

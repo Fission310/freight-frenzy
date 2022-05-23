@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.mechanisms;
 
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -9,10 +10,12 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Config
 public class FreightSensor extends Mechanism {
-    ColorSensor colorLeft;
-    ColorSensor colorRight;
+    ColorRangeSensor colorLeft;
+    ColorRangeSensor colorRight;
 
     public static int YELLOW_THRESHOLD = 200;
     public static int WHITE_THRESHOLD = 200;
@@ -24,19 +27,28 @@ public class FreightSensor extends Mechanism {
     @Override
     public void init(HardwareMap hwMap) {
 
-        colorLeft = hwMap.get(ColorSensor.class, "colorLeft");
-        colorRight = hwMap.get(ColorSensor.class, "colorRight");
+        colorLeft = hwMap.get(ColorRangeSensor.class, "colorLeft");
+        colorRight = hwMap.get(ColorRangeSensor.class, "colorRight");
+
     }
 
-    private int getWhite(ColorSensor color){
+    private int getWhite(ColorRangeSensor color) {
         return (color.red() + color.green() + color.blue()) / 3;
     }
 
-    private int getYellow(ColorSensor color){
+    private int getYellow(ColorRangeSensor color) {
         return (color.red() + color.green()) / 2;
     }
 
-    public boolean hasFreightSensor(ColorSensor color) {
+    private double getDistance(ColorRangeSensor color) {
+        return color.getDistance(DistanceUnit.CM);
+    }
+
+    private double getLight(ColorRangeSensor color) {
+        return color.getLightDetected();
+    }
+
+    public boolean hasFreightSensor(ColorRangeSensor color) {
         int yellow = getYellow(color);
         int white = getWhite(color);
 
@@ -67,6 +79,11 @@ public class FreightSensor extends Mechanism {
         telemetry.addData("yellowRight",getYellow(colorRight));
         telemetry.addData("whiteRight", getWhite(colorRight));
 
+        telemetry.addData("distanceLeft", getDistance(colorLeft));
+        telemetry.addData("lightLeft", getLight(colorLeft));
+
+        telemetry.addData("distanceRight", getDistance(colorRight));
+        telemetry.addData("lightRight", getLight(colorRight));
 
     }
 

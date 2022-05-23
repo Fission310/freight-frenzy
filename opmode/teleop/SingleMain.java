@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.MeccRobot;
 
-@TeleOp (name = "SingleMain", group = "Test")
+@TeleOp (name = "SingleMain", group = "drive")
 public class SingleMain extends LinearOpMode {
 
     private MeccRobot robot = new MeccRobot(this);
