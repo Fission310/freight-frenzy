@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.stuyfission.fissionlib.util.Mechanism;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.FlipServo;
 
 public class FlipTest extends Mechanism {
@@ -24,4 +25,6 @@ public class FlipTest extends Mechanism {
     public void loop(Gamepad gamepad) {
         grant.loop(gamepad);
     }
+
+    public void telemetry(Telemetry telemetry){grant.telemetry(telemetry);}
 }
