@@ -17,8 +17,8 @@ public class FreightSensor extends Mechanism {
     ColorRangeSensor colorLeft;
     ColorRangeSensor colorRight;
 
-    public static int YELLOW_THRESHOLD = 200;
-    public static int WHITE_THRESHOLD = 200;
+    public static int YELLOW_THRESHOLD = 100;
+    public static int WHITE_THRESHOLD = 100;
 
     public FreightSensor(LinearOpMode opMode){
         this.opMode = opMode;
