@@ -5,12 +5,12 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.FlipTest;
+import org.firstinspires.ftc.teamcode.hardware.TestRobot;
 
 @TeleOp(name = "GrantTest", group = "drive")
 public class GrantTest extends LinearOpMode {
 
-    private FlipTest robot = new FlipTest(this);
+    private TestRobot robot = new TestRobot(this);
 
     @Override
     public void runOpMode() throws InterruptedException {

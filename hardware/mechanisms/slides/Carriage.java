@@ -41,13 +41,13 @@ public class Carriage extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        cup = hwMap.get(Servo.class, "freightServo");
+        cup = hwMap.get(Servo.class, "cupServo");
         cup.setDirection(Servo.Direction.REVERSE);
 
-        armLeft = hwMap.get(Servo.class, "leftSlide");
+        armLeft = hwMap.get(Servo.class, "armLeft");
         armLeft.setDirection(Servo.Direction.FORWARD);
 
-        armRight = hwMap.get(Servo.class, "rightSlide");
+        armRight = hwMap.get(Servo.class, "armRight");
         armRight.setDirection(Servo.Direction.REVERSE);
     }
 
@@ -125,18 +125,16 @@ public class Carriage extends Mechanism {
         armRight.setPosition(ARM_SHARED_TEMP);
     }
 
-//    @Override
-//    public void loop(Gamepad gamepad) {
-//        if (gamepad.x) {
-//            rest();
-//        }
-//        if (gamepad.dpad_up) {
-//            lvl3();
-//        }
-//        if (gamepad.dpad_down) {
-//            lvl1();
-//        }
-//    }
+    @Override
+    public void loop(Gamepad gamepad) {
+        if (gamepad.dpad_up) {
+            armLeft.setPosition(ARM_TEST);
+            armRight.setPosition(ARM_TEST);
+        }
+        if (gamepad.dpad_down) {
+            cup.setPosition(CUP_TEST);
+        }
+    }
 
     @Override
     public void telemetry(Telemetry telemetry) {

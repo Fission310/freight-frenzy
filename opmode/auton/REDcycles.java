@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Autonomous
 @Config
 public class REDcycles extends LinearOpMode {
-
     private static final double WALL_POS = -70.5+(12.5/2.0);
     private static final Pose2d SCORE_0 = new Pose2d(-11, WALL_POS-2.5);
     private static final Pose2d SCORE_1 = new Pose2d(-11+1, WALL_POS-3);
