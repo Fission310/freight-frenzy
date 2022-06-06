@@ -67,7 +67,7 @@ public class Acquirer extends Mechanism {
         intakeLeft = hwMap.get(DcMotorEx.class, "intakeLeft");
         intakeRight = hwMap.get(DcMotorEx.class, "intakeRight");
 
-        intakeRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeRight.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         sensor = new FreightSensor(opMode);
@@ -239,13 +239,12 @@ public class Acquirer extends Mechanism {
 
     public void telemetry(Telemetry telemetry){
 
-
         telemetry.addData("Left Sensor", sensor.hasFreightLeft());
         telemetry.addData("Right Sensor", sensor.hasFreightRight());
 
-        telemetry.addData("Delay", timer.seconds());
+//        telemetry.addData("Delay", timer.seconds());
 
-        telemetry.addData("state", acquirerState);
+//        telemetry.addData("state", acquirerState);
 
 
 
