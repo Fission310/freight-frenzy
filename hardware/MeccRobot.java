@@ -30,8 +30,6 @@ public class MeccRobot extends Mechanism {
         carousel.init(hwMap);
         odoLift.init(hwMap);
         slides.init(hwMap);
-
-        odoLift.lift();
     }
 
     @Override
@@ -39,7 +37,6 @@ public class MeccRobot extends Mechanism {
         dt.loop(gamepad);
         acquirer.loop(gamepad);
         carousel.loop(gamepad);
-        odoLift.loop(gamepad);
         slides.loop(gamepad);
     }
 
@@ -48,7 +45,6 @@ public class MeccRobot extends Mechanism {
         dt.telemetry(telemetry);
         acquirer.telemetry(telemetry);
         carousel.telemetry(telemetry);
-        odoLift.telemetry(telemetry);
         slides.telemetry(telemetry);
     }
 

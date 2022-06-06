@@ -7,6 +7,8 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.Carriage;
 
 public class TestRobot extends Mechanism {
@@ -15,23 +17,25 @@ public class TestRobot extends Mechanism {
         this.opMode = opMode;
     }
 
+    private Drivetrain dt = new Drivetrain(opMode);
     private Acquirer acquirer = new Acquirer(opMode);
-    private Carriage carriage = new Carriage(opMode);
+    private Slides slides = new Slides(opMode);
 
     @Override
     public void init(HardwareMap hwMap) {
-
+        dt.init(hwMap);
         acquirer.init(hwMap);
-        carriage.init(hwMap);
+        slides.init(hwMap);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
-
+        dt.loop(gamepad);
         acquirer.loop(gamepad);
-        carriage.loop(gamepad);
+        slides.loop(gamepad);
     }
 
     public void telemetry(Telemetry telemetry){
-        acquirer.telemetry(telemetry);}
+        acquirer.telemetry(telemetry);
+    }
 }

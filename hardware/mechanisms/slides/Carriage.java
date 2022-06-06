@@ -24,15 +24,15 @@ public class Carriage extends Mechanism {
     public static double CUP_LEVEL1_TIP = 1;
     public static double CUP_SHARED = 0.15;
     public static double CUP_SHARED_TIP = 0.7;
-    public static double CUP_REST = 0.81;
+    public static double CUP_REST = 0.8;
 
-    public static double ARM_LEVEL3 = 0.85;
+    public static double ARM_LEVEL3 = 0.94;
     public static double ARM_LEVEL3_CLOSE = 0.8;
     public static double ARM_LEVEL2 = 1;
     public static double ARM_LEVEL1 = 0;
     public static double ARM_SHARED = 1;
     public static double ARM_SHARED_TEMP = 0.3;
-    public static double ARM_REST = 0.20;
+    public static double ARM_REST = 0.17;
 
     public static double CUP_TEST = 0.77;
     public static double ARM_TEST = 0.21;
@@ -45,10 +45,10 @@ public class Carriage extends Mechanism {
         cup.setDirection(Servo.Direction.REVERSE);
 
         armLeft = hwMap.get(Servo.class, "armLeft");
-        armLeft.setDirection(Servo.Direction.FORWARD);
+        armLeft.setDirection(Servo.Direction.REVERSE);
 
         armRight = hwMap.get(Servo.class, "armRight");
-        armRight.setDirection(Servo.Direction.REVERSE);
+        armRight.setDirection(Servo.Direction.FORWARD);
     }
 
     public void rest() {

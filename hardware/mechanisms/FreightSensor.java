@@ -17,8 +17,8 @@ public class FreightSensor extends Mechanism {
     ColorRangeSensor colorLeft;
     ColorRangeSensor colorRight;
 
-    public static int YELLOW_THRESHOLD = 100;
-    public static int WHITE_THRESHOLD = 100;
+    public static int YELLOW_THRESHOLD = 200;
+    public static int WHITE_THRESHOLD = 200;
 
     public FreightSensor(LinearOpMode opMode){
         this.opMode = opMode;
@@ -79,11 +79,11 @@ public class FreightSensor extends Mechanism {
         telemetry.addData("yellowRight",getYellow(colorRight));
         telemetry.addData("whiteRight", getWhite(colorRight));
 
-        telemetry.addData("distanceLeft", getDistance(colorLeft));
-        telemetry.addData("lightLeft", getLight(colorLeft));
+//        telemetry.addData("distanceLeft", getDistance(colorLeft));
+//        telemetry.addData("lightLeft", getLight(colorLeft));
 
-        telemetry.addData("distanceRight", getDistance(colorRight));
-        telemetry.addData("lightRight", getLight(colorRight));
+//        telemetry.addData("distanceRight", getDistance(colorRight));
+//        telemetry.addData("lightRight", getLight(colorRight));
 
     }
 

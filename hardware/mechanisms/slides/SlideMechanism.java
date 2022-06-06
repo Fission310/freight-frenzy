@@ -18,14 +18,14 @@ public class SlideMechanism extends Mechanism {
     MotionProfiledDcMotor spool;
     Carriage carriage = new Carriage(opMode);
 
-    public static double EXTEND_POS_LEVEL3 = 7.5; //7.7
+    public static double EXTEND_POS_LEVEL3 = 7; //7.7
     public static double EXTEND_POS_LEVEL2 = 4.7; //5.1
     public static double EXTEND_POS_LEVEL1 = 6;
     public static double EXTEND_POS_SHARED = 1;
 
     public static double MAX_VEL = 60;
     public static double MAX_ACCEL = 50;
-    public static double RETRACTION_MULTIPLIER = 0.35;
+    public static double RETRACTION_MULTIPLIER = 0.4;
     private static final double WHEEL_RADIUS = 1.37795;
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
