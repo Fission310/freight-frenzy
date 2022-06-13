@@ -26,13 +26,18 @@ public class Acquirer extends Mechanism {
     private FreightSensor sensor;
 
     public static double LEFT_UP_POS = 0.25;
+    public static double LEFT_UP_INACTIVE = 0.15;
     public static double LEFT_DOWN_POS = 0.03;
+
     public static double RIGHT_UP_POS = 0.25;
+    public static double RIGHT_UP_INACTIVE = 0.15;
     public static double RIGHT_DOWN_POS = 0.03;
 
     public static double FLIP_DELAY = 0;
     public static double OUTTAKE_DELAY = 0.25;
-    public static double RESET_DELAY = 0.50;
+    public static double RESET_DELAY = 1.25;
+
+    public static double SPEED_OUTTAKE = 0.7;
 
     private ElapsedTime timer = new ElapsedTime();
 
@@ -85,10 +90,18 @@ public class Acquirer extends Mechanism {
         leftHub.setPosition(LEFT_UP_POS);
         leftWall.setPosition(LEFT_UP_POS);
     }
+    public void raiseLeftInactive() {
+        leftHub.setPosition(LEFT_UP_INACTIVE);
+        leftWall.setPosition(LEFT_UP_INACTIVE);
+    }
 
     public void raiseRight() {
         rightHub.setPosition(RIGHT_UP_POS);
         rightWall.setPosition(RIGHT_UP_POS);
+    }
+    public void raiseRightInactive() {
+        rightHub.setPosition(RIGHT_UP_INACTIVE);
+        rightWall.setPosition(RIGHT_UP_INACTIVE);
     }
 
     public void lowerLeft() {
@@ -115,11 +128,11 @@ public class Acquirer extends Mechanism {
     }
 
     public void outtakeLeft() {
-        intakeLeft.setPower(0.5);
+    intakeLeft.setPower(SPEED_OUTTAKE);
     }
 
     public void outtakeRight() {
-        intakeRight.setPower(0.5);
+        intakeRight.setPower(SPEED_OUTTAKE);
     }
 
     public void stopLeft() {
@@ -144,7 +157,7 @@ public class Acquirer extends Mechanism {
         switch (acquirerState) {
             case ACQUIRER_START_RIGHT:
                 if (gamepad.right_trigger > 0) {
-                    raiseLeft();
+                    raiseLeftInactive();
                     lowerRight();
                     intakeRight();
 
@@ -168,7 +181,6 @@ public class Acquirer extends Mechanism {
 
 
 
-
                 break;
             case ACQUIRER_START_LEFT:
                 if (gamepad.right_trigger > 0) {
@@ -177,7 +189,7 @@ public class Acquirer extends Mechanism {
                     break;
 
                 } else if(gamepad.left_trigger > 0){
-                    raiseRight();
+                    raiseRightInactive();
                     lowerLeft();
                     intakeLeft();
                 }

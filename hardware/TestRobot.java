@@ -25,17 +25,17 @@ public class TestRobot extends Mechanism {
     public void init(HardwareMap hwMap) {
         dt.init(hwMap);
         acquirer.init(hwMap);
-        slides.init(hwMap);
+//        slides.init(hwMap);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
         dt.loop(gamepad);
         acquirer.loop(gamepad);
-        slides.loop(gamepad);
+//        slides.loop(gamepad);
     }
 
     public void telemetry(Telemetry telemetry){
-        acquirer.telemetry(telemetry);
+//        acquirer.telemetry(telemetry);
     }
 }
