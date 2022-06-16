@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 @Config
-public class NEW_BLUEcycles extends LinearOpMode {
+public class BLUE_cycles extends LinearOpMode {
 
     private static double HEADING = Math.toRadians(180);
 
