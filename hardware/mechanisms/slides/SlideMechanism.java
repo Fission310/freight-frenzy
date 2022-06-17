@@ -90,6 +90,10 @@ public class SlideMechanism extends Mechanism {
         spool.update();
     }
 
+    public boolean hasFreight() {
+        return carriage.hasFreight();
+    }
+
     @Override
     public void loop(Gamepad gamepad) {
         update();

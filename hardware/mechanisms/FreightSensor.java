@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class FreightSensor extends Mechanism {
     ColorRangeSensor colorLeft;
     ColorRangeSensor colorRight;
+    ColorRangeSensor clampColor;
 
     public static int YELLOW_THRESHOLD = 200;
     public static int WHITE_THRESHOLD = 200;
@@ -29,6 +30,7 @@ public class FreightSensor extends Mechanism {
 
         colorLeft = hwMap.get(ColorRangeSensor.class, "colorLeft");
         colorRight = hwMap.get(ColorRangeSensor.class, "colorRight");
+        clampColor = hwMap.get(ColorRangeSensor.class, "clampColor");
 
     }
 
@@ -63,6 +65,10 @@ public class FreightSensor extends Mechanism {
     public boolean hasFreightRight() {
 
         return hasFreightSensor(colorRight);
+    }
+
+    public boolean hasFreightClamp() {
+        return hasFreightSensor(clampColor);
     }
 
     public boolean hasFreight(){

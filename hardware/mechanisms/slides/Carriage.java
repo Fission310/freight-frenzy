@@ -8,12 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.FreightSensor;
 
 @Config
 public class Carriage extends Mechanism {
     Servo cup;
     Servo armLeft;
     Servo armRight;
+    FreightSensor sensor;
 
     public static double CUP_CLOSED = 0.12;
     public static double CUP_OPEN = 0.7;
@@ -39,6 +41,10 @@ public class Carriage extends Mechanism {
 
         armRight = hwMap.get(Servo.class, "rightArm");
         armRight.setDirection(Servo.Direction.REVERSE);
+
+        sensor = new FreightSensor(opMode);
+        sensor.init(hwMap);
+
     }
 
     public void rest() {
@@ -77,6 +83,10 @@ public class Carriage extends Mechanism {
         armLeft.setPosition(ARM_SHARED);
         armRight.setPosition(ARM_SHARED);
         cup.setPosition(CUP_CLOSED);
+    }
+
+    public boolean hasFreight() {
+        return sensor.hasFreightClamp();
     }
 
 //    public void sharedArmRestTemp() {

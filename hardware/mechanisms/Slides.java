@@ -54,6 +54,10 @@ public class Slides extends Mechanism {
 
         // wait for input
             case WAIT:
+                // if clamp has freight
+                if (slides.hasFreight()) {
+                    slides.close();
+                }
                 if (gamepad.y) {
                     slides.extendLevel3();
                     slides.close();
