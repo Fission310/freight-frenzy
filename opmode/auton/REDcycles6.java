@@ -61,11 +61,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 // ================ CV ================ //
                 .addTemporalMarker(slides::extendLevel2)
-                .UNSTABLE_addDisplacementMarkerOffset(0.2, slides::level2ArmTemp)
-                .UNSTABLE_addTemporalMarkerOffset(0.4, slides::level2CupTemp)
+                .UNSTABLE_addDisplacementMarkerOffset(0.2, slides::armLevel2)
 
                 .lineToLinearHeading(SCORE_0)
-                .UNSTABLE_addDisplacementMarkerOffset(-0.2, slides::level2Tip)
+                .UNSTABLE_addDisplacementMarkerOffset(-0.2, slides::open)
                 .UNSTABLE_addDisplacementMarkerOffset(-0.2 + LVL2_WAIT, slides::rest)
                 // =========================================== //
 
@@ -76,10 +75,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
                     slides.extendLevel3();
-                    slides.level3Temp();
+                    slides.armLevel3();
                 })
                 .lineToLinearHeading(SCORE_0)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + 0.05, slides::level3Tip)
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + 0.05, slides::open)
                 .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT + 0.05, slides::rest)
                 // =========================================== //
 
@@ -89,10 +88,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
                     slides.extendLevel3();
-                    slides.level3Temp();
+                    slides.armLevel3();
                 })
                 .lineToLinearHeading(SCORE_1)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::level3Tip)
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::open)
                 .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, slides::rest)
                 // =========================================== //
 
@@ -102,10 +101,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
                     slides.extendLevel3();
-                    slides.level3Temp();
+                    slides.armLevel3();
                 })
                 .lineToLinearHeading(SCORE_2)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::level3Tip)
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::open)
                 .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, slides::rest)
                 // =========================================== //
 
@@ -115,10 +114,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
                     slides.extendLevel3();
-                    slides.level3Temp();
+                    slides.armLevel3();
                 })
                 .lineToLinearHeading(SCORE_3)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::level3Tip)
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::open)
                 .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, slides::rest)
                 // =========================================== //
 
@@ -128,10 +127,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
                     slides.extendLevel3();
-                    slides.level3Temp();
+                    slides.armLevel3();
                 })
                 .lineToLinearHeading(SCORE_4)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::level3Tip)
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::open)
                 .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, slides::rest)
                 // =========================================== //
 
@@ -141,10 +140,10 @@ public class REDcycles6 extends LinearOpMode {
 
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () ->{
                     slides.extendLevel3();
-                    slides.level3Temp();
+                    slides.armLevel3();
                 })
                 .lineToLinearHeading(SCORE_5)
-                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::level3Tip)
+                .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT, slides::open)
                 .UNSTABLE_addTemporalMarkerOffset(-SCORE_ANTI_WAIT + LVL3_WAIT, slides::rest)
                 // =========================================== //
 

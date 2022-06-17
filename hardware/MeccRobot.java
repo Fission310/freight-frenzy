@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.Carriage;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
 
 public class MeccRobot extends Mechanism {
 
@@ -20,22 +21,35 @@ public class MeccRobot extends Mechanism {
     private Drivetrain dt = new Drivetrain(opMode);
     private Acquirer acquirer = new Acquirer(opMode);
     private Slides slides = new Slides(opMode);
+    private SlideMechanism slideMech = new SlideMechanism(opMode);
+
+//    private Carriage carriage =  new Carriage(opMode);
 
     @Override
     public void init(HardwareMap hwMap) {
         dt.init(hwMap);
         acquirer.init(hwMap);
-//        slides.init(hwMap);
+        slides.init(hwMap);
+
+//        slideMech.init(hwMap);
+
+//        carriage.init(hwMap);
     }
 
     @Override
     public void loop(Gamepad gamepad) {
         dt.loop(gamepad);
         acquirer.loop(gamepad);
-//        slides.loop(gamepad);
+        slides.loop(gamepad);
+
+//        slideMech.loop(gamepad);
+
+//        carriage.loop(gamepad);
     }
 
     public void telemetry(Telemetry telemetry){
 //        acquirer.telemetry(telemetry);
+//        slides.telemetry(telemetry);
+//        slideMech.telemetry(telemetry);
     }
 }

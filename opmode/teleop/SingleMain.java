@@ -16,15 +16,15 @@ public class SingleMain extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-        //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
             robot.loop(gamepad1);
-            //robot.telemetry(telemetry);
+            robot.telemetry(telemetry);
 
-            //telemetry.update();
+            telemetry.update();
         }
     }
 

@@ -25,148 +25,61 @@ public class Slides extends Mechanism {
         REST,
         WAIT,
         DELAY,
-//        LEVEL2_TEMP_DELAY,
-        EXTENDED,
-        TIPPING,
-        SHARED_DELAY
+        TIP,
+        TIP_DELAY
     }
     SlidesState state;
 
-    public enum LevelState {
-        SHARED,
-        LEVEL1,
-//        LEVEL2,
-        LEVEL3_CLOSE,
-        LEVEL3_FAR
-    }
-    LevelState level;
 
     ElapsedTime time = new ElapsedTime();
-//    public static double CARRIAGE2_DELAYTIME = 0.25;
-    public static double CARRIAGESHARED_DELAYTIME = 0.2;
-//    public static double CARRIAGE2_TEMP_DELAYTIME = 0.2;
-    public static double CARRIAGE3_DELAYTIME = 0.4;
-//    public static double TIPPING2_DELAYTIME = 0.7;
-    public static double TIPPINGSHARED_DELAYTIME = 1;
-    public static double TIPPING3_DELAYTIME = 0.5;
-
-    public static double SHARED_WAIT = 0.5;
+    public static double LEVEL3_TEMP_WAIT = 0.2;
+    public static double LEVEL3_TIP_WAIT = 0.25;
 
     @Override
     public void init(HardwareMap hwMap) {
         slides.init(hwMap);
 
         state = SlidesState.REST;
-        level = LevelState.LEVEL1;
         time.reset();
     }
 
     @Override
     public void loop(Gamepad gamepad) {
         slides.update();
-        switch(state) {
+        switch (state) {
             case REST:
-                switch(level) {
-                    case SHARED:
-                        slides.sharedRest();
-                        state = SlidesState.WAIT;
-                        break;
-                    case LEVEL1:
-                    case LEVEL3_FAR:
-                    case LEVEL3_CLOSE:
-                        slides.rest();
-                        state = SlidesState.WAIT;
-                        break;
-                }
+                slides.rest();
+                state = SlidesState.WAIT;
                 break;
+
+        // wait for input
             case WAIT:
                 if (gamepad.y) {
-                    level = LevelState.LEVEL3_FAR;
                     slides.extendLevel3();
-                    state = SlidesState.DELAY;
+                    slides.close();
+
                     time.reset();
-                }
-                if (gamepad.b) {
-                    level = LevelState.LEVEL3_CLOSE;
-                    slides.extendLevel3();
                     state = SlidesState.DELAY;
-                    time.reset();
-                }
-                if (gamepad.a) {
-                    level = LevelState.SHARED;
-                    slides.extendShared();
-                    state = SlidesState.DELAY;
-                    time.reset();
                 }
                 break;
             case DELAY:
-                switch(level) {
-                    case SHARED:
-                        if (time.seconds() > CARRIAGESHARED_DELAYTIME) {
-                            slides.sharedTemp();
-                            state = SlidesState.EXTENDED;
-                        }
-                        break;
-                    case LEVEL1:
-                        break;
-                    case LEVEL3_CLOSE:
-                        if (time.seconds() > CARRIAGE3_DELAYTIME) {
-                            slides.level3TempClose();
-                            state = SlidesState.EXTENDED;
-                        }
-                        break;
-                    case LEVEL3_FAR:
-                        if (time.seconds() > CARRIAGE3_DELAYTIME) {
-                            slides.level3Temp();
-                            state = SlidesState.EXTENDED;
-                        }
-                        break;
+                if (time.seconds() > LEVEL3_TEMP_WAIT) {
+                    slides.armLevel3();
+
+                    state = SlidesState.TIP;
                 }
                 break;
-            case EXTENDED:
+            case TIP:
                 if (gamepad.x) {
-                    switch(level) {
-                        case SHARED:
-                            slides.sharedTip();
-                            time.reset();
-                            state = SlidesState.TIPPING;
-                            break;
-                        case LEVEL1:
-                            break;
-                        case LEVEL3_CLOSE:
-                            slides.level3TipClose();
-                            time.reset();
-                            state = SlidesState.TIPPING;
-                            break;
-                        case LEVEL3_FAR:
-                            slides.level3Tip();
-                            time.reset();
-                            state = SlidesState.TIPPING;
-                            break;
-                    }
+                    slides.open();
+
+                    time.reset();
+                    state = SlidesState.TIP_DELAY;
                 }
                 break;
-            case TIPPING:
-                switch (level) {
-                    case SHARED:
-                        if (time.seconds() > TIPPINGSHARED_DELAYTIME) {
-                            time.reset();
-                            slides.sharedRestTemp();
-                            state = SlidesState.SHARED_DELAY;
-                        }
-                        break;
-                    case LEVEL1:
-                        break;
-                    case LEVEL3_CLOSE:
-                    case LEVEL3_FAR:
-                        if (time.seconds() > TIPPING3_DELAYTIME) {
-                            state = SlidesState.REST;
-                        }
-                        break;
-                }
-                break;
-            case SHARED_DELAY:
-                if (time.seconds() > SHARED_WAIT) {
+            case TIP_DELAY:
+                if (time.seconds() > LEVEL3_TIP_WAIT) {
+                    time.reset();
                     state = SlidesState.REST;
                 }
                 break;
