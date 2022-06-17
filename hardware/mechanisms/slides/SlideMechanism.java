@@ -22,6 +22,7 @@ public class SlideMechanism extends Mechanism {
     public static double EXTEND_POS_LEVEL2 = 4.7; //5.1
     public static double EXTEND_POS_LEVEL1 = 6;
     public static double EXTEND_POS_SHARED = 1;
+    public static double EXTEND_POS_REST = 0;
 
     public static double MAX_VEL = 60;
     public static double MAX_ACCEL = 50;
@@ -50,52 +51,32 @@ public class SlideMechanism extends Mechanism {
         carriage.init(hwMap);
     }
 
-    public void sharedRestTemp() {
-        spool.setTargetPosition(0);
-        carriage.restCup();
-        carriage.sharedArmRestTemp();
-    }
+    public void open(){carriage.open();}
+    public void close(){carriage.close();}
+
     public void rest() {
-        spool.setTargetPosition(0);
-        carriage.rest();
-    }
-    public void sharedRest() {
-        spool.setTargetPosition(0, 1);
+        spool.setTargetPosition(EXTEND_POS_REST);
         carriage.rest();
     }
     public void resetServos(){
         carriage.rest();
     }
+
     public void extendLevel3() {
         spool.setTargetPosition(EXTEND_POS_LEVEL3);
     }
-    public void level3Temp() {
-        carriage.level3Temp();
+    public void armLevel3() {
+        carriage.level3();
     }
-    public void level3TempClose() {
-        carriage.level3TempClose();
-    }
-    public void level3Tip() {
-        carriage.level3Tip();
-    }
-    public void level3TipClose() {
-        carriage.level3TipClose();
-    }
+//    public void armLevel3Close() {
+//        carriage.level3Close();
+//    }
 
     public void extendLevel2() {
         spool.setTargetPosition(EXTEND_POS_LEVEL2);
     }
-    public void level2Temp() {
-        carriage.level2Temp();
-    }
-    public void level2Tip() {
-        carriage.level2Tip();
-    }
-    public void level2ArmTemp() {
-        carriage.level2ArmTemp();
-    }
-    public void level2CupTemp(){
-        carriage.level2CupTemp();
+    public void armLevel2() {
+        carriage.level2();
     }
 
     public void extendShared() {
@@ -104,12 +85,20 @@ public class SlideMechanism extends Mechanism {
     public void sharedTemp() {
         carriage.sharedTemp();
     }
-    public void sharedTip() {
-        carriage.sharedTip();
-    }
 
     public void update() {
         spool.update();
+    }
+
+    @Override
+    public void loop(Gamepad gamepad) {
+        update();
+        if (gamepad.dpad_up) {
+            spool.setTargetPosition(EXTEND_POS_LEVEL3);
+        }
+        if (gamepad.dpad_down) {
+            spool.setTargetPosition(EXTEND_POS_REST);
+        }
     }
 
 

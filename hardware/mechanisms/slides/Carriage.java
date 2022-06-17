@@ -15,24 +15,14 @@ public class Carriage extends Mechanism {
     Servo armLeft;
     Servo armRight;
 
-    public static double CUP_LEVEL3 = 0.25;
-    public static double CUP_LEVEL3_TIP = 0.7;
-    public static double CUP_LEVEL3_TIP_CLOSE = 0.85;
-    public static double CUP_LEVEL2 = 0;
-    public static double CUP_LEVEL2_TIP = 0.65;
-    public static double CUP_LEVEL1 = 0.9;
-    public static double CUP_LEVEL1_TIP = 1;
-    public static double CUP_SHARED = 0.15;
-    public static double CUP_SHARED_TIP = 0.7;
-    public static double CUP_REST = 0.8;
+    public static double CUP_CLOSED = 0.12;
+    public static double CUP_OPEN = 0.7;
 
-    public static double ARM_LEVEL3 = 0.94;
-    public static double ARM_LEVEL3_CLOSE = 0.8;
-    public static double ARM_LEVEL2 = 1;
-    public static double ARM_LEVEL1 = 0;
+    public static double ARM_LEVEL3 = 0.85;
+    public static double ARM_LEVEL2 = 0.95;
+    public static double ARM_LEVEL1 = 1;
     public static double ARM_SHARED = 1;
-    public static double ARM_SHARED_TEMP = 0.3;
-    public static double ARM_REST = 0.17;
+    public static double ARM_REST = 0.006;
 
     public static double CUP_TEST = 0.77;
     public static double ARM_TEST = 0.21;
@@ -41,95 +31,76 @@ public class Carriage extends Mechanism {
 
     @Override
     public void init(HardwareMap hwMap) {
-        cup = hwMap.get(Servo.class, "cupServo");
+        cup = hwMap.get(Servo.class, "clamp");
         cup.setDirection(Servo.Direction.REVERSE);
 
-        armLeft = hwMap.get(Servo.class, "armLeft");
-        armLeft.setDirection(Servo.Direction.REVERSE);
+        armLeft = hwMap.get(Servo.class, "leftArm");
+        armLeft.setDirection(Servo.Direction.FORWARD);
 
-        armRight = hwMap.get(Servo.class, "armRight");
-        armRight.setDirection(Servo.Direction.FORWARD);
+        armRight = hwMap.get(Servo.class, "rightArm");
+        armRight.setDirection(Servo.Direction.REVERSE);
     }
 
     public void rest() {
         armLeft.setPosition(ARM_REST);
         armRight.setPosition(ARM_REST);
-        cup.setPosition(CUP_REST);
-    }
-    public void restCup() {
-        cup.setPosition(CUP_REST);
+        cup.setPosition(CUP_OPEN);
     }
 
-    public void level3Temp() {
+    public void open(){
+        cup.setPosition(CUP_OPEN);
+    }
+
+    public void close(){
+        cup.setPosition(CUP_CLOSED);
+    }
+
+    public void level3() {
         armLeft.setPosition(ARM_LEVEL3);
         armRight.setPosition(ARM_LEVEL3);
-        cup.setPosition(CUP_LEVEL3);
+        cup.setPosition(CUP_CLOSED);
     }
-    public void level3Tip() {
-        armLeft.setPosition(ARM_LEVEL3);
-        armRight.setPosition(ARM_LEVEL3);
-        cup.setPosition(CUP_LEVEL3_TIP);
-    }
-    public void level3TempClose() {
-        armLeft.setPosition(ARM_LEVEL3_CLOSE);
-        armRight.setPosition(ARM_LEVEL3_CLOSE);
-        cup.setPosition(CUP_LEVEL3);
-    }
-    public void level3TipClose() {
-        armLeft.setPosition(ARM_LEVEL3_CLOSE);
-        armRight.setPosition(ARM_LEVEL3_CLOSE);
-        cup.setPosition(CUP_LEVEL3_TIP_CLOSE);
-    }
-    public void level2Temp(){
+
+//    public void level3Close() {
+//        armLeft.setPosition(ARM_LEVEL3_CLOSE);
+//        armRight.setPosition(ARM_LEVEL3_CLOSE);
+//        cup.setPosition(CUP_CLOSED);
+//    }
+
+    public void level2(){
         armLeft.setPosition(ARM_LEVEL2);
         armRight.setPosition(ARM_LEVEL2);
-        cup.setPosition(CUP_LEVEL2);
-    }
-
-    public void level2ArmTemp(){
-        armLeft.setPosition(ARM_LEVEL2);
-        armRight.setPosition(ARM_LEVEL2);
-    }
-
-    public void level2CupTemp(){
-        cup.setPosition(CUP_LEVEL2);
-    }
-
-    public void level2Tip(){
-        armLeft.setPosition(ARM_LEVEL2);
-        armRight.setPosition(ARM_LEVEL2);
-        cup.setPosition(CUP_LEVEL2_TIP);
-    }
-
-    public void level1Temp(){
-        armLeft.setPosition(ARM_LEVEL1);
-        armRight.setPosition(ARM_LEVEL1);
-        cup.setPosition(CUP_LEVEL1);
-    }
-    public void level1Tip() {
-        armLeft.setPosition(ARM_LEVEL1);
-        armRight.setPosition(ARM_LEVEL1);
-        cup.setPosition(CUP_LEVEL1_TIP);
+        cup.setPosition(CUP_CLOSED);
     }
 
     public void sharedTemp() {
         armLeft.setPosition(ARM_SHARED);
         armRight.setPosition(ARM_SHARED);
-        cup.setPosition(CUP_SHARED);
+        cup.setPosition(CUP_CLOSED);
     }
-    public void sharedTip() {
-        cup.setPosition(CUP_SHARED_TIP);
-    }
-    public void sharedArmRestTemp() {
-        armLeft.setPosition(ARM_SHARED_TEMP);
-        armRight.setPosition(ARM_SHARED_TEMP);
-    }
+
+//    public void sharedArmRestTemp() {
+//        armLeft.setPosition(ARM_SHARED_TEMP);
+//        armRight.setPosition(ARM_SHARED_TEMP);
+//    }
 
     @Override
     public void loop(Gamepad gamepad) {
         if (gamepad.dpad_up) {
-            armLeft.setPosition(ARM_TEST);
-            armRight.setPosition(ARM_TEST);
+            armLeft.setPosition(ARM_REST);
+            armRight.setPosition(ARM_REST);
+        }
+        if (gamepad.y) {
+            armLeft.setPosition(ARM_LEVEL3);
+            armRight.setPosition(ARM_LEVEL3);
+        }
+        if (gamepad.x) {
+            armLeft.setPosition(ARM_LEVEL2);
+            armRight.setPosition(ARM_LEVEL2);
+        }
+        if (gamepad.a) {
+            armLeft.setPosition(ARM_LEVEL1);
+            armRight.setPosition(ARM_LEVEL1);
         }
         if (gamepad.dpad_down) {
             cup.setPosition(CUP_TEST);
