@@ -7,6 +7,7 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Carousel;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.Carriage;
@@ -21,19 +22,14 @@ public class MeccRobot extends Mechanism {
     private Drivetrain dt = new Drivetrain(opMode);
     private Acquirer acquirer = new Acquirer(opMode);
     private Slides slides = new Slides(opMode);
-    private SlideMechanism slideMech = new SlideMechanism(opMode);
-
-//    private Carriage carriage =  new Carriage(opMode);
+    private Carousel carousel = new Carousel(opMode);
 
     @Override
     public void init(HardwareMap hwMap) {
         dt.init(hwMap);
         acquirer.init(hwMap);
         slides.init(hwMap);
-
-//        slideMech.init(hwMap);
-
-//        carriage.init(hwMap);
+        carousel.init(hwMap);
     }
 
     @Override
@@ -41,10 +37,7 @@ public class MeccRobot extends Mechanism {
         dt.loop(gamepad);
         acquirer.loop(gamepad);
         slides.loop(gamepad);
-
-//        slideMech.loop(gamepad);
-
-//        carriage.loop(gamepad);
+        carousel.loop(gamepad);
     }
 
     public void telemetry(Telemetry telemetry){
