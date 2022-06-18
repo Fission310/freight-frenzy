@@ -20,7 +20,7 @@ public class Acquirer extends Mechanism {
     private Servo rightHub;
     private Servo rightWall;
 
-    private DcMotorEx intakeLeft;
+//    private DcMotorEx intakeLeft;
     private DcMotorEx intakeRight;
 
     private FreightSensor sensor;
@@ -69,11 +69,11 @@ public class Acquirer extends Mechanism {
         rightHub.setDirection(Servo.Direction.REVERSE);
 
 
-        intakeLeft = hwMap.get(DcMotorEx.class, "intakeLeft");
+//        intakeLeft = hwMap.get(DcMotorEx.class, "intakeLeft");
         intakeRight = hwMap.get(DcMotorEx.class, "intakeRight");
 
         intakeRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        intakeLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         sensor = new FreightSensor(opMode);
         sensor.init(hwMap);
@@ -114,30 +114,30 @@ public class Acquirer extends Mechanism {
         rightWall.setPosition(RIGHT_DOWN_POS);
     }
 
-    public void intakeLeft() {
-        intakeLeft.setPower(1);
-    }
+//    public void intakeLeft() {
+//        intakeLeft.setPower(1);
+//    }
 
     public void intakeRight() {
         intakeRight.setPower(1);
     }
 
     public void intake(){
-        intakeLeft.setPower(1);
+//        intakeLeft.setPower(1);
         intakeRight.setPower(1);
     }
 
-    public void outtakeLeft() {
-    intakeLeft.setPower(SPEED_OUTTAKE);
-    }
+//    public void outtakeLeft() {
+//    intakeLeft.setPower(SPEED_OUTTAKE);
+//    }
 
     public void outtakeRight() {
         intakeRight.setPower(SPEED_OUTTAKE);
     }
 
-    public void stopLeft() {
-        intakeLeft.setPower(0);
-    }
+//    public void stopLeft() {
+//        intakeLeft.setPower(0);
+//    }
 
     public void stopRight() {
         intakeRight.setPower(0);
@@ -145,7 +145,7 @@ public class Acquirer extends Mechanism {
 
     public void stop() {
         intakeRight.setPower(0);
-        intakeLeft.setPower(0);
+//        intakeLeft.setPower(0);
     }
 
     public void autonLoop(){
@@ -191,7 +191,7 @@ public class Acquirer extends Mechanism {
                 } else if(gamepad.left_trigger > 0){
                     raiseRightInactive();
                     lowerLeft();
-                    intakeLeft();
+//                    intakeLeft();
                 }
                 else {
                     stop();
@@ -218,7 +218,7 @@ public class Acquirer extends Mechanism {
                 break;
             case ACQUIRER_FLIPPING_LEFT:
                 if(timer.seconds() >= OUTTAKE_DELAY){
-                    outtakeLeft();
+//                    outtakeLeft();
 
                     acquirerState = AcquirerState.ACQUIRER_OUTTAKING_LEFT;
                     timer.reset();
