@@ -10,35 +10,32 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 @Config
-public class BLUE_cycles extends LinearOpMode {
-
-    private static double HEADING = Math.toRadians(180);
+public class RED_cycles extends LinearOpMode {
 
     public static double WAREHOUSE_WAIT = 0.15;
 
-    public static double WALL_POS = 70.5 - (12.15/2.0);
+    public static double WALL_POS = -70.5 + (12.5/2.0);
 
-    private static final Pose2d SCORE_0 = new Pose2d(-11.5+3.6, WALL_POS+0.6, HEADING);
-    private static final Pose2d SCORE_1 = new Pose2d(-11.5+4.6, WALL_POS+1.6, HEADING);
-    private static final Pose2d SCORE_2 = new Pose2d(-11.5+4.6, WALL_POS+1.6, HEADING);
-    private static final Pose2d SCORE_3 = new Pose2d(-11.5+5.2, WALL_POS+2.6, HEADING);
-    private static final Pose2d SCORE_4 = new Pose2d(-11.5+5.6, WALL_POS+3.6, HEADING);
-    private static final Pose2d SCORE_5 = new Pose2d(-11.5+6, WALL_POS+4.6, HEADING);
+    private static final Pose2d SCORE_0 = new Pose2d(-11, WALL_POS+1);
+    private static final Pose2d SCORE_1 = new Pose2d(-11+1, WALL_POS+1);
+    private static final Pose2d SCORE_2 = new Pose2d(-11, WALL_POS+1);
+    private static final Pose2d SCORE_3 = new Pose2d(-11+1, WALL_POS+1);
+    private static final Pose2d SCORE_4 = new Pose2d(-11+1, WALL_POS+1);
+    private static final Pose2d SCORE_5 = new Pose2d(-11+1, WALL_POS+1);
 
+    private static final Pose2d PARK = new Pose2d(41+3, WALL_POS+2);
+    private static final Pose2d WAREHOUSE_0 = new Pose2d(44, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_1 = new Pose2d(50, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_2 = new Pose2d(54, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_3 = new Pose2d(55.5, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_4 = new Pose2d(57, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_5 = new Pose2d(58, WALL_POS+1);
 
-    private static final Pose2d WAREHOUSE_0 = new Pose2d(47, WALL_POS+0.6, HEADING);
-    private static final Pose2d WAREHOUSE_1 = new Pose2d(50, WALL_POS+1.6, HEADING);
-    private static final Pose2d WAREHOUSE_2 = new Pose2d(53, WALL_POS+1.6, HEADING);
-    private static final Pose2d WAREHOUSE_3 = new Pose2d(56, WALL_POS+2.6, HEADING);
-    private static final Pose2d WAREHOUSE_4 = new Pose2d(59, WALL_POS+3.6, HEADING);
-    private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS+4.6, HEADING);
-
-    private static final Pose2d PARK = new Pose2d(50, WALL_POS+4.6, HEADING);
-
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(12, WALL_POS, HEADING);
+        Pose2d startPose = new Pose2d(18, WALL_POS);
 
         TrajectorySequence cycles = drive.trajectorySequenceBuilder(startPose)
                 // ======== CV ======== //
