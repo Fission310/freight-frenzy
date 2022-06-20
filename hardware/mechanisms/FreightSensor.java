@@ -18,8 +18,11 @@ public class FreightSensor extends Mechanism {
     ColorRangeSensor colorRight;
     ColorRangeSensor clampColor;
 
-    public static int YELLOW_THRESHOLD = 200;
-    public static int WHITE_THRESHOLD = 200;
+    public static int YELLOW_THRESHOLD = 250;
+    public static int WHITE_THRESHOLD = 250;
+
+    public static int CLAMP_YELLOW_THRESHOLD = 300;
+    public static int CLAMP_WHITE_THRESHOLD = 300;
 
     public FreightSensor(LinearOpMode opMode){
         this.opMode = opMode;
@@ -57,6 +60,13 @@ public class FreightSensor extends Mechanism {
         return ((yellow > color.blue() && yellow >= YELLOW_THRESHOLD) || white >= WHITE_THRESHOLD);
     }
 
+    public boolean hasFreightClampSensor(ColorRangeSensor color) {
+        int yellow = getYellow(color);
+        int white = getWhite(color);
+
+        return ((yellow > color.blue() && yellow >= CLAMP_YELLOW_THRESHOLD) || white >= CLAMP_WHITE_THRESHOLD);
+    }
+
     public boolean hasFreightLeft() {
 
         return hasFreightSensor(colorLeft);
@@ -68,7 +78,7 @@ public class FreightSensor extends Mechanism {
     }
 
     public boolean hasFreightClamp() {
-        return hasFreightSensor(clampColor);
+        return hasFreightClampSensor(clampColor);
     }
 
     public boolean hasFreight(){
@@ -84,6 +94,9 @@ public class FreightSensor extends Mechanism {
 
         telemetry.addData("yellowRight",getYellow(colorRight));
         telemetry.addData("whiteRight", getWhite(colorRight));
+
+        telemetry.addData("yellowClamp", getYellow(clampColor));
+        telemetry.addData("whiteClamp", getWhite(clampColor));
 
 //        telemetry.addData("distanceLeft", getDistance(colorLeft));
 //        telemetry.addData("lightLeft", getLight(colorLeft));
