@@ -17,17 +17,20 @@ public class Carriage extends Mechanism {
     Servo armRight;
     FreightSensor sensor;
 
-    public static double CUP_CLOSED = 0.12;
-    public static double CUP_OPEN = 0.7;
+    public static double CUP_CLOSED = 0.56;
+    public static double CUP_OPEN = 0;
 
-    public static double ARM_LEVEL3 = 0.85;
-    public static double ARM_LEVEL2 = 0.95;
+    public static double ARM_LEVEL3 = 0.8;
+    public static double ARM_LEVEL2 = 0.92;
     public static double ARM_LEVEL1 = 1;
-    public static double ARM_SHARED = 1;
-    public static double ARM_REST = 0.006;
 
-    public static double CUP_TEST = 0.77;
-    public static double ARM_TEST = 0.21;
+    public static double ARM_LOWER_CAP = 1;
+    public static double ARM_MID_CAP = 0.75;
+    public static double ARM_HIGHER_CAP = 0.6;
+
+    public static double ARM_REST = 0;
+
+    public static double CUP_TEST = 0;
 
     public Carriage(LinearOpMode opMode) { this.opMode = opMode; }
 
@@ -67,21 +70,15 @@ public class Carriage extends Mechanism {
         cup.setPosition(CUP_CLOSED);
     }
 
-//    public void level3Close() {
-//        armLeft.setPosition(ARM_LEVEL3_CLOSE);
-//        armRight.setPosition(ARM_LEVEL3_CLOSE);
-//        cup.setPosition(CUP_CLOSED);
-//    }
-
     public void level2(){
         armLeft.setPosition(ARM_LEVEL2);
         armRight.setPosition(ARM_LEVEL2);
         cup.setPosition(CUP_CLOSED);
     }
 
-    public void sharedTemp() {
-        armLeft.setPosition(ARM_SHARED);
-        armRight.setPosition(ARM_SHARED);
+    public void level1() {
+        armLeft.setPosition(ARM_LEVEL1);
+        armRight.setPosition(ARM_LEVEL1);
         cup.setPosition(CUP_CLOSED);
     }
 
@@ -89,31 +86,35 @@ public class Carriage extends Mechanism {
         return sensor.hasFreightClamp();
     }
 
-//    public void sharedArmRestTemp() {
-//        armLeft.setPosition(ARM_SHARED_TEMP);
-//        armRight.setPosition(ARM_SHARED_TEMP);
-//    }
+    public void lowerCap() {
+        armLeft.setPosition(ARM_LOWER_CAP);
+        armRight.setPosition(ARM_LOWER_CAP);
+        cup.setPosition(CUP_CLOSED);
+    }
+    public void midCap() {
+        armLeft.setPosition(ARM_MID_CAP);
+        armRight.setPosition(ARM_MID_CAP);
+        cup.setPosition(CUP_CLOSED);
+    }
+    public void higherCap() {
+        armLeft.setPosition(ARM_HIGHER_CAP);
+        armRight.setPosition(ARM_HIGHER_CAP);
+        cup.setPosition(CUP_CLOSED);
+    }
 
     @Override
-    public void loop(Gamepad gamepad) {
-        if (gamepad.dpad_up) {
-            armLeft.setPosition(ARM_REST);
-            armRight.setPosition(ARM_REST);
+    public void loop(Gamepad gamepad2) {
+        if (gamepad2.y) {
+            higherCap();
         }
-        if (gamepad.y) {
-            armLeft.setPosition(ARM_LEVEL3);
-            armRight.setPosition(ARM_LEVEL3);
+        if (gamepad2.b) {
+            midCap();
         }
-        if (gamepad.x) {
-            armLeft.setPosition(ARM_LEVEL2);
-            armRight.setPosition(ARM_LEVEL2);
+        if (gamepad2.a) {
+            lowerCap();
         }
-        if (gamepad.a) {
-            armLeft.setPosition(ARM_LEVEL1);
-            armRight.setPosition(ARM_LEVEL1);
-        }
-        if (gamepad.dpad_down) {
-            cup.setPosition(CUP_TEST);
+        if (gamepad2.x) {
+            rest();
         }
     }
 

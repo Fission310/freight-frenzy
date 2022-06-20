@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.MeccRobot;
 
-@TeleOp (name = "SingleMain", group = "test")
-public class SingleMain extends LinearOpMode {
+@TeleOp (name = "PairedMain", group = "test")
+public class PairedMain extends LinearOpMode {
 
     private MeccRobot robot = new MeccRobot(this);
 
@@ -16,15 +16,15 @@ public class SingleMain extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            robot.loop(gamepad1);
-            robot.telemetry(telemetry);
+            robot.loop(gamepad1, gamepad2);
+//            robot.telemetry(telemetry);
 
-            telemetry.update();
+//            telemetry.update();
         }
     }
 
