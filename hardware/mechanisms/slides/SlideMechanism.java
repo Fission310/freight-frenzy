@@ -18,15 +18,19 @@ public class SlideMechanism extends Mechanism {
     MotionProfiledDcMotor spool;
     Carriage carriage = new Carriage(opMode);
 
-    public static double EXTEND_POS_LEVEL3 = 7; //7.7
-    public static double EXTEND_POS_LEVEL2 = 4.7; //5.1
+    public static double EXTEND_POS_LEVEL3 = 7;
+    public static double EXTEND_POS_LEVEL2 = 6;
+    public static double EXTEND_POS_LEVEL2_TEMP = 3.5;
     public static double EXTEND_POS_LEVEL1 = 6;
+    public static double EXTEND_POS_LEVEL1_TEMP = 3;
     public static double EXTEND_POS_SHARED = 1;
-    public static double EXTEND_POS_REST = 0;
+    public static double EXTEND_POS_REST = 1.1;
+    public static double EXTEND_POS_REST_TEMP = 2.5;
+    public static double EXTEND_POS_CAP = 2;
 
-    public static double MAX_VEL = 60;
-    public static double MAX_ACCEL = 50;
-    public static double RETRACTION_MULTIPLIER = 0.4;
+    public static double MAX_VEL = 80;
+    public static double MAX_ACCEL = 80;
+    public static double RETRACTION_MULTIPLIER = 0.5;
     private static final double WHEEL_RADIUS = 1.37795;
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
@@ -58,8 +62,11 @@ public class SlideMechanism extends Mechanism {
         spool.setTargetPosition(EXTEND_POS_REST);
         carriage.rest();
     }
-    public void resetServos(){
+    public void restCarriage() {
         carriage.rest();
+    }
+    public void restTEMP() {
+        spool.setTargetPosition(EXTEND_POS_REST_TEMP, 1);
     }
 
     public void extendLevel3() {
@@ -68,22 +75,29 @@ public class SlideMechanism extends Mechanism {
     public void armLevel3() {
         carriage.level3();
     }
-//    public void armLevel3Close() {
-//        carriage.level3Close();
-//    }
 
     public void extendLevel2() {
         spool.setTargetPosition(EXTEND_POS_LEVEL2);
+    }
+    public void extendLevel2TEMP() {
+        spool.setTargetPosition(EXTEND_POS_LEVEL2_TEMP);
     }
     public void armLevel2() {
         carriage.level2();
     }
 
-    public void extendShared() {
-        spool.setTargetPosition(EXTEND_POS_SHARED);
+    public void extendLevel1() {
+        spool.setTargetPosition(EXTEND_POS_LEVEL1);
     }
-    public void sharedTemp() {
-        carriage.sharedTemp();
+    public void extendLevel1TEMP() {
+        spool.setTargetPosition(EXTEND_POS_LEVEL1_TEMP);
+    }
+    public void armLevel1() {
+        carriage.level1();
+    }
+
+    public void extendCapping() {
+        spool.setTargetPosition(EXTEND_POS_CAP);
     }
 
     public void update() {
@@ -95,14 +109,23 @@ public class SlideMechanism extends Mechanism {
     }
 
     @Override
-    public void loop(Gamepad gamepad) {
-        update();
-        if (gamepad.dpad_up) {
-            spool.setTargetPosition(EXTEND_POS_LEVEL3);
-        }
-        if (gamepad.dpad_down) {
-            spool.setTargetPosition(EXTEND_POS_REST);
-        }
+    public void loop(Gamepad gamepad2) {
+//        update();
+//        if (gamepad2.y) {
+//            spool.setTargetPosition(2);
+//            carriage.higherCap();
+//        }
+//        if (gamepad2.b) {
+//            spool.setTargetPosition(2);
+//            carriage.midCap();
+//        }
+//        if (gamepad2.a) {
+//            spool.setTargetPosition(2);
+//            carriage.lowerCap();
+//        }
+//        if (gamepad2.x) {
+//            rest();
+//        }
     }
 
 
