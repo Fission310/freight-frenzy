@@ -109,6 +109,8 @@ public class Slides extends Mechanism {
                 }
                 if (gamepad.b) {
                     slides.extendCapping();
+
+                    state = SlidesState.CAP_RESET;
                 }
                 break;
             case DELAY:
@@ -204,6 +206,7 @@ public class Slides extends Mechanism {
                     time.reset();
                     state = SlidesState.REST;
                 }
+                break;
         }
     }
 
