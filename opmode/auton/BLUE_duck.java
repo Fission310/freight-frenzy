@@ -4,16 +4,35 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Carousel;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Webcam;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Webcam.Location;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous
+@Autonomous(group = "_blue")
 @Config
 public class BLUE_duck extends LinearOpMode {
 
     private static final double WALL_POS = -70.5+(12.5/2.0);
+
+    private enum TrajState {
+        CAROUSEL,
+        SCORING,
+        PARKING,
+        IDLING
+    }
+    private TrajState trajState;
+
+    Slides.SlidesState slidesState;
+
+    ElapsedTime time = new ElapsedTime();
+    public static double TIP_WAIT = 2;
 
     @Override public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -21,25 +40,187 @@ public class BLUE_duck extends LinearOpMode {
         Acquirer acquirer = new Acquirer(this);
         acquirer.init(hardwareMap);
 
+        Carousel carousel = new Carousel(this);
+        carousel.init(hardwareMap);
+
+        Webcam webcam = new Webcam(this);
+        webcam.init(hardwareMap);
+
+        SlideMechanism slides = new SlideMechanism(this);
+        slides.init(hardwareMap);
+
+        trajState = TrajState.CAROUSEL;
+        slidesState = Slides.SlidesState.WAIT;
+
+        slides.close();
+
         Pose2d startPose = new Pose2d(-31, WALL_POS, Math.toRadians(180));
 
-        TrajectorySequence duckTraj = drive.trajectorySequenceBuilder(startPose)
-                .waitSeconds(1)
-                .lineToLinearHeading(new Pose2d(-31, WALL_POS-2, Math.toRadians(180)))
-                .waitSeconds(0.5)
-                .lineToLinearHeading(new Pose2d(-58, 59, Math.toRadians(220)))
-                .waitSeconds(4)
+        TrajectorySequence carouselTraj = drive.trajectorySequenceBuilder(startPose)
+
+                // SCAN 4 DUCK
+                .waitSeconds(0.2)
+                .lineToLinearHeading(new Pose2d(-31, WALL_POS-4, Math.toRadians(180)))
+                .waitSeconds(0.2)
+                .lineToLinearHeading(new Pose2d(-57, 59, Math.toRadians(220)))
+                .addTemporalMarker(carousel::rotateAUTO)
+                .waitSeconds(8)
+                .addTemporalMarker(carousel::stop)
                 .lineToLinearHeading(new Pose2d(-WALL_POS+2, 23, Math.toRadians(270)))
-                .waitSeconds(3)
+                .waitSeconds(0.5)
+                
+                .build();
+
+        TrajectorySequence parkTraj = drive.trajectorySequenceBuilder(carouselTraj.end())
                 .lineToLinearHeading(new Pose2d(-WALL_POS+2, 36, Math.toRadians(270)))
+
                 .build();
 
         drive.setPoseEstimate(startPose);
         waitForStart();
-        drive.followTrajectorySequenceAsync(duckTraj);
+        
+        Location location = webcam.location();
+        webcam.stopStreaming();
+        
+        drive.followTrajectorySequenceAsync(carouselTraj);
 
         while(opModeIsActive() && !isStopRequested()) {
+            
+            slides.update();
             drive.update();
+
+            switch (trajState) {
+                case CAROUSEL:
+                    if (!drive.isBusy()) {
+                        trajState = TrajState.SCORING;
+                    }
+                    break;
+                case SCORING:
+                    switch (slidesState) {
+                        case WAIT:
+                            switch (location) {
+                                case LEFT:
+                                    slides.extendLevel1TEMP();
+                                    slides.close();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.DELAY;
+                                    break;
+                                case MIDDLE:
+                                    slides.extendLevel2TEMP();
+                                    slides.close();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.DELAY;
+                                    break;
+                                case RIGHT:
+                                    slides.extendLevel3();
+                                    slides.close();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.DELAY;
+                                    break;
+                            }
+                            break;
+                        case DELAY:
+                            switch (location) {
+                                case LEFT:
+                                    if (time.seconds() > Slides.LEVEL1_ARM_TEMP_WAIT) {
+                                        slides.armLevel1();
+                                    }
+                                    if (time.seconds() > Slides.LEVEL1_TEMP_WAIT) {
+                                        slides.extendLevel1();
+
+                                        slidesState = Slides.SlidesState.TIP;
+                                    }
+                                    break;
+                                case MIDDLE:
+                                    if (time.seconds() > Slides.LEVEL1_ARM_TEMP_WAIT) {
+                                        slides.armLevel2();
+                                    }
+                                    if (time.seconds() > Slides.LEVEL2_TEMP_WAIT) {
+                                        slides.extendLevel2();
+
+                                        slidesState = Slides.SlidesState.TIP;
+                                    }
+                                    break;
+                                case RIGHT:
+                                    if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                        slides.armLevel3();
+
+                                        slidesState = Slides.SlidesState.TIP;
+                                    }
+                                    break;
+                            }
+                            break;
+                        case TIP:
+                            if (time.seconds() > TIP_WAIT) {
+                                slides.open();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.TEMP_RETRACT;
+                            }
+                            break;
+                        case TEMP_RETRACT:
+                            if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                time.reset();
+                                switch (location) {
+                                    case LEFT:
+                                    case MIDDLE:
+                                        slides.restTEMP();
+                                        slidesState = Slides.SlidesState.TEMP_CARRIAGE;
+                                        time.reset();
+                                        break;
+                                    case RIGHT:
+                                        slidesState = Slides.SlidesState.TIP_DELAY;
+                                        time.reset();
+                                        break;
+                                }
+                            }
+                            break;
+                        case TEMP_CARRIAGE:
+                            if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                slides.restCarriage();
+                                time.reset();
+                                slidesState = Slides.SlidesState.TIP_DELAY;
+                            }
+                            break;
+                        case TIP_DELAY:
+                            switch (location) {
+                                case LEFT:
+                                    if (time.seconds() > Slides.LEVEL1_TIP_WAIT) {
+                                        time.reset();
+                                        slides.rest();
+                                        trajState = TrajState.PARKING;
+                                    }
+                                    break;
+                                case MIDDLE:
+                                    if (time.seconds() > Slides.LEVEL2_TIP_WAIT) {
+                                        time.reset();
+                                        slides.rest();
+                                        trajState = TrajState.PARKING;
+                                    }
+                                    break;
+                                case RIGHT:
+                                    if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                        time.reset();
+                                        slides.rest();
+                                        trajState = TrajState.PARKING;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case PARKING:
+                    drive.followTrajectorySequenceAsync(parkTraj);
+                    trajState = TrajState.IDLING;
+                    break;
+                case IDLING:
+                    // wait for parking to finish
+                    break;
+            }
+            
         }
     }
 }
