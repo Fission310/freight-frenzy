@@ -76,27 +76,23 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
         SC_5,
         IDLE
     }
-
     TrajState currentTraj;
-
     Slides.SlidesState slidesState;
 
     ElapsedTime time = new ElapsedTime();
-
     public static double TIP_WAIT = 2;
 
     @Override
     public void runOpMode() {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-
         FreightSensor sensor = new FreightSensor(this);
-        sensor.init(hardwareMap);
-
         SlideMechanism slides = new SlideMechanism(this);
-        slides.init(hardwareMap);
-
         Webcam webcam = new Webcam(this);
+
+        sensor.init(hardwareMap);
+        slides.init(hardwareMap);
         webcam.init(hardwareMap);
 
         Pose2d startPose = new Pose2d(18, WALL_POS);
@@ -177,21 +173,18 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
 
                 .build();
 
-
         drive.setPoseEstimate(startPose);
-
-        waitForStart();
 
         currentTraj = TrajState.CV;
         slidesState = Slides.SlidesState.WAIT;
         slides.close();
 
+        waitForStart();
+
         Location location = webcam.location();
         webcam.stopStreaming();
 
         drive.followTrajectorySequenceAsync(cv);
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         while(opModeIsActive() && !isStopRequested()) {
 
@@ -239,6 +232,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                         slides.extendLevel1();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                                 case MIDDLE:
@@ -249,6 +243,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                         slides.extendLevel2();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                                 case RIGHT:
@@ -256,6 +251,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                         slides.armLevel3();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                             }

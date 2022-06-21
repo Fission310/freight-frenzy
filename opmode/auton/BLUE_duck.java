@@ -38,15 +38,13 @@ public class BLUE_duck extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Acquirer acquirer = new Acquirer(this);
-        acquirer.init(hardwareMap);
-
         Carousel carousel = new Carousel(this);
-        carousel.init(hardwareMap);
-
         Webcam webcam = new Webcam(this);
-        webcam.init(hardwareMap);
-
         SlideMechanism slides = new SlideMechanism(this);
+
+        acquirer.init(hardwareMap);
+        carousel.init(hardwareMap);
+        webcam.init(hardwareMap);
         slides.init(hardwareMap);
 
         trajState = TrajState.CAROUSEL;
@@ -62,10 +60,12 @@ public class BLUE_duck extends LinearOpMode {
                 .waitSeconds(0.2)
                 .lineToLinearHeading(new Pose2d(-31, WALL_POS-4, Math.toRadians(180)))
                 .waitSeconds(0.2)
-                .lineToLinearHeading(new Pose2d(-57, 59, Math.toRadians(220)))
+                .lineToLinearHeading(new Pose2d(-57, -59, Math.toRadians(220)))
                 .addTemporalMarker(carousel::rotateAUTO)
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)
+                .lineToLinearHeading(new Pose2d(-WALL_POS+4, 23, Math.toRadians(270)))
+                .waitSeconds(0.1)
                 .lineToLinearHeading(new Pose2d(-WALL_POS+2, 23, Math.toRadians(270)))
                 .waitSeconds(0.5)
                 
@@ -132,6 +132,7 @@ public class BLUE_duck extends LinearOpMode {
                                         slides.extendLevel1();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                                 case MIDDLE:
@@ -142,6 +143,7 @@ public class BLUE_duck extends LinearOpMode {
                                         slides.extendLevel2();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                                 case RIGHT:
@@ -149,6 +151,7 @@ public class BLUE_duck extends LinearOpMode {
                                         slides.armLevel3();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                             }

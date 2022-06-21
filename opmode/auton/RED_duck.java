@@ -34,19 +34,18 @@ public class RED_duck extends LinearOpMode {
     ElapsedTime time = new ElapsedTime();
     public static double TIP_WAIT = 2;
 
+    public static double SCORING_POS = -58;
     @Override public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Acquirer acquirer = new Acquirer(this);
-        acquirer.init(hardwareMap);
-
         Carousel carousel = new Carousel(this);
-        carousel.init(hardwareMap);
-
         Webcam webcam = new Webcam(this);
-        webcam.init(hardwareMap);
-
         SlideMechanism slides = new SlideMechanism(this);
+
+        acquirer.init(hardwareMap);
+        carousel.init(hardwareMap);
+        webcam.init(hardwareMap);
         slides.init(hardwareMap);
 
         trajState = TrajState.CAROUSEL;
@@ -62,17 +61,19 @@ public class RED_duck extends LinearOpMode {
                 .waitSeconds(0.2)
                 .lineToLinearHeading(new Pose2d(-31, WALL_POS+4))
                 .waitSeconds(0.2)
-                .lineToLinearHeading(new Pose2d(-57.5, -60, Math.toRadians(-30)))
+                .lineToLinearHeading(new Pose2d(-60, -59, Math.toRadians(-37)))
                 .addTemporalMarker(carousel::reverseAUTO)
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)
-                .lineToLinearHeading(new Pose2d(-60, -23, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(WALL_POS-4, -20, Math.toRadians(-90)))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(SCORING_POS, -20, Math.toRadians(-90)))
                 .waitSeconds(0.5)
 
                 .build();
 
         TrajectorySequence parkTraj = drive.trajectorySequenceBuilder(carouselTraj.end())
-                .lineToLinearHeading(new Pose2d(WALL_POS+2, -34, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(WALL_POS-5, -34, Math.toRadians(-90)))
 
                 .build();
 
@@ -83,7 +84,6 @@ public class RED_duck extends LinearOpMode {
         webcam.stopStreaming();
 
         drive.followTrajectorySequenceAsync(carouselTraj);
-
 
         while(opModeIsActive() && !isStopRequested()) {
 
@@ -133,6 +133,7 @@ public class RED_duck extends LinearOpMode {
                                         slides.extendLevel1();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                                 case MIDDLE:
@@ -143,6 +144,7 @@ public class RED_duck extends LinearOpMode {
                                         slides.extendLevel2();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                                 case RIGHT:
@@ -150,6 +152,7 @@ public class RED_duck extends LinearOpMode {
                                         slides.armLevel3();
 
                                         slidesState = Slides.SlidesState.TIP;
+                                        time.reset();
                                     }
                                     break;
                             }

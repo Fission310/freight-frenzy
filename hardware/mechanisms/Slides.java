@@ -36,7 +36,8 @@ public class Slides extends Mechanism {
     public enum Level {
         LEVEL1,
         LEVEL2,
-        LEVEL3
+        LEVEL3,
+        SHARED
     }
     Level level;
 
@@ -52,6 +53,10 @@ public class Slides extends Mechanism {
     public static double LEVEL1_ARM_TEMP_WAIT = 0.3;
     public static double LEVEL1_TEMP_WAIT = 1;
     public static double LEVEL1_TIP_WAIT = 1;
+
+    public static double SHARED_ARM_TEMP_WAIT = 1;
+    public static double SHARED_TEMP_WAIT = 2;
+    public static double SHARED_TIP_WAIT = 1;
 
     public static double TEMP_RETRACT_WAIT = 0.2;
     public static double TEMP_CARRIAGE_WAIT = 0.4;
@@ -70,9 +75,18 @@ public class Slides extends Mechanism {
         slides.update();
         switch (state) {
             case REST:
-                slides.rest();
-                state = SlidesState.WAIT;
-                break;
+                switch (level){
+                    case SHARED:
+                        slides.restShared();
+                        state = SlidesState.WAIT;
+                        break;
+                    case LEVEL1:
+                    case LEVEL2:
+                    case LEVEL3:
+                        slides.rest();
+                        state = SlidesState.WAIT;
+                        break;
+                }
 
         // wait for input
             case WAIT:
@@ -107,11 +121,20 @@ public class Slides extends Mechanism {
                     time.reset();
                     state = SlidesState.DELAY;
                 }
-                if (gamepad.b) {
-                    slides.extendCapping();
+                if(gamepad.b){
+                    slides.extendSharedTEMP();
+                    slides.close();
 
-                    state = SlidesState.CAP_RESET;
+                    level = Level.SHARED;
+
+                    time.reset();
+                    state = SlidesState.DELAY;
                 }
+//                if (gamepad.b) {
+//                    slides.extendCapping();
+//
+//                    state = SlidesState.CAP_RESET;
+//                }
                 break;
             case DELAY:
                 switch (level) {
@@ -126,7 +149,7 @@ public class Slides extends Mechanism {
                         }
                         break;
                     case LEVEL2:
-                        if (time.seconds() > LEVEL1_ARM_TEMP_WAIT) {
+                        if (time.seconds() > LEVEL2_ARM_TEMP_WAIT) {
                             slides.armLevel2();
                         }
                         if (time.seconds() > LEVEL2_TEMP_WAIT) {
@@ -138,6 +161,16 @@ public class Slides extends Mechanism {
                     case LEVEL3:
                         if (time.seconds() > LEVEL3_TEMP_WAIT) {
                             slides.armLevel3();
+
+                            state = SlidesState.TIP;
+                        }
+                        break;
+                    case SHARED:
+                        if (time.seconds() > SHARED_ARM_TEMP_WAIT) {
+                            slides.armSharerd();
+                        }
+                        if (time.seconds() > SHARED_TEMP_WAIT) {
+                            slides.extendShared();
 
                             state = SlidesState.TIP;
                         }
@@ -155,11 +188,15 @@ public class Slides extends Mechanism {
                 break;
             case TEMP_RETRACT:
                 if (time.seconds() > TEMP_RETRACT_WAIT) {
-                    time.reset();
                     switch (level) {
                         case LEVEL1:
                         case LEVEL2:
                             slides.restTEMP();
+                            state = SlidesState.TEMP_CARRIAGE;
+                            time.reset();
+                            break;
+                        case SHARED:
+                            slides.extendSharedTEMP();
                             state = SlidesState.TEMP_CARRIAGE;
                             time.reset();
                             break;
@@ -193,6 +230,12 @@ public class Slides extends Mechanism {
                         break;
                     case LEVEL3:
                         if (time.seconds() > LEVEL3_TIP_WAIT) {
+                            time.reset();
+                            state = SlidesState.REST;
+                        }
+                        break;
+                    case SHARED:
+                        if (time.seconds() > SHARED_TIP_WAIT) {
                             time.reset();
                             state = SlidesState.REST;
                         }

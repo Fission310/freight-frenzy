@@ -23,19 +23,20 @@ public class SlideMechanism extends Mechanism {
     public static double EXTEND_POS_LEVEL2_TEMP = 3.5;
     public static double EXTEND_POS_LEVEL1 = 6;
     public static double EXTEND_POS_LEVEL1_TEMP = 3;
-    public static double EXTEND_POS_SHARED = 1;
+    public static double EXTEND_POS_SHARED = 1.5;
+    public static double EXTEND_POS_SHARED_TEMP = 3;
     public static double EXTEND_POS_REST = 1.1;
     public static double EXTEND_POS_REST_TEMP = 2.5;
     public static double EXTEND_POS_CAP = 2;
 
     public static double MAX_VEL = 80;
     public static double MAX_ACCEL = 80;
-    public static double RETRACTION_MULTIPLIER = 0.5;
+    public static double RETRACTION_MULTIPLIER = 0.7;
     private static final double WHEEL_RADIUS = 1.37795;
     private static final double GEAR_RATIO = 1.0;
     private static final double TICKS_PER_REV = 537.6;
 
-    public static double kP = 0.2;
+    public static double kP = 0.5;
     public static double kI = 0;
     public static double kD = 0;
     public static double kF = 0;
@@ -68,6 +69,9 @@ public class SlideMechanism extends Mechanism {
     public void restTEMP() {
         spool.setTargetPosition(EXTEND_POS_REST_TEMP, 1);
     }
+    public void restShared(){
+        spool.setTargetPosition(EXTEND_POS_REST, 1);
+    }
 
     public void extendLevel3() {
         spool.setTargetPosition(EXTEND_POS_LEVEL3);
@@ -94,6 +98,16 @@ public class SlideMechanism extends Mechanism {
     }
     public void armLevel1() {
         carriage.level1();
+    }
+
+    public void extendShared() {
+        spool.setTargetPosition(EXTEND_POS_SHARED);
+    }
+    public void extendSharedTEMP() {
+        spool.setTargetPosition(EXTEND_POS_SHARED_TEMP);
+    }
+    public void armSharerd() {
+        carriage.shared();
     }
 
     public void extendCapping() {

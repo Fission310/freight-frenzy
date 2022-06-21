@@ -23,6 +23,7 @@ public class Carriage extends Mechanism {
     public static double ARM_LEVEL3 = 0.8;
     public static double ARM_LEVEL2 = 0.92;
     public static double ARM_LEVEL1 = 1;
+    public static double ARM_SHARED = 1;
 
     public static double ARM_LOWER_CAP = 1;
     public static double ARM_MID_CAP = 0.75;
@@ -79,6 +80,12 @@ public class Carriage extends Mechanism {
     public void level1() {
         armLeft.setPosition(ARM_LEVEL1);
         armRight.setPosition(ARM_LEVEL1);
+        cup.setPosition(CUP_CLOSED);
+    }
+
+    public void shared(){
+        armLeft.setPosition(ARM_SHARED);
+        armRight.setPosition(ARM_SHARED);
         cup.setPosition(CUP_CLOSED);
     }
 

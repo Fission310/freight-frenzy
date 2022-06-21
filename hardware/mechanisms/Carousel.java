@@ -13,7 +13,7 @@ public class Carousel extends Mechanism {
     private DcMotorEx carousel;
 
     public static double POWER = 0.27;
-    public static double AUTO_POWER = 0.2;
+    public static double AUTO_POWER = 0.25;
 
     public Carousel(LinearOpMode opMode) { this.opMode = opMode; }
 
