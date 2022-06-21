@@ -180,14 +180,12 @@ public class Slides extends Mechanism {
             case TIP_DELAY:
                 switch (level) {
                     case LEVEL1:
-//                        slides.restCarriage();
                         if (time.seconds() > LEVEL1_TIP_WAIT) {
                             time.reset();
                             state = SlidesState.REST;
                         }
                         break;
                     case LEVEL2:
-//                        slides.restCarriage();
                         if (time.seconds() > LEVEL2_TIP_WAIT) {
                             time.reset();
                             state = SlidesState.REST;
