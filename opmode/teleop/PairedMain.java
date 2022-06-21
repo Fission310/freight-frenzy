@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.MeccRobot;
 
-@TeleOp (name = "PairedMain", group = "test")
+@TeleOp (name = "Paired Main", group = "_main")
 public class PairedMain extends LinearOpMode {
 
     private MeccRobot robot = new MeccRobot(this);
