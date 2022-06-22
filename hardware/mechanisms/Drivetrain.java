@@ -56,21 +56,13 @@ public class Drivetrain extends Mechanism {
 
         switch(driveMode){
             case ROBOT_CENTRIC:
-                if(gamepad.dpad_left){
-                    strafeLeft();
-                }
-                else if(gamepad.dpad_right){
-                    strafeRight();
-                }
-                else{
-                    rrDrive.setWeightedDrivePower(
-                            new Pose2d(
-                                    gamepad.left_stick_x,
-                                    -gamepad.left_stick_y,
-                                    -gamepad.right_stick_x
-                            )
-                    );
-                }
+                rrDrive.setWeightedDrivePower(
+                        new Pose2d(
+                                gamepad.left_stick_x,
+                                -gamepad.left_stick_y,
+                                -gamepad.right_stick_x
+                        )
+                );
 
                 break;
             case FIELD_CENTRIC_BLUE:
