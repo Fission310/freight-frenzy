@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.FreightSensor;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Slides;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Webcam;
@@ -94,6 +95,9 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
         Webcam webcam = new Webcam(this);
         webcam.init(hardwareMap);
+
+        Acquirer acquirer = new Acquirer(this);
+        acquirer.init(hardwareMap);
         
         Pose2d startPose = new Pose2d(18, WALL_POS);
 
@@ -178,6 +182,10 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
         waitForStart();
 
+        acquirer.intakeLeft();
+        acquirer.intakeRight();
+        acquirer.acquirerState = Acquirer.AcquirerState.ACQUIRER_START_RIGHT;
+
         currentTraj = TrajState.CV;
         slidesState = Slides.SlidesState.WAIT;
         slides.close();
@@ -187,7 +195,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
         
         drive.followTrajectorySequenceAsync(cv);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         while(opModeIsActive() && !isStopRequested()) {
 
@@ -327,8 +335,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
                 case SC_0:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_1;
-                        drive.followTrajectorySequenceAsync(wh1);
+                        // score level 3
+                        switch (slidesState) {
+                            case WAIT:
+                                slides.extendLevel3();
+                                slides.close();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.DELAY;
+                                break;
+                            case DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                    slides.armLevel3();
+
+                                    slidesState = Slides.SlidesState.TIP;
+                                }
+                                break;
+                            case TIP:
+                                if (time.seconds() > TIP_WAIT) {
+                                    slides.open();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TEMP_RETRACT;
+                                }
+                                break;
+                            case TEMP_RETRACT:
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    time.reset();
+                                    break;
+                                }
+                                break;
+                            case TEMP_CARRIAGE:
+                                if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                    slides.restCarriage();
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                }
+                                break;
+                            case TIP_DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                    time.reset();
+                                    slides.rest();
+                                    currentTraj = TrajState.WH_1;
+                                    drive.followTrajectorySequenceAsync(wh1);
+                                }
+                                break;
+                        }
                     }
                     break;
                 case WH_1:
@@ -343,8 +397,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
                 case SC_1:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_2;
-                        drive.followTrajectorySequenceAsync(wh2);
+                        // score level 3
+                        switch (slidesState) {
+                            case WAIT:
+                                slides.extendLevel3();
+                                slides.close();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.DELAY;
+                                break;
+                            case DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                    slides.armLevel3();
+
+                                    slidesState = Slides.SlidesState.TIP;
+                                }
+                                break;
+                            case TIP:
+                                if (time.seconds() > TIP_WAIT) {
+                                    slides.open();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TEMP_RETRACT;
+                                }
+                                break;
+                            case TEMP_RETRACT:
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    time.reset();
+                                    break;
+                                }
+                                break;
+                            case TEMP_CARRIAGE:
+                                if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                    slides.restCarriage();
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                }
+                                break;
+                            case TIP_DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                    time.reset();
+                                    slides.rest();
+                                    currentTraj = TrajState.WH_2;
+                                    drive.followTrajectorySequenceAsync(wh2);
+                                }
+                                break;
+                        }
                     }
                     break;
                 case WH_2:
@@ -359,8 +459,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
                 case SC_2:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_3;
-                        drive.followTrajectorySequenceAsync(wh3);
+                        // score level 3
+                        switch (slidesState) {
+                            case WAIT:
+                                slides.extendLevel3();
+                                slides.close();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.DELAY;
+                                break;
+                            case DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                    slides.armLevel3();
+
+                                    slidesState = Slides.SlidesState.TIP;
+                                }
+                                break;
+                            case TIP:
+                                if (time.seconds() > TIP_WAIT) {
+                                    slides.open();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TEMP_RETRACT;
+                                }
+                                break;
+                            case TEMP_RETRACT:
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    time.reset();
+                                    break;
+                                }
+                                break;
+                            case TEMP_CARRIAGE:
+                                if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                    slides.restCarriage();
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                }
+                                break;
+                            case TIP_DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                    time.reset();
+                                    slides.rest();
+                                    currentTraj = TrajState.WH_3;
+                                    drive.followTrajectorySequenceAsync(wh3);
+                                }
+                                break;
+                        }
                     }
                     break;
                 case WH_3:
@@ -375,8 +521,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
                 case SC_3:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_4;
-                        drive.followTrajectorySequenceAsync(wh4);
+                        // score level 3
+                        switch (slidesState) {
+                            case WAIT:
+                                slides.extendLevel3();
+                                slides.close();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.DELAY;
+                                break;
+                            case DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                    slides.armLevel3();
+
+                                    slidesState = Slides.SlidesState.TIP;
+                                }
+                                break;
+                            case TIP:
+                                if (time.seconds() > TIP_WAIT) {
+                                    slides.open();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TEMP_RETRACT;
+                                }
+                                break;
+                            case TEMP_RETRACT:
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    time.reset();
+                                    break;
+                                }
+                                break;
+                            case TEMP_CARRIAGE:
+                                if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                    slides.restCarriage();
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                }
+                                break;
+                            case TIP_DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                    time.reset();
+                                    slides.rest();
+                                    currentTraj = TrajState.WH_4;
+                                    drive.followTrajectorySequenceAsync(wh4);
+                                }
+                                break;
+                        }
                     }
                     break;
                 case WH_4:
@@ -391,8 +583,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
                 case SC_4:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_5;
-                        drive.followTrajectorySequenceAsync(wh5);
+                        // score level 3
+                        switch (slidesState) {
+                            case WAIT:
+                                slides.extendLevel3();
+                                slides.close();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.DELAY;
+                                break;
+                            case DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                    slides.armLevel3();
+
+                                    slidesState = Slides.SlidesState.TIP;
+                                }
+                                break;
+                            case TIP:
+                                if (time.seconds() > TIP_WAIT) {
+                                    slides.open();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TEMP_RETRACT;
+                                }
+                                break;
+                            case TEMP_RETRACT:
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    time.reset();
+                                    break;
+                                }
+                                break;
+                            case TEMP_CARRIAGE:
+                                if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                    slides.restCarriage();
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                }
+                                break;
+                            case TIP_DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                    time.reset();
+                                    slides.rest();
+                                    currentTraj = TrajState.WH_5;
+                                    drive.followTrajectorySequenceAsync(wh5);
+                                }
+                                break;
+                        }
                     }
                     break;
                 case WH_5:
@@ -407,8 +645,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
                 case SC_5:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.IDLE;
-                        drive.followTrajectorySequenceAsync(park);
+                        // score level 3
+                        switch (slidesState) {
+                            case WAIT:
+                                slides.extendLevel3();
+                                slides.close();
+
+                                time.reset();
+                                slidesState = Slides.SlidesState.DELAY;
+                                break;
+                            case DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TEMP_WAIT) {
+                                    slides.armLevel3();
+
+                                    slidesState = Slides.SlidesState.TIP;
+                                }
+                                break;
+                            case TIP:
+                                if (time.seconds() > TIP_WAIT) {
+                                    slides.open();
+
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TEMP_RETRACT;
+                                }
+                                break;
+                            case TEMP_RETRACT:
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    time.reset();
+                                    break;
+                                }
+                                break;
+                            case TEMP_CARRIAGE:
+                                if (time.seconds() > Slides.TEMP_CARRIAGE_WAIT) {
+                                    slides.restCarriage();
+                                    time.reset();
+                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                }
+                                break;
+                            case TIP_DELAY:
+                                if (time.seconds() > Slides.LEVEL3_TIP_WAIT) {
+                                    time.reset();
+                                    slides.rest();
+                                    currentTraj = TrajState.IDLE;
+                                    drive.followTrajectorySequenceAsync(park);
+                                }
+                                break;
+                        }
                     }
                     break;
                 case IDLE:
@@ -417,9 +701,10 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
             slides.update();
             drive.update();
+            acquirer.autonLoop();
 
-            telemetry.addData("current trajectory", currentTraj);
-            telemetry.update();
+//            telemetry.addData("current trajectory", currentTraj);
+//            telemetry.update();
         }
     }
 }
