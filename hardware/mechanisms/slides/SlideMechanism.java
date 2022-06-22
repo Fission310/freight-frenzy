@@ -27,7 +27,7 @@ public class SlideMechanism extends Mechanism {
     public static double EXTEND_POS_SHARED_TEMP = 3;
     public static double EXTEND_POS_REST = 1.1;
     public static double EXTEND_POS_REST_TEMP = 2.5;
-    public static double EXTEND_POS_CAP = 2;
+    public static double EXTEND_POS_CAP = 2.5;
 
     public static double MAX_VEL = 80;
     public static double MAX_ACCEL = 80;

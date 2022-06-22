@@ -61,6 +61,8 @@ public class Slides extends Mechanism {
     public static double TEMP_RETRACT_WAIT = 0.2;
     public static double TEMP_CARRIAGE_WAIT = 0.4;
 
+    public static double CAP_RESET_WAIT = 0.5;
+
     @Override
     public void init(HardwareMap hwMap) {
         slides.init(hwMap);
@@ -112,16 +114,16 @@ public class Slides extends Mechanism {
                     time.reset();
                     state = SlidesState.DELAY;
                 }
-                if (gamepad.a) {
-                    slides.extendLevel1TEMP();
-                    slides.close();
-
-                    level = Level.LEVEL1;
-
-                    time.reset();
-                    state = SlidesState.DELAY;
-                }
-                if(gamepad.b){
+//                if (gamepad.a) {
+//                    slides.extendLevel1TEMP();
+//                    slides.close();
+//
+//                    level = Level.LEVEL1;
+//
+//                    time.reset();
+//                    state = SlidesState.DELAY;
+//                }
+                if(gamepad.a){
                     slides.extendSharedTEMP();
                     slides.close();
 
@@ -130,11 +132,12 @@ public class Slides extends Mechanism {
                     time.reset();
                     state = SlidesState.DELAY;
                 }
-//                if (gamepad.b) {
-//                    slides.extendCapping();
-//
-//                    state = SlidesState.CAP_RESET;
-//                }
+                if (gamepad.b) {
+                    slides.extendCapping();
+
+                    time.reset();
+                    state = SlidesState.CAP_RESET;
+                }
                 break;
             case DELAY:
                 switch (level) {
@@ -243,9 +246,12 @@ public class Slides extends Mechanism {
                 }
                 break;
             case CAP_RESET:
-                if (gamepad.b) {
-                    time.reset();
-                    state = SlidesState.REST;
+                if (time.seconds() > CAP_RESET_WAIT) {
+                    if (gamepad.b) {
+                        time.reset();
+                        state = SlidesState.REST;
+                        break;
+                    }
                 }
                 break;
         }

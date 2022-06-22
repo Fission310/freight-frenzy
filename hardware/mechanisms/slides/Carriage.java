@@ -26,6 +26,7 @@ public class Carriage extends Mechanism {
     public static double ARM_SHARED = 1;
 
     public static double ARM_LOWER_CAP = 1;
+    public static double ARM_MID_LOW_CAP = 0.8;
     public static double ARM_MID_CAP = 0.75;
     public static double ARM_HIGHER_CAP = 0.6;
 
@@ -98,6 +99,11 @@ public class Carriage extends Mechanism {
         armRight.setPosition(ARM_LOWER_CAP);
         cup.setPosition(CUP_CLOSED);
     }
+    public void midLowCap(){
+        armLeft.setPosition(ARM_MID_LOW_CAP);
+        armRight.setPosition(ARM_MID_LOW_CAP);
+        cup.setPosition(CUP_CLOSED);
+    }
     public void midCap() {
         armLeft.setPosition(ARM_MID_CAP);
         armRight.setPosition(ARM_MID_CAP);
@@ -116,6 +122,9 @@ public class Carriage extends Mechanism {
         }
         if (gamepad2.b) {
             midCap();
+        }
+        if(gamepad2.right_bumper){
+            midLowCap();
         }
         if (gamepad2.a) {
             lowerCap();
