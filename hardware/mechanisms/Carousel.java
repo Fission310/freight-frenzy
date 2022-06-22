@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Carousel extends Mechanism {
     private DcMotorEx carousel;
 
-    public static double POWER = 0.27;
-    public static double AUTO_POWER = 0.25;
+    public static double POWER = 0.5;
+    public static double AUTO_POWER = 0.4;
 
     public Carousel(LinearOpMode opMode) { this.opMode = opMode; }
 
