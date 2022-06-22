@@ -25,11 +25,11 @@ public class Acquirer extends Mechanism {
 
     private FreightSensor sensor;
 
-    public static double LEFT_UP_POS = 0.3;
+    public static double LEFT_UP_POS = 0.35;
     public static double LEFT_UP_INACTIVE = 0.25;
     public static double LEFT_DOWN_POS = 0.03;
 
-    public static double RIGHT_UP_POS = 0.25;
+    public static double RIGHT_UP_POS = 0.265;
     public static double RIGHT_UP_INACTIVE = 0.2;
     public static double RIGHT_DOWN_POS = 0.03;
 
@@ -54,7 +54,7 @@ public class Acquirer extends Mechanism {
         ACQUIRER_OUTTAKING_RIGHT
 
     }
-    AcquirerState acquirerState;
+    public AcquirerState acquirerState;
 
     @Override
     public void init(HardwareMap hwMap) {
@@ -117,9 +117,15 @@ public class Acquirer extends Mechanism {
     public void intakeLeft() {
         intakeLeft.setPower(1);
     }
+    public void reverseIntakeLeft() {
+        intakeLeft.setPower(-1);
+    }
 
     public void intakeRight() {
         intakeRight.setPower(1);
+    }
+    public void reverseIntakeRight() {
+        intakeRight.setPower(-1);
     }
 
     public void intake(){
@@ -150,7 +156,81 @@ public class Acquirer extends Mechanism {
 
     public void autonLoop(){
 
-        return;
+        switch (acquirerState) {
+            case ACQUIRER_START_RIGHT:
+
+                if (sensor.hasFreightRight()) {
+                    raiseRight();
+                    stop();
+
+                    acquirerState = AcquirerState.ACQUIRER_FLIPPING_RIGHT;
+                    timer.reset();
+                }
+
+                if(sensor.hasFreightLeft()){
+                    raiseRightInactive();
+                    stopRight();
+                    acquirerState = AcquirerState.ACQUIRER_START_LEFT;
+                }
+
+
+                break;
+            case ACQUIRER_START_LEFT:
+
+                if (sensor.hasFreightLeft()) {
+
+                    raiseLeft();
+                    stop();
+
+                    acquirerState = AcquirerState.ACQUIRER_FLIPPING_LEFT;
+                    timer.reset();
+                }
+
+                if(sensor.hasFreightRight()){
+                    raiseLeftInactive();
+                    stopLeft();
+                    acquirerState = AcquirerState.ACQUIRER_FLIPPING_RIGHT;
+                }
+
+                break;
+
+            case ACQUIRER_FLIPPING_RIGHT:
+                if(timer.seconds() >= OUTTAKE_DELAY){
+                    outtakeRight();
+
+                    acquirerState = AcquirerState.ACQUIRER_OUTTAKING_RIGHT;
+                    timer.reset();
+                }
+                break;
+            case ACQUIRER_FLIPPING_LEFT:
+                if(timer.seconds() >= OUTTAKE_DELAY){
+                    outtakeLeft();
+
+                    acquirerState = AcquirerState.ACQUIRER_OUTTAKING_LEFT;
+                    timer.reset();
+                }
+                break;
+            case ACQUIRER_OUTTAKING_RIGHT:
+                if(timer.seconds() >= RESET_DELAY){
+                    lowerRight();
+                    stop();
+
+                    acquirerState = AcquirerState.ACQUIRER_START_RIGHT;
+                    timer.reset();
+                }
+                break;
+            case ACQUIRER_OUTTAKING_LEFT:
+                if(timer.seconds() >= RESET_DELAY){
+                    lowerLeft();
+                    stop();
+
+                    acquirerState = AcquirerState.ACQUIRER_START_LEFT;
+                    timer.reset();
+                }
+                break;
+
+
+        }
     }
 
     public void loop(Gamepad gamepad) {
@@ -165,7 +245,10 @@ public class Acquirer extends Mechanism {
                     acquirerState = AcquirerState.ACQUIRER_START_LEFT;
                     break;
                 }
-                else {
+                else if (gamepad.dpad_right) {
+                    lowerRight();
+                    reverseIntakeRight();
+                } else {
                     stop();
                 }
 
@@ -188,12 +271,14 @@ public class Acquirer extends Mechanism {
                     acquirerState = AcquirerState.ACQUIRER_START_RIGHT;
                     break;
 
-                } else if(gamepad.left_trigger > 0){
+                } else if (gamepad.left_trigger > 0){
                     raiseRightInactive();
                     lowerLeft();
                     intakeLeft();
-                }
-                else {
+                } else if (gamepad.dpad_left) {
+                    lowerLeft();
+                    reverseIntakeLeft();
+                } else {
                     stop();
                 }
 
@@ -248,6 +333,7 @@ public class Acquirer extends Mechanism {
 
 
     }
+
 
     public void telemetry(Telemetry telemetry){
 
