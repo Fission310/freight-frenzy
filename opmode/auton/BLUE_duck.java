@@ -19,7 +19,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Config
 public class BLUE_duck extends LinearOpMode {
 
-    private static final double WALL_POS = -70.5+(12.5/2.0);
+    private static final double WALL_POS = 70.5-(12.5/2.0);
+    public static double SCORING_POS = -59;
 
     private enum TrajState {
         CAROUSEL,
@@ -58,15 +59,17 @@ public class BLUE_duck extends LinearOpMode {
 
                 // SCAN 4 DUCK
                 .waitSeconds(0.2)
-                .lineToLinearHeading(new Pose2d(-31, WALL_POS-4, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-31, WALL_POS-6, Math.toRadians(180)))
                 .waitSeconds(0.2)
-                .lineToLinearHeading(new Pose2d(-57, -59, Math.toRadians(220)))
+                .lineToLinearHeading(new Pose2d(-56, 58, Math.toRadians(210)))
                 .addTemporalMarker(carousel::rotateAUTO)
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)
-                .lineToLinearHeading(new Pose2d(-WALL_POS+4, 23, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(SCORING_POS, 23, Math.toRadians(270)))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(-WALL_POS+2, 23, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-WALL_POS-4, 23, Math.toRadians(-90)))
+                .waitSeconds(0.1)
+                .lineToLinearHeading(new Pose2d(SCORING_POS, 23, Math.toRadians(270)))
                 .waitSeconds(0.5)
                 
                 .build();
