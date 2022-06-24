@@ -25,20 +25,20 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
     public static double WALL_POS = -70.5 + (12.5/2.0);
 
-    private static final Pose2d SCORE_0 = new Pose2d(-11, WALL_POS+1);
-    private static final Pose2d SCORE_1 = new Pose2d(-11+1, WALL_POS+1);
-    private static final Pose2d SCORE_2 = new Pose2d(-11, WALL_POS+1);
-    private static final Pose2d SCORE_3 = new Pose2d(-11+1, WALL_POS+1);
-    private static final Pose2d SCORE_4 = new Pose2d(-11+1, WALL_POS+1);
-    private static final Pose2d SCORE_5 = new Pose2d(-11+1, WALL_POS+1);
+    private static final Pose2d SCORE_0 = new Pose2d(-8, WALL_POS+1);
+    private static final Pose2d SCORE_1 = new Pose2d(-9-1, WALL_POS+1);
+    private static final Pose2d SCORE_2 = new Pose2d(-9, WALL_POS);
+    private static final Pose2d SCORE_3 = new Pose2d(-9, WALL_POS);
+    private static final Pose2d SCORE_4 = new Pose2d(-9, WALL_POS);
+    private static final Pose2d SCORE_5 = new Pose2d(-9, WALL_POS);
 
-    private static final Pose2d PARK = new Pose2d(41+3, WALL_POS+2);
-    private static final Pose2d WAREHOUSE_0 = new Pose2d(44, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_1 = new Pose2d(50, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_2 = new Pose2d(54, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_3 = new Pose2d(55.5, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_4 = new Pose2d(57, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_5 = new Pose2d(58, WALL_POS+1);
+    private static final Pose2d PARK = new Pose2d(41+3, WALL_POS-1);
+    private static final Pose2d WAREHOUSE_0 = new Pose2d(45, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_1 = new Pose2d(48, WALL_POS+1);
+    private static final Pose2d WAREHOUSE_2 = new Pose2d(51, WALL_POS);
+    private static final Pose2d WAREHOUSE_3 = new Pose2d(53, WALL_POS);
+    private static final Pose2d WAREHOUSE_4 = new Pose2d(56, WALL_POS);
+    private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS);
 
     private TrajectorySequence cv;
     private TrajectorySequence wh0;
@@ -80,7 +80,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
     
     ElapsedTime time = new ElapsedTime();
 
-    public static double TIP_WAIT = 2;
+    public static double TIP_WAIT = 0.7;
     
     @Override
     public void runOpMode() {
@@ -182,7 +182,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
         waitForStart();
 
-        acquirer.intakeLeft();
+//        acquirer.intakeLeft();
         acquirer.intakeRight();
         acquirer.acquirerState = Acquirer.AcquirerState.ACQUIRER_START_RIGHT;
 
@@ -202,8 +202,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
             switch(currentTraj) {
                 case CV:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_0;
-                        drive.followTrajectorySequenceAsync(wh0);
+                        currentTraj = TrajState.SC_CV;
                     }
                     break;
                 case SC_CV:
@@ -303,6 +302,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                         time.reset();
                                         slides.rest();
                                         currentTraj = TrajState.WH_0;
+                                        drive.followTrajectorySequenceAsync(wh0);
                                     }
                                     break;
                                 case MIDDLE:
@@ -310,6 +310,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                         time.reset();
                                         slides.rest();
                                         currentTraj = TrajState.WH_0;
+                                        drive.followTrajectorySequenceAsync(wh0);
                                     }
                                     break;
                                 case RIGHT:
@@ -317,6 +318,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                         time.reset();
                                         slides.rest();
                                         currentTraj = TrajState.WH_0;
+                                        drive.followTrajectorySequenceAsync(wh0);
                                     }
                                     break;
                             }
@@ -329,10 +331,12 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_0;
                         drive.followTrajectorySequenceAsync(sc0);
                     }
                     break;
+
                 case SC_0:
                     if (!drive.isBusy()) {
                         // score level 3
@@ -391,6 +395,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_1;
                         drive.followTrajectorySequenceAsync(sc1);
                     }
@@ -453,6 +458,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_2;
                         drive.followTrajectorySequenceAsync(sc2);
                     }
@@ -515,6 +521,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_3;
                         drive.followTrajectorySequenceAsync(sc3);
                     }
@@ -577,6 +584,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_4;
                         drive.followTrajectorySequenceAsync(sc4);
                     }
@@ -639,6 +647,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_5;
                         drive.followTrajectorySequenceAsync(sc5);
                     }

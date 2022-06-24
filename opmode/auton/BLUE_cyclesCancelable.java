@@ -92,11 +92,13 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
         SlideMechanism slides = new SlideMechanism(this);
         Acquirer acquirer = new Acquirer(this);
         Webcam webcam = new Webcam(this);
+        FreightSensor freightSensor = new FreightSensor(this);
 
         sensor.init(hardwareMap);
         slides.init(hardwareMap);
         webcam.init(hardwareMap);
         acquirer.init(hardwareMap);
+        freightSensor.init(hardwareMap);
 
         Pose2d startPose = new Pose2d(12, WALL_POS, HEADING);
 
@@ -189,7 +191,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
 
         acquirer.intakeLeft();
         acquirer.intakeRight();
-        acquirer.acquirerState = Acquirer.AcquirerState.ACQUIRER_START_RIGHT;
+        acquirer.acquirerState = Acquirer.AcquirerState.ACQUIRER_START_LEFT;
 
         drive.followTrajectorySequenceAsync(cv);
 
@@ -198,8 +200,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
             switch(currentTraj) {
                 case CV:
                     if (!drive.isBusy()) {
-                        currentTraj = TrajState.WH_0;
-                        drive.followTrajectorySequenceAsync(wh0);
+                        currentTraj = TrajState.SC_CV;
                     }
                     break;
                 case SC_CV:
@@ -299,6 +300,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                         time.reset();
                                         slides.rest();
                                         currentTraj = TrajState.WH_0;
+                                        drive.followTrajectorySequenceAsync(wh0);
                                     }
                                     break;
                                 case MIDDLE:
@@ -306,6 +308,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                         time.reset();
                                         slides.rest();
                                         currentTraj = TrajState.WH_0;
+                                        drive.followTrajectorySequenceAsync(wh0);
                                     }
                                     break;
                                 case RIGHT:
@@ -313,6 +316,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                         time.reset();
                                         slides.rest();
                                         currentTraj = TrajState.WH_0;
+                                        drive.followTrajectorySequenceAsync(wh0);
                                     }
                                     break;
                             }
@@ -325,10 +329,12 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_0;
                         drive.followTrajectorySequenceAsync(sc0);
                     }
                     break;
+
                 case SC_0:
                     if (!drive.isBusy()) {
                         // score level 3
@@ -387,6 +393,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_1;
                         drive.followTrajectorySequenceAsync(sc1);
                     }
@@ -449,6 +456,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_2;
                         drive.followTrajectorySequenceAsync(sc2);
                     }
@@ -511,6 +519,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_3;
                         drive.followTrajectorySequenceAsync(sc3);
                     }
@@ -573,6 +582,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_4;
                         drive.followTrajectorySequenceAsync(sc4);
                     }
@@ -635,6 +645,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.WAIT;
                         currentTraj = TrajState.SC_5;
                         drive.followTrajectorySequenceAsync(sc5);
                     }
@@ -695,12 +706,19 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                     break;
             }
 
+            telemetry.addData("Traj state", currentTraj);
+            telemetry.addData("slides state", slidesState);
+            telemetry.addData("is drive busy", drive.isBusy());
+
+            acquirer.telemetry(telemetry);
+
+            telemetry.update();
+
             slides.update();
             drive.update();
             acquirer.autonLoop();
 
-            telemetry.addData("current trajectory", currentTraj);
-            telemetry.update();
+//            freightSensor.telemetry(telemetry);
         }
     }
 }
