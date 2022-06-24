@@ -102,12 +102,12 @@ public class Carriage extends Mechanism {
     public void midLowCap(){
         armLeft.setPosition(ARM_MID_LOW_CAP);
         armRight.setPosition(ARM_MID_LOW_CAP);
-        cup.setPosition(CUP_CLOSED);
+        cup.setPosition(CUP_OPEN);
     }
     public void midCap() {
         armLeft.setPosition(ARM_MID_CAP);
         armRight.setPosition(ARM_MID_CAP);
-        cup.setPosition(CUP_CLOSED);
+        cup.setPosition(CUP_OPEN);
     }
     public void higherCap() {
         armLeft.setPosition(ARM_HIGHER_CAP);
