@@ -159,6 +159,9 @@ public class Acquirer extends Mechanism {
         switch (acquirerState) {
             case ACQUIRER_START_RIGHT:
 
+                lowerRight();
+                intakeRight();
+
                 if (sensor.hasFreightRight()) {
                     raiseRight();
                     stop();
@@ -176,6 +179,9 @@ public class Acquirer extends Mechanism {
 
                 break;
             case ACQUIRER_START_LEFT:
+
+                lowerLeft();
+                intakeLeft();
 
                 if (sensor.hasFreightLeft()) {
 
@@ -342,7 +348,7 @@ public class Acquirer extends Mechanism {
 
 //        telemetry.addData("Delay", timer.seconds());
 
-//        telemetry.addData("state", acquirerState);
+        telemetry.addData("state", acquirerState);
 
 
 
