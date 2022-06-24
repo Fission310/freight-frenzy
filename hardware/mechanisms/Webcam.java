@@ -135,12 +135,12 @@ public class Webcam extends Mechanism {
 
 
 
-            telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
-            telemetry.addData("Middle raw value", (int) Core.sumElems(middle).val[0]);
-            telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
-            telemetry.addData("Left percentage", Math.round(leftValue * 100) + "%");
-            telemetry.addData("Middle percentage", Math.round(middleValue * 100) + "%");
-            telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
+//            telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
+//            telemetry.addData("Middle raw value", (int) Core.sumElems(middle).val[0]);
+//            telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
+//            telemetry.addData("Left percentage", Math.round(leftValue * 100) + "%");
+//            telemetry.addData("Middle percentage", Math.round(middleValue * 100) + "%");
+//            telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
 
             double maxVal = Math.max(Math.max(leftValue, middleValue), rightValue);
 
