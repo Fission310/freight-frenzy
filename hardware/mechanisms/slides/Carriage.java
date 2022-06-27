@@ -20,19 +20,19 @@ public class Carriage extends Mechanism {
     public static double CUP_CLOSED = 0.56;
     public static double CUP_OPEN = 0;
 
-    public static double ARM_LEVEL3 = 0.8;
+    public static double ARM_LEVEL3 = 0.83;
     public static double ARM_LEVEL2 = 0.92;
     public static double ARM_LEVEL1 = 1;
     public static double ARM_SHARED = 1;
 
     public static double ARM_LOWER_CAP = 1;
-    public static double ARM_MID_LOW_CAP = 0.8;
+    public static double ARM_MID_LOW_CAP = 0.83;
     public static double ARM_MID_CAP = 0.75;
-    public static double ARM_HIGHER_CAP = 0.6;
+    public static double ARM_HIGHER_CAP = 0.63;
 
     public static double ARM_REST = 0;
 
-    public static double CUP_TEST = 0;
+    public static double ARM_TEST = 0;
 
     public Carriage(LinearOpMode opMode) { this.opMode = opMode; }
 
@@ -132,6 +132,38 @@ public class Carriage extends Mechanism {
         if (gamepad2.x) {
             rest();
         }
+        if (gamepad2.dpad_up) {
+            open();
+        }
+        if (gamepad2.dpad_down) {
+            close();
+        }
+
+//        if (gamepad2.a){
+//            armLeft.setPosition(0);
+//        }
+//        else if(gamepad2.b){
+//            armLeft.setPosition(1);
+//        }
+//        else if(gamepad2.x){
+//            armRight.setPosition(0);
+//        }
+//        else if(gamepad2.y){
+//            armRight.setPosition(1);
+//        }
+//        else if(gamepad2.left_bumper){
+//            armRight.setPosition(0);
+//            armLeft.setPosition(0);
+//        }
+//        else if(gamepad2.right_bumper){
+//            armRight.setPosition(1);
+//            armLeft.setPosition(1);
+//        }
+
+//        if(gamepad2.a){
+//            armLeft.setPosition(ARM_TEST);
+//            armRight.setPosition(ARM_TEST);
+//        }
     }
 
     @Override

@@ -18,16 +18,16 @@ public class SlideMechanism extends Mechanism {
     MotionProfiledDcMotor spool;
     Carriage carriage = new Carriage(opMode);
 
-    public static double EXTEND_POS_LEVEL3 = 7;
-    public static double EXTEND_POS_LEVEL2 = 6;
-    public static double EXTEND_POS_LEVEL2_TEMP = 3.5;
-    public static double EXTEND_POS_LEVEL1 = 6;
+    public static double EXTEND_POS_LEVEL3 = 6.1;
+    public static double EXTEND_POS_LEVEL2 = 4.8;
+    public static double EXTEND_POS_LEVEL2_TEMP = 2.7;
+    public static double EXTEND_POS_LEVEL1 = 6.1;
     public static double EXTEND_POS_LEVEL1_TEMP = 3;
-    public static double EXTEND_POS_SHARED = 1.5;
-    public static double EXTEND_POS_SHARED_TEMP = 3;
-    public static double EXTEND_POS_REST = 1.1;
-    public static double EXTEND_POS_REST_TEMP = 2.5;
-    public static double EXTEND_POS_CAP = 2.5;
+    public static double EXTEND_POS_SHARED = -0.3;
+    public static double EXTEND_POS_SHARED_TEMP = 2;
+    public static double EXTEND_POS_REST = 0.35;
+    public static double EXTEND_POS_REST_TEMP = 3;
+    public static double EXTEND_POS_CAP = 1.2;
 
     public static double MAX_VEL = 80;
     public static double MAX_ACCEL = 80;
@@ -69,8 +69,9 @@ public class SlideMechanism extends Mechanism {
     public void restTEMP() {
         spool.setTargetPosition(EXTEND_POS_REST_TEMP, 1);
     }
-    public void restShared(){
-        spool.setTargetPosition(EXTEND_POS_REST, 1);
+    public void restFast(){
+        carriage.rest();
+        spool.setTargetPosition(EXTEND_POS_REST, 1.5);
     }
 
     public void extendLevel3() {

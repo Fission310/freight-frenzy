@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmode.auton;
 
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.FreightSensor;
@@ -17,41 +22,62 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.Webcam.Location;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(group = "_red")
+@Autonomous(group = "_blue")
 @Config
-public class RED_cyclesCancelable extends LinearOpMode {
+public class BLUE_cyclesSmart extends LinearOpMode {
+
+    private static double HEADING = Math.toRadians(180);
 
     public static double WAREHOUSE_WAIT = 0.15;
 
-    public static double WALL_POS = -70.5 + (12.5/2.0);
+    public static double WALL_POS = 70.5 - (12.15/2.0);
 
-    private static final Pose2d SCORE_0 = new Pose2d(-8, WALL_POS+1);
-    private static final Pose2d SCORE_1 = new Pose2d(-9-1, WALL_POS+1);
-    private static final Pose2d SCORE_2 = new Pose2d(-9, WALL_POS);
-    private static final Pose2d SCORE_3 = new Pose2d(-9, WALL_POS);
-    private static final Pose2d SCORE_4 = new Pose2d(-9, WALL_POS);
-    private static final Pose2d SCORE_5 = new Pose2d(-9, WALL_POS);
+    private static final Pose2d SCORE_0 = new Pose2d(-11.5+3.6, WALL_POS+0.6, HEADING);
+    private static final Pose2d SCORE_1 = new Pose2d(-11.5+4.6, WALL_POS+1.6, HEADING);
+    private static final Pose2d SCORE_2 = new Pose2d(-11.5+4.6, WALL_POS+1.6, HEADING);
+    private static final Pose2d SCORE_3 = new Pose2d(-11.5+5.2, WALL_POS+2.6, HEADING);
+    private static final Pose2d SCORE_4 = new Pose2d(-11.5+5.6, WALL_POS+3.6, HEADING);
+    private static final Pose2d SCORE_5 = new Pose2d(-11.5+6, WALL_POS+4.6, HEADING);
 
-    private static final Pose2d PARK = new Pose2d(41+3, WALL_POS-1);
-    private static final Pose2d WAREHOUSE_0 = new Pose2d(45, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_1 = new Pose2d(48, WALL_POS+1);
-    private static final Pose2d WAREHOUSE_2 = new Pose2d(51, WALL_POS);
-    private static final Pose2d WAREHOUSE_3 = new Pose2d(53, WALL_POS);
-    private static final Pose2d WAREHOUSE_4 = new Pose2d(56, WALL_POS);
-    private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS);
+
+    private static final Pose2d WAREHOUSE_0 = new Pose2d(47, WALL_POS+0.6, HEADING);
+    private static final Pose2d CREEP_0 = new Pose2d(70, WALL_POS+0.6, HEADING);
+
+    private static final Pose2d WAREHOUSE_1 = new Pose2d(50, WALL_POS+1.6, HEADING);
+    private static final Pose2d CREEP_1 = new Pose2d(70, WALL_POS+1.6, HEADING);
+
+    private static final Pose2d WAREHOUSE_2 = new Pose2d(53, WALL_POS+1.6, HEADING);
+    private static final Pose2d CREEP_2 = new Pose2d(70, WALL_POS+1.6, HEADING);
+
+    private static final Pose2d WAREHOUSE_3 = new Pose2d(56, WALL_POS+2.6, HEADING);
+    private static final Pose2d CREEP_3 = new Pose2d(70, WALL_POS+1.6, HEADING);
+
+    private static final Pose2d WAREHOUSE_4 = new Pose2d(59, WALL_POS+3.6, HEADING);
+    private static final Pose2d CREEP_4 = new Pose2d(70, WALL_POS+1.6, HEADING);
+
+    private static final Pose2d WAREHOUSE_5 = new Pose2d(59, WALL_POS+4.6, HEADING);
+    private static final Pose2d CREEP_5 = new Pose2d(70, WALL_POS+1.6, HEADING);
+
+    private static final Pose2d PARK = new Pose2d(50, WALL_POS+4.6, HEADING);
 
     private TrajectorySequence cv;
     private TrajectorySequence wh0;
+    private TrajectorySequence cp0;
     private TrajectorySequence sc0;
     private TrajectorySequence wh1;
+    private TrajectorySequence cp1;
     private TrajectorySequence sc1;
     private TrajectorySequence wh2;
+    private TrajectorySequence cp2;
     private TrajectorySequence sc2;
     private TrajectorySequence wh3;
+    private TrajectorySequence cp3;
     private TrajectorySequence sc3;
     private TrajectorySequence wh4;
+    private TrajectorySequence cp4;
     private TrajectorySequence sc4;
     private TrajectorySequence wh5;
+    private TrajectorySequence cp5;
     private TrajectorySequence sc5;
 
     private TrajectorySequence park;
@@ -60,46 +86,54 @@ public class RED_cyclesCancelable extends LinearOpMode {
         CV,
         SC_CV,
         WH_0,
+        CP_0,
         SC_0,
         WH_1,
+        CP_1,
         SC_1,
         WH_2,
+        CP_2,
         SC_2,
         WH_3,
+        CP_3,
         SC_3,
         WH_4,
+        CP_4,
         SC_4,
         WH_5,
+        CP_5,
         SC_5,
         IDLE
     }
-
     TrajState currentTraj;
-
     Slides.SlidesState slidesState;
-    
-    ElapsedTime time = new ElapsedTime();
 
-    public static double TIP_WAIT = 0.7;
-    
+    ElapsedTime time = new ElapsedTime();
+    public static double TIP_WAIT = 2;
+
+    public static double CREEP_MAX_VEL = 30;
+    public static double CREEP_MAX_ACCEL = 30;
+    public static TrajectoryVelocityConstraint CREEP_VEL_CONSTRAINT = SampleMecanumDrive.getVelocityConstraint(CREEP_MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint CREEP_ACCEL_CONSTRAINT = SampleMecanumDrive.getAccelerationConstraint(CREEP_MAX_ACCEL);
+
     @Override
     public void runOpMode() {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-
         FreightSensor sensor = new FreightSensor(this);
-        sensor.init(hardwareMap);
-
         SlideMechanism slides = new SlideMechanism(this);
-        slides.init(hardwareMap);
-
-        Webcam webcam = new Webcam(this);
-        webcam.init(hardwareMap);
-
         Acquirer acquirer = new Acquirer(this);
+        Webcam webcam = new Webcam(this);
+        FreightSensor freightSensor = new FreightSensor(this);
+
+        sensor.init(hardwareMap);
+        slides.init(hardwareMap);
+        webcam.init(hardwareMap);
         acquirer.init(hardwareMap);
-        
-        Pose2d startPose = new Pose2d(18, WALL_POS);
+        freightSensor.init(hardwareMap);
+
+        Pose2d startPose = new Pose2d(12, WALL_POS, HEADING);
 
         cv = drive.trajectorySequenceBuilder(startPose)
                 .lineToLinearHeading(SCORE_0)
@@ -112,6 +146,14 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
                 .build();
 
+        cp0 = drive.trajectorySequenceBuilder(wh0.end())
+                .setConstraints(CREEP_VEL_CONSTRAINT, CREEP_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(CREEP_0)
+                .resetConstraints()
+
+                .build();
+
+
         sc0 = drive.trajectorySequenceBuilder(wh0.end())
                 .lineToLinearHeading(SCORE_0)
                 .build();
@@ -119,6 +161,13 @@ public class RED_cyclesCancelable extends LinearOpMode {
         wh1 = drive.trajectorySequenceBuilder(sc0.end())
                 .lineToLinearHeading(WAREHOUSE_1)
                 .waitSeconds(WAREHOUSE_WAIT)
+
+                .build();
+
+        cp1 = drive.trajectorySequenceBuilder(wh0.end())
+                .setConstraints(CREEP_VEL_CONSTRAINT, CREEP_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(CREEP_1)
+                .resetConstraints()
 
                 .build();
 
@@ -133,6 +182,13 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
                 .build();
 
+        cp2 = drive.trajectorySequenceBuilder(wh0.end())
+                .setConstraints(CREEP_VEL_CONSTRAINT, CREEP_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(CREEP_2)
+                .resetConstraints()
+
+                .build();
+
         sc2 = drive.trajectorySequenceBuilder(wh2.end())
                 .lineToLinearHeading(SCORE_2)
 
@@ -141,6 +197,13 @@ public class RED_cyclesCancelable extends LinearOpMode {
         wh3 = drive.trajectorySequenceBuilder(sc2.end())
                 .lineToLinearHeading(WAREHOUSE_3)
                 .waitSeconds(WAREHOUSE_WAIT)
+
+                .build();
+
+        cp3 = drive.trajectorySequenceBuilder(wh0.end())
+                .setConstraints(CREEP_VEL_CONSTRAINT, CREEP_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(CREEP_3)
+                .resetConstraints()
 
                 .build();
 
@@ -155,6 +218,13 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
                 .build();
 
+        cp4 = drive.trajectorySequenceBuilder(wh0.end())
+                .setConstraints(CREEP_VEL_CONSTRAINT, CREEP_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(CREEP_4)
+                .resetConstraints()
+
+                .build();
+
         sc4 = drive.trajectorySequenceBuilder(wh4.end())
                 .lineToLinearHeading(SCORE_4)
 
@@ -163,6 +233,13 @@ public class RED_cyclesCancelable extends LinearOpMode {
         wh5 = drive.trajectorySequenceBuilder(sc4.end())
                 .lineToLinearHeading(WAREHOUSE_5)
                 .waitSeconds(WAREHOUSE_WAIT)
+
+                .build();
+
+        cp5 = drive.trajectorySequenceBuilder(wh0.end())
+                .setConstraints(CREEP_VEL_CONSTRAINT, CREEP_ACCEL_CONSTRAINT)
+                .lineToLinearHeading(CREEP_5)
+                .resetConstraints()
 
                 .build();
 
@@ -177,25 +254,22 @@ public class RED_cyclesCancelable extends LinearOpMode {
 
                 .build();
 
-
         drive.setPoseEstimate(startPose);
-
-        waitForStart();
-
-//        acquirer.intakeLeft();
-        acquirer.intakeRight();
-        acquirer.acquirerState = Acquirer.AcquirerState.ACQUIRER_START_RIGHT;
 
         currentTraj = TrajState.CV;
         slidesState = Slides.SlidesState.WAIT;
         slides.close();
-        
+
+        waitForStart();
+
         Location location = webcam.location();
         webcam.stopStreaming();
-        
-        drive.followTrajectorySequenceAsync(cv);
 
-//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        acquirer.intakeLeft();
+        acquirer.intakeRight();
+        acquirer.acquirerState = Acquirer.AcquirerState.ACQUIRER_START_LEFT;
+
+        drive.followTrajectorySequenceAsync(cv);
 
         while(opModeIsActive() && !isStopRequested()) {
 
@@ -272,23 +346,20 @@ public class RED_cyclesCancelable extends LinearOpMode {
                             }
                             break;
                         case TEMP_RETRACT:
-
-                            switch (location) {
-                                case LEFT:
-                                case MIDDLE:
-                                    if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                            if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                time.reset();
+                                switch (location) {
+                                    case LEFT:
+                                    case MIDDLE:
                                         slides.restTEMP();
                                         slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                         time.reset();
-                                    }
-                                    break;
-                                case RIGHT:
-                                    if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                        break;
+                                    case RIGHT:
                                         slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                         time.reset();
-                                    }
-                                    break;
-
+                                        break;
+                                }
                             }
                             break;
                         case TEMP_CARRIAGE:
@@ -334,9 +405,25 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        // we didn't pick up freight, creep
                         slidesState = Slides.SlidesState.WAIT;
-                        currentTraj = TrajState.SC_0;
-                        drive.followTrajectorySequenceAsync(sc0);
+                        currentTraj = TrajState.CP_0;
+                        drive.followTrajectorySequenceAsync(cp0);
+
+//                        slidesState = Slides.SlidesState.WAIT;
+//                        currentTraj = TrajState.SC_0;
+//                        drive.followTrajectorySequenceAsync(sc0);
+                    }
+                    break;
+
+                case CP_0:
+                    if (sensor.hasFreightRight() || sensor.hasFreightClamp()) {
+                        drive.breakFollowing();
+                        drive.setDrivePower(new Pose2d());
+                    }
+                    if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.REST;
+                        currentTraj = TrajState.IDLE;
                     }
                     break;
 
@@ -367,7 +454,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
                                     slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
@@ -398,9 +485,20 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.setDrivePower(new Pose2d());
                     }
                     if (!drive.isBusy()) {
+                        // we didn't pick up freight, creep
                         slidesState = Slides.SlidesState.WAIT;
-                        currentTraj = TrajState.SC_1;
-                        drive.followTrajectorySequenceAsync(sc1);
+                        currentTraj = TrajState.CP_1;
+                        drive.followTrajectorySequenceAsync(cp1);
+                    }
+                    break;
+                case CP_1:
+                    if (sensor.hasFreightRight() || sensor.hasFreightClamp()) {
+                        drive.breakFollowing();
+                        drive.setDrivePower(new Pose2d());
+                    }
+                    if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.REST;
+                        currentTraj = TrajState.IDLE;
                     }
                     break;
                 case SC_1:
@@ -430,7 +528,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
                                     slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
@@ -466,6 +564,16 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.followTrajectorySequenceAsync(sc2);
                     }
                     break;
+                case CP_2:
+                    if (sensor.hasFreightRight() || sensor.hasFreightClamp()) {
+                        drive.breakFollowing();
+                        drive.setDrivePower(new Pose2d());
+                    }
+                    if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.REST;
+                        currentTraj = TrajState.IDLE;
+                    }
+                    break;
                 case SC_2:
                     if (!drive.isBusy()) {
                         // score level 3
@@ -493,7 +601,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
                                     slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
@@ -529,6 +637,16 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.followTrajectorySequenceAsync(sc3);
                     }
                     break;
+                case CP_3:
+                    if (sensor.hasFreightRight() || sensor.hasFreightClamp()) {
+                        drive.breakFollowing();
+                        drive.setDrivePower(new Pose2d());
+                    }
+                    if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.REST;
+                        currentTraj = TrajState.IDLE;
+                    }
+                    break;
                 case SC_3:
                     if (!drive.isBusy()) {
                         // score level 3
@@ -556,7 +674,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
                                     slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
@@ -592,6 +710,16 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.followTrajectorySequenceAsync(sc4);
                     }
                     break;
+                case CP_4:
+                    if (sensor.hasFreightRight() || sensor.hasFreightClamp()) {
+                        drive.breakFollowing();
+                        drive.setDrivePower(new Pose2d());
+                    }
+                    if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.REST;
+                        currentTraj = TrajState.IDLE;
+                    }
+                    break;
                 case SC_4:
                     if (!drive.isBusy()) {
                         // score level 3
@@ -619,7 +747,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
                                     slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
@@ -655,6 +783,16 @@ public class RED_cyclesCancelable extends LinearOpMode {
                         drive.followTrajectorySequenceAsync(sc5);
                     }
                     break;
+                case CP_5:
+                    if (sensor.hasFreightRight() || sensor.hasFreightClamp()) {
+                        drive.breakFollowing();
+                        drive.setDrivePower(new Pose2d());
+                    }
+                    if (!drive.isBusy()) {
+                        slidesState = Slides.SlidesState.REST;
+                        currentTraj = TrajState.IDLE;
+                    }
+                    break;
                 case SC_5:
                     if (!drive.isBusy()) {
                         // score level 3
@@ -682,7 +820,7 @@ public class RED_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
                                     slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
@@ -711,12 +849,19 @@ public class RED_cyclesCancelable extends LinearOpMode {
                     break;
             }
 
+            telemetry.addData("Traj state", currentTraj);
+            telemetry.addData("slides state", slidesState);
+            telemetry.addData("is drive busy", drive.isBusy());
+
+            acquirer.telemetry(telemetry);
+
+            telemetry.update();
+
             slides.update();
             drive.update();
             acquirer.autonLoop();
 
-//            telemetry.addData("current trajectory", currentTraj);
-//            telemetry.update();
+//            freightSensor.telemetry(telemetry);
         }
     }
 }

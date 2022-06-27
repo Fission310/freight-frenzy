@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.opmode.auton;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Acquirer;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.Carousel;
@@ -34,7 +37,12 @@ public class RED_duck extends LinearOpMode {
     ElapsedTime time = new ElapsedTime();
     public static double TIP_WAIT = 2;
 
-    public static double SCORING_POS = -58;
+    public static double CAROUSEL_MAX_VEL = 30;
+    public static double CAROUSEL_MAX_ACCEL = 30;
+    public static TrajectoryVelocityConstraint CAROUSEL_VEL_CONSTRAINT = SampleMecanumDrive.getVelocityConstraint(CAROUSEL_MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint CAROUSEL_ACCEL_CONSTRAINT = SampleMecanumDrive.getAccelerationConstraint(CAROUSEL_MAX_ACCEL);
+
+    public static double SCORING_POS = -59;
     @Override public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -55,25 +63,30 @@ public class RED_duck extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(-31, WALL_POS);
 
+
+
         TrajectorySequence carouselTraj = drive.trajectorySequenceBuilder(startPose)
 
                 // SCAN 4 DUCK
                 .waitSeconds(0.2)
                 .lineToLinearHeading(new Pose2d(-31, WALL_POS+4))
                 .waitSeconds(0.2)
+                .setConstraints(CAROUSEL_VEL_CONSTRAINT, CAROUSEL_ACCEL_CONSTRAINT)
                 .lineToLinearHeading(new Pose2d(-60, -59, Math.toRadians(-37)))
                 .addTemporalMarker(carousel::reverseAUTO)
                 .waitSeconds(8)
                 .addTemporalMarker(carousel::stop)
-                .lineToLinearHeading(new Pose2d(WALL_POS-4, -20, Math.toRadians(-90)))
+                .resetConstraints()
+                .lineToLinearHeading(new Pose2d(SCORING_POS, -25, Math.toRadians(-90)))
+                .waitSeconds(0.2)
+                .lineToLinearHeading(new Pose2d(WALL_POS-5, -25, Math.toRadians(-90)))
                 .waitSeconds(0.1)
-                .lineToLinearHeading(new Pose2d(SCORING_POS, -20, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(SCORING_POS, -25, Math.toRadians(-90)))
                 .waitSeconds(0.5)
-
                 .build();
 
         TrajectorySequence parkTraj = drive.trajectorySequenceBuilder(carouselTraj.end())
-                .lineToLinearHeading(new Pose2d(WALL_POS-5, -34, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(WALL_POS-5, -39.5, Math.toRadians(-90)))
 
                 .build();
 
@@ -166,20 +179,23 @@ public class RED_duck extends LinearOpMode {
                             }
                             break;
                         case TEMP_RETRACT:
-                            if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
-                                time.reset();
-                                switch (location) {
-                                    case LEFT:
-                                    case MIDDLE:
+
+                            switch (location) {
+                                case LEFT:
+                                case MIDDLE:
+                                    if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                         slides.restTEMP();
                                         slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                         time.reset();
-                                        break;
-                                    case RIGHT:
-                                        slidesState = Slides.SlidesState.TIP_DELAY;
+                                    }
+                                    break;
+                                case RIGHT:
+                                    if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                        slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                         time.reset();
-                                        break;
-                                }
+                                    }
+                                    break;
+
                             }
                             break;
                         case TEMP_CARRIAGE:
@@ -194,14 +210,14 @@ public class RED_duck extends LinearOpMode {
                                 case LEFT:
                                     if (time.seconds() > Slides.LEVEL1_TIP_WAIT) {
                                         time.reset();
-                                        slides.rest();
+                                        slides.restFast();
                                         trajState = TrajState.PARKING;
                                     }
                                     break;
                                 case MIDDLE:
                                     if (time.seconds() > Slides.LEVEL2_TIP_WAIT) {
                                         time.reset();
-                                        slides.rest();
+                                        slides.restFast();
                                         trajState = TrajState.PARKING;
                                     }
                                     break;

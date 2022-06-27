@@ -48,6 +48,6 @@ public class MeccRobot extends Mechanism {
     }
 
     public void telemetry(Telemetry telemetry){
-
+        acquirer.telemetry(telemetry);
     }
 }

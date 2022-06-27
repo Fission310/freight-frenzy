@@ -18,8 +18,8 @@ public class FreightSensor extends Mechanism {
     ColorRangeSensor colorRight;
     ColorRangeSensor clampColor;
 
-    public static int YELLOW_THRESHOLD = 250;
-    public static int WHITE_THRESHOLD = 250;
+    public static int YELLOW_THRESHOLD = 175;
+    public static int WHITE_THRESHOLD = 500;
 
     public static int CLAMP_YELLOW_THRESHOLD = 300;
     public static int CLAMP_WHITE_THRESHOLD = 300;

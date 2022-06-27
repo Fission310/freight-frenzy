@@ -37,7 +37,7 @@ public class Acquirer extends Mechanism {
     public static double OUTTAKE_DELAY = 0.25;
     public static double RESET_DELAY = 1.25;
 
-    public static double SPEED_OUTTAKE = 0.4;
+    public static double SPEED_OUTTAKE = 0.5;
 
     private ElapsedTime timer = new ElapsedTime();
 
@@ -243,11 +243,12 @@ public class Acquirer extends Mechanism {
         switch (acquirerState) {
             case ACQUIRER_START_RIGHT:
                 if (gamepad.right_trigger > 0) {
-                    raiseLeftInactive();
+                    raiseLeft();
                     lowerRight();
                     intakeRight();
 
-                } else if(gamepad.left_trigger > 0){
+                }
+                else if(gamepad.left_trigger > 0){
                     acquirerState = AcquirerState.ACQUIRER_START_LEFT;
                     break;
                 }
@@ -278,7 +279,7 @@ public class Acquirer extends Mechanism {
                     break;
 
                 } else if (gamepad.left_trigger > 0){
-                    raiseRightInactive();
+                    raiseRight();
                     lowerLeft();
                     intakeLeft();
                 } else if (gamepad.dpad_left) {

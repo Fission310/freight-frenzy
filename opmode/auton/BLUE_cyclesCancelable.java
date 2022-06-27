@@ -270,20 +270,23 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                             }
                             break;
                         case TEMP_RETRACT:
-                            if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
-                                time.reset();
-                                switch (location) {
-                                    case LEFT:
-                                    case MIDDLE:
+
+                            switch (location) {
+                                case LEFT:
+                                case MIDDLE:
+                                    if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                         slides.restTEMP();
                                         slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                         time.reset();
-                                        break;
-                                    case RIGHT:
-                                        slidesState = Slides.SlidesState.TIP_DELAY;
+                                    }
+                                    break;
+                                case RIGHT:
+                                    if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
+                                        slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                         time.reset();
-                                        break;
-                                }
+                                    }
+                                    break;
+
                             }
                             break;
                         case TEMP_CARRIAGE:
@@ -364,7 +367,7 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                             case TEMP_RETRACT:
                                 if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
                                     time.reset();
-                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
                                     break;
                                 }
@@ -425,9 +428,9 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
                                     time.reset();
-                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
                                     break;
                                 }
@@ -488,9 +491,9 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
                                     time.reset();
-                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
                                     break;
                                 }
@@ -551,9 +554,9 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
                                     time.reset();
-                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
                                     break;
                                 }
@@ -614,9 +617,9 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
                                     time.reset();
-                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
                                     break;
                                 }
@@ -677,9 +680,9 @@ public class BLUE_cyclesCancelable extends LinearOpMode {
                                 }
                                 break;
                             case TEMP_RETRACT:
-                                if (time.seconds() > Slides.TEMP_RETRACT_WAIT) {
+                                if (time.seconds() > Slides.LEVEL_3_TEMP_RETRACT_WAIT) {
                                     time.reset();
-                                    slidesState = Slides.SlidesState.TIP_DELAY;
+                                    slidesState = Slides.SlidesState.TEMP_CARRIAGE;
                                     time.reset();
                                     break;
                                 }

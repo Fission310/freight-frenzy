@@ -10,6 +10,11 @@ import com.stuyfission.fissionlib.util.Mechanism;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
+import org.firstinspires.ftc.teamcode.opmode.auton.BLUE_cyclesCancelable;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * FSM for slides scoring
@@ -18,6 +23,7 @@ import org.firstinspires.ftc.teamcode.hardware.mechanisms.slides.SlideMechanism;
 public class Slides extends Mechanism {
 
     SlideMechanism slides = new SlideMechanism(opMode);
+    Acquirer acquirer = new Acquirer(opMode);
 
     public Slides(LinearOpMode opMode) { this.opMode = opMode; }
 
@@ -44,28 +50,53 @@ public class Slides extends Mechanism {
 
     ElapsedTime time = new ElapsedTime();
     public static double LEVEL3_TEMP_WAIT = 0.2;
-    public static double LEVEL3_TIP_WAIT = 0.25;
+    public static double LEVEL3_TIP_WAIT = 0;
 
     public static double LEVEL2_ARM_TEMP_WAIT = 0.3;
-    public static double LEVEL2_TEMP_WAIT = 0.9;
-    public static double LEVEL2_TIP_WAIT = 0.5;
+    public static double LEVEL2_TEMP_WAIT = 0.95;
+    public static double LEVEL2_TIP_WAIT = 0.7;
 
     public static double LEVEL1_ARM_TEMP_WAIT = 0.3;
-    public static double LEVEL1_TEMP_WAIT = 1;
+    public static double LEVEL1_TEMP_WAIT = 1.1;
     public static double LEVEL1_TIP_WAIT = 1;
 
-    public static double SHARED_ARM_TEMP_WAIT = 1;
-    public static double SHARED_TEMP_WAIT = 2;
-    public static double SHARED_TIP_WAIT = 1;
+    public static double SHARED_ARM_TEMP_WAIT = 0.3;
+    public static double SHARED_TEMP_WAIT = 0.5;
+    public static double SHARED_TIP_WAIT = 0.6;
 
-    public static double TEMP_RETRACT_WAIT = 0.2;
-    public static double TEMP_CARRIAGE_WAIT = 0.4;
+    public static double TEMP_RETRACT_WAIT = 0.4;
+    public static double LEVEL_3_TEMP_RETRACT_WAIT = 0.2;
+    public static double TEMP_CARRIAGE_WAIT = 0.35;
 
     public static double CAP_RESET_WAIT = 0.5;
+
+    public Runnable level3 = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                slides.close();
+                slides.extendLevel3();
+                Thread.sleep((long) LEVEL3_TEMP_WAIT * 1000);
+                slides.armLevel3();
+                Thread.sleep((long) 3 * 1000);
+                slides.open();
+                Thread.sleep((long) LEVEL_3_TEMP_RETRACT_WAIT * 1000);
+                slides.restCarriage();
+                Thread.sleep((long) LEVEL1_TIP_WAIT * 1000);
+                slides.rest();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     public void init(HardwareMap hwMap) {
         slides.init(hwMap);
+        acquirer.init(hwMap);
+
+        slides.rest();
 
         state = SlidesState.REST;
         level = Level.LEVEL1;
@@ -78,27 +109,36 @@ public class Slides extends Mechanism {
         switch (state) {
             case REST:
                 switch (level){
-                    case SHARED:
-                        slides.restShared();
-                        state = SlidesState.WAIT;
-                        break;
                     case LEVEL1:
                     case LEVEL2:
+                    case SHARED:
+                        slides.restFast();
+                        state = SlidesState.WAIT;
+                        break;
                     case LEVEL3:
                         slides.rest();
                         state = SlidesState.WAIT;
                         break;
                 }
-
+            break;
         // wait for input
             case WAIT:
                 // if clamp has freight
                 if (slides.hasFreight()) {
                     slides.close();
+                    acquirer.raiseRightInactive();
+                    acquirer.raiseLeftInactive();
                 }
+                else{
+                    slides.open();
+                }
+
                 if (gamepad.y) {
                     slides.extendLevel3();
                     slides.close();
+
+                    acquirer.raiseRightInactive();
+                    acquirer.raiseLeftInactive();
 
                     level = Level.LEVEL3;
 
@@ -109,6 +149,9 @@ public class Slides extends Mechanism {
                     slides.extendLevel2TEMP();
                     slides.close();
 
+                    acquirer.raiseRightInactive();
+                    acquirer.raiseLeftInactive();
+
                     level = Level.LEVEL2;
 
                     time.reset();
@@ -118,6 +161,9 @@ public class Slides extends Mechanism {
 //                    slides.extendLevel1TEMP();
 //                    slides.close();
 //
+//                    acquirer.raiseRightInactive();
+//                    acquirer.raiseLeftInactive();
+//
 //                    level = Level.LEVEL1;
 //
 //                    time.reset();
@@ -126,6 +172,9 @@ public class Slides extends Mechanism {
                 if(gamepad.a){
                     slides.extendSharedTEMP();
                     slides.close();
+
+                    acquirer.raiseRightInactive();
+                    acquirer.raiseLeftInactive();
 
                     level = Level.SHARED;
 
@@ -190,24 +239,30 @@ public class Slides extends Mechanism {
                 }
                 break;
             case TEMP_RETRACT:
-                if (time.seconds() > TEMP_RETRACT_WAIT) {
-                    switch (level) {
-                        case LEVEL1:
-                        case LEVEL2:
+
+                switch (level) {
+                    case LEVEL1:
+                    case LEVEL2:
+                        if (time.seconds() > TEMP_RETRACT_WAIT) {
                             slides.restTEMP();
                             state = SlidesState.TEMP_CARRIAGE;
                             time.reset();
-                            break;
-                        case SHARED:
+                        }
+                        break;
+                    case SHARED:
+                        if (time.seconds() > TEMP_RETRACT_WAIT) {
                             slides.extendSharedTEMP();
                             state = SlidesState.TEMP_CARRIAGE;
                             time.reset();
-                            break;
-                        case LEVEL3:
-                            state = SlidesState.TIP_DELAY;
+                        }
+                        break;
+                    case LEVEL3:
+                        if (time.seconds() > LEVEL_3_TEMP_RETRACT_WAIT) {
+                            state = SlidesState.TEMP_CARRIAGE;
                             time.reset();
-                            break;
-                    }
+                        }
+                        break;
+
                 }
                 break;
             case TEMP_CARRIAGE:
@@ -256,6 +311,7 @@ public class Slides extends Mechanism {
                 break;
         }
     }
+
 
     @Override
     public void telemetry(Telemetry telemetry) {
